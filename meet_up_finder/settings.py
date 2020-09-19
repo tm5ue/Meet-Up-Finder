@@ -141,7 +141,7 @@ AUTHENTICATION_BACKENDS = (
  )
 
 SOCIAL_AUTH_URL_NAMESPACE = 'social'
-SITE_ID = 2
+SITE_ID = 3
 LOGIN_REDIRECT_URL = '/'
 SOCIALACCOUNT_PROVIDERS = {
     'google': {
@@ -149,3 +149,4 @@ SOCIALACCOUNT_PROVIDERS = {
         'AUTH_PARAMS': {'access_type': 'online',}
     }
 }
+
