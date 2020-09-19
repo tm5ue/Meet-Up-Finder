@@ -1,52 +1,14 @@
-<!doctype html>
-<html lang="en">
+{% extends "base.html" %}
 {% load static %}
+{% block content %}
 
-<head>
-  <meta charset="utf-8">
-  <title>Meet-Up Finder</title>
+{% load socialaccount %}
 
-  <link rel="stylesheet" href="{% static '/maps/style.css' %}"/>
-  <style>
-    .intro {
-      text-align: center;
-      font-family: fantasy;
-    }
-  </style>
-</head>
 
-<body>
-  <div class="intro">
-    <h1>Group 1-25: Kool Katz</h1>
-  </div>
-
-  {% load socialaccount %}
-  {% if user.is_authenticated %}
+{% if user.is_authenticated %}
   <p>Welcome, {{ user.username }} !</p>
 
-  {% else %}
-  <a href="{% provider_login_url "google" %}">Google</a>
-  {% endif %}
-
-<h3>Team Members</h3>
-<ul>
-  <li>Jonathon Mo</li>
-  <li>Simran	Kaur</li>
-  <li>Tanya	Mekavibul</li>
-  <li>Nick Cooney</li>
-</ul>
-
-
-<h3>TA</h3>
-<ul>
-  <li>Nick Figgins</li>
-</ul>
-
-</body>
-
-
-
-
-
-
-</html>
+{% else %}
+  <a href="{% provider_login_url 'google' %}">Google</a>
+{% endif %}
+{% endblock %}
