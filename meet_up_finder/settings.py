@@ -84,8 +84,12 @@ WSGI_APPLICATION = 'meet_up_finder.wsgi.application'
 
 DATABASES = {
     'default': {
-        'ENGINE': 'django.db.backends.sqlite3',
-        'NAME': BASE_DIR / 'db.sqlite3',
+        'ENGINE': 'django.db.backends.postgresql',
+        'NAME': 'meetup-finder',
+        'USER': 'nickc',
+        'PASSWORD': 'meetup-finder',
+        'HOST': '127.0.0.1',
+        'PORT': '5432',
     }
 }
 
@@ -145,3 +149,4 @@ SOCIALACCOUNT_PROVIDERS = {
         'AUTH_PARAMS': {'access_type': 'online',}
     }
 }
+
