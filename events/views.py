@@ -4,7 +4,12 @@ from django.views.generic.list import ListView
 
 # Create your views here.
 class Index(ListView):
-    template_name = 'maps/index.html'
+    template_name = 'events/index.html'
 
     def get_queryset(self):
         pass
+
+
+class AddEvent(ListView):
+    pass
+    # TODO:
