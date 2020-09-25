@@ -15,7 +15,7 @@
 
         <nav class="navbar navbar-light bg-light">
             <div class = "container">
-            <a class="navbar-brand" href="{% url 'maps:index' %}">Home</a>
+            <a class="navbar-brand" href="{% url 'events:index' %}">Home</a>
             <ul class="nav">
                 <li class="nav-item active">
                     <a class="nav-link" href="#">Add a Field here in /templates/base.html</a>
@@ -25,7 +25,7 @@
                 </li>
                 <li class="nav-item">
                     {% if user.is_authenticated %}
-                        <a class="nav-link" href="{% url 'maps:logout'  %}">Logout</a>
+                        <a class="nav-link" href="{% url 'events:logout'  %}">Logout</a>
 
                     {% else %}
                         <a class="nav-link" href="{% provider_login_url 'google' %}">Login</a>
