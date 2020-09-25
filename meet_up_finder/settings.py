@@ -31,7 +31,6 @@ ALLOWED_HOSTS = []
 
 INSTALLED_APPS = [
     'events.apps.EventsConfig',
-    'maps.apps.MapsConfig',
     'django.contrib.admin',
     'django.contrib.auth',
     'django.contrib.contenttypes',
@@ -139,7 +138,7 @@ AUTHENTICATION_BACKENDS = (
 )
 
 SOCIAL_AUTH_URL_NAMESPACE = 'social'
-SITE_ID = 3
+SITE_ID = 2
 LOGIN_REDIRECT_URL = '/'
 
 SOCIALACCOUNT_PROVIDERS = {
