@@ -5,10 +5,8 @@
 {% load socialaccount %}
 
 
-{% if user.is_authenticated %}
-  <p>Welcome, {{ user.username }} !</p>
-
-{% else %}
-  <a href="{% provider_login_url 'google' %}">Google</a>
-{% endif %}
+<h1>Current Events</h1>
+{% for event in object_list%}
+  <li><a href="{% url 'events:detail' event.id %}">{{ event.name | title }}</a></li>
+{% endfor %}
 {% endblock %}
