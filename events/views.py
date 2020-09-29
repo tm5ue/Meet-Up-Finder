@@ -6,6 +6,7 @@ from django.views.generic.list import ListView, View
 from django.utils import timezone
 from .models import Event
 from .forms import EventForm
+from django.contrib.auth.decorators import user_passes_test
 
 
 # Create your views here.
@@ -27,6 +28,7 @@ class AddEvent(TemplateView):
     def post(self, request):
         '''Handles adding a new event'''
         form = EventForm(request.POST)
+        
         if form.is_valid():
             event = form.save(commit=False)
             event.author = request.user
@@ -49,17 +51,28 @@ class AddEvent(TemplateView):
 
     def get_queryset(self):
         pass
+        
+     
 
+ 
 class EventTime(CreateView):
     '''For inputting in the datetime field in the form'''
     model = Event
     form_class = EventForm
+    
+    
 
 class Detail(View):
     template_name = 'events/details.html'
+    
+#    def user_is_not_logged_in(user):
+#        return not user.is_authenticated()
+#    @user_passes_test(user_is_not_logged_in)
     def get(self, request, event_id):
         '''Queries database for an event based on event_id parameter, returns page with details'''
         event = Event.objects.get(id=event_id)
         context = {'event': event}
         print(context)
         return render(request, self.template_name, context)
+     
+    
