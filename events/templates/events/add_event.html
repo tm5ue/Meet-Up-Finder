@@ -3,7 +3,8 @@
 {% block content %}
 
 {% load socialaccount %}
-
+    
+{% if user.is_authenticated %}
     <h1>Add an event</h1>
 
     <form action="{% url 'events:add_event' %}" method="post">
@@ -25,6 +26,10 @@
         </div>
         <input type="submit" class="btn btn-primary" value="Submit">
     </form>
+
+{% else %}
+<h1>Please log in to add events</h1>
+{% endif %}
 
 
 {% endblock %}
