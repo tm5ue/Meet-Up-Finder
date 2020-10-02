@@ -1,0 +1,15 @@
+language: python
+install:
+- pip install -r requirements-travis.txt
+- pip install -r requirements.txt
+script:
+- python manage.py test
+deploy:
+  provider: heroku
+  api_key:
+    secure: d8WdjYPO0ttnZXsj5bcItd5E+jVe+Htt1EsWbJySFjCxIRzklbaxUKElItGXeWLfBgl+oQwb8qsUpWp5Dmdom9PfySXmLpnF4Y4Aoi+/rhZ0DXh/wzqCF8ikgQmc8EE30ZciMZwzwF1jfk8d5dJm8dbAaWO70+tulWyftR6TkPKwByknrwLtN/QnZ4E7eahQmHZZiORmnbSlg9CtetHVHqkiAfSu1AaqRYrInT+dww0v70ZyJe2donK7Dcp07CHOn5+FFTt8hg9Ae6PHDrvRH5Qw787pch18Q+QFtT5m6IePHp91jEULojjMn8mew77B9UjsiAN51sSzI0pt5Z6j9p39bvx/0JFE4GF8aSMoYWQC8MeUHJQTgzhgHnNUtizoDg2CbEneRFCWwTuJwfxk4zKnidYHBXteMRDLqrSzykMJfx/yk761beCEkS0CRYauyml0dft6wRKPasqti7vzCd+tjEta2WOl7KDuWO5J4H+LKMk9s71Kzvz5eqOTnrJe4FOAINA/4RbEP7KSgW7PB+4HOUP34YJ7RTl0NYpde77ZciZdpCp4Cl3eHxmX4wmLD6koBew10vhsTNL7N6gpASBIxU5XSllXodUzkLs5zHEMqx3Atfh1LVo0G7Cy1MZE4EWKGXSVZMRA2djTOOXk9BVgLySzKMbNBmvu6eXNl9A=
+  app: project-1-25
+  run: "rake db:migrate"
+  on:
+    repo: uva-cs3240-f20/project-1-25  
+    branch: master
