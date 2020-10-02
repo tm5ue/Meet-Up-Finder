@@ -12,3 +12,4 @@ deploy:
   run: "rake db:migrate"
   on:
     repo: uva-cs3240-f20/project-1-25  
+    branch: master
