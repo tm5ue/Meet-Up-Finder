@@ -2,15 +2,16 @@ language: python
 services:
 - postgresql
 #env:
-#- DATABASE_URL=postgres://postgres:postgres@localhost:5432/meet_up_finder
+#- DATABASE_URL=postgres://postgres:postgres@localhost/meet_up_finder
 before_install:
   - export DJANGO_SETTINGS_MODULE=meet_up_finder.settings
 install:
 - pip install -r requirements-travis.txt
 - pip install -r requirements.txt
 before_script:
-  - psql -c 'CREATE DATABASE "meetup-finder";' -U postgres
+  - psql -c 'CREATE DATABASE "mytestdatabase";' -U postgres
   - psql -c "CREATE USER nickc WITH PASSWORD 'meetup-finder';" -U postgres
+  - psql -c 'GRANT ALL PRIVILEGES ON DATABASE "mytestdatabase" to nickc;' - U postgres
 script:
   - python manage.py makemigrations
   - python manage.py migrate
