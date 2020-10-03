@@ -2,7 +2,7 @@ language: python
 services:
 - postgresql
 env:
-- DATABASE_URL=postgres://postgres:postgres@localhost/meet_up_finder
+- DATABASE_URL=postgres://postgres:postgres@localhost/meetup-finder
 before_install:
   - export DJANGO_SETTINGS_MODULE=meet_up_finder.settings
 install:
