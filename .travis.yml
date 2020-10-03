@@ -10,7 +10,7 @@ install:
 - pip install -r requirements.txt
 before_script:
   - psql -c 'CREATE DATABASE "meetup-finder";' -U postgres
-  - psql -c 'CREATE USER nickc WITH PASSWORD "meetup-finder";' -U postgres
+  - psql -c "CREATE USER nickc WITH PASSWORD 'meetup-finder';" -U postgres
 script:
   - python manage.py makemigrations
   - python manage.py migrate
