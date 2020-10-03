@@ -1,18 +1,21 @@
 language: python
 services:
 - postgresql
-before_script:
-  - psql -U postgres -c 'CREATE DATABASE "meetup-finder";'
-  - python manage.py makemigrations
-  - python manage.py migrate
-#- psql --command="CREATE USER nickc WITH PASSWORD 'meetup-finder';"
-#- psql --command='CREATE DATABASE "meetup-finder"'
-#- psql --command='GRANT ALL PRIVILEGES ON "meetup-finder" TO nickc;'
+#env:
+#- DATABASE_URL=postgres://postgres:postgres@localhost:5432/meet_up_finder
+before_install:
+  - export DJANGO_SETTINGS_MODULE=meet_up_finder.settings
 install:
 - pip install -r requirements-travis.txt
 - pip install -r requirements.txt
+before_script:
+  - psql -c 'CREATE DATABASE "meetup-finder"' -U postgres
+  - psql -c 'CREATE USER nickc WITH PASSWORD "meetup-finder";' -U postgres
 script:
-- python manage.py test
+  - python manage.py makemigrations
+  - python manage.py migrate
+  - python manage.py collectstatic --noinput
+  - python manage.py test
 deploy:
   provider: heroku
   api_key:
