@@ -2,9 +2,11 @@ language: python
 services:
 - postgresql
 before_script:
-- psql --command="CREATE USER nickc WITH PASSWORD 'meetup-finder';"
-- psql --command='CREATE DATABASE "meetup-finder" WITH OWNER=nickc;'
-- psql --command='GRANT ALL PRIVILEGES ON "meetup-finder" TO nickc;'
+  - psql -U postgres -c 'CREATE DATABASE "meetup-finder";'
+  - psql -U postgres -f ./db/create-tables.sql -d "meetup-finder"
+#- psql --command="CREATE USER nickc WITH PASSWORD 'meetup-finder';"
+#- psql --command='CREATE DATABASE "meetup-finder"'
+#- psql --command='GRANT ALL PRIVILEGES ON "meetup-finder" TO nickc;'
 install:
 - pip install -r requirements-travis.txt
 - pip install -r requirements.txt
