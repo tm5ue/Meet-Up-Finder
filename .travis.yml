@@ -2,10 +2,13 @@ language: python
 install:
 - pip install -r requirements-travis.txt
 - pip install -r requirements.txt
-script:
-- python manage.py test
 services:
 - postgresql
+before_script:
+- psql --command="CREATE USER nickc;"
+- psql --command="CREATE DATABASE "meetup-finder" WITH OWNER = nickc;"
+script:
+- python manage.py test
 deploy:
   provider: heroku
   api_key:
