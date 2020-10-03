@@ -7,7 +7,6 @@ before_install:
   - export DJANGO_SETTINGS_MODULE=meet_up_finder.settings
 install:
 - pip install -r requirements-travis.txt
-#- pip install -r requirements.txt
 before_script:
   - psql -c "CREATE USER nickc WITH PASSWORD 'meetup-finder';" -U postgres
   - psql -c 'CREATE DATABASE "meetup-finder" OWNER nickc;' -U postgres
