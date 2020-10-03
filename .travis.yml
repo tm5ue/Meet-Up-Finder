@@ -3,7 +3,6 @@ services:
 - postgresql
 before_script:
   - psql -U postgres -c 'CREATE DATABASE "meetup-finder";'
-  - psql -U postgres -f ./db/create-tables.sql -d "meetup-finder"
   - python manage.py makemigrations
   - python manage.py migrate
 #- psql --command="CREATE USER nickc WITH PASSWORD 'meetup-finder';"
