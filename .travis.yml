@@ -1,13 +1,13 @@
 language: python
-install:
-- pip install -r requirements-travis.txt
-- pip install -r requirements.txt
 services:
 - postgresql
 before_script:
 - psql --command="CREATE USER nickc WITH PASSWORD 'meetup-finder';"
 - psql --command="ALTER USER nickc CREATDB;"
 - psql --command='CREATE DATABASE "meetup-finder" WITH OWNER=nickc;'
+install:
+- pip install -r requirements-travis.txt
+- pip install -r requirements.txt
 script:
 - python manage.py test
 deploy:
