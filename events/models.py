@@ -1,5 +1,7 @@
 from django.db import models
 from django.utils import timezone
+from django.contrib.auth.models import User
+
 # Create your models here.
 
 class Event(models.Model):
@@ -16,6 +18,9 @@ class Event(models.Model):
     # TODO: tags (sports, music, etc)
     #location =
     #comments = []
+    friends = models.TextField(null=True)
+    users = models.ManyToManyField(User)
+
 
 
     def __str__(self):

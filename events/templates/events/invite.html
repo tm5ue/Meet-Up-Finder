@@ -1,0 +1,72 @@
+<!--<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css" integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">-->
+{% extends "base.html" %}
+{% load static %}
+{% block content %}
+{% load bootstrap4 %}
+
+
+{% if user.is_authenticated %}
+<!--    <h1>Make a private event!</h1>-->
+<!---->
+<!---->
+<!--    <p>Who do you want to invite?</p>-->
+<!--    {% for user in object_list%}-->
+<!--    <li class="list-group-item">-->
+<!--    <div class="custom-control custom-checkbox">-->
+<!--        <input type="checkbox" class="custom-control-input" id={{user}}>-->
+<!--        <label class="custom-control-label" for={{user}}>{{ user.email }}</label>-->
+<!--    </div>-->
+<!--    </li>-->
+<!--    {% endfor %}-->
+ 
+ 
+ <form action="{% url 'events:invite_event' %}" method="post">
+    {% csrf_token %}
+    <div class="form-group">
+        <label for="name">Event Name:</label>
+        <input type="text" name="name" class="form-control" placeholder="Name">
+    </div>
+    <div class="form-group">
+        <label for="description">Event Description:</label>
+        <input type="text" name="description" class="form-control" placeholder="Description">
+    </div>
+    <div class="form-group">
+        <label for="event_date">Event Date:</label>
+        <input type="text" name="event_date" class="form-control" placeholder="Event Date">
+    </div>
+
+
+    <li class="list-group-item">
+    Invite:
+    <div class="custom-control custom-checkbox">
+        <input type="checkbox" name="friends" value ={{ user.email }} class="custom-control-input" id={{user}}
+            {% if 'friends' in value %} checked {% endif %}>
+        <label class="custom-control-label" for={{user}}>{{ user.email }}</label>
+    </div>
+    </li>
+    
+ 
+  
+  {{form.users}}
+ 
+    
+    
+ 
+    
+
+    
+
+    
+<!--    <div class="form-group">-->
+<!--        <label for="friends">Friends:</label>-->
+<!--        <input type="text" name="friends" class="form-control" placeholder="Friends">-->
+<!--    </div>-->
+    <input type="submit" class="btn btn-primary" value="Submit">
+</form>
+
+
+{% else %}
+    <h1>Log in!</h1>
+{% endif %}
+{% endblock %}
+

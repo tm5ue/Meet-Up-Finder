@@ -14,4 +14,17 @@
 <p>{{ event.author | title }}</p>
 <h5>Publish Date </h5>
 <p>{{ event.pub_date | title }}</p>
+
+{% if event.friends is not Null %}
+    <h5>Invites </h5>
+    <p>{{ event.friends| title }}</p>
+{% endif %}
+
+<h5> users</h5>
+{% for u in event.users.all %}
+<p> {{u.email}} </p>
+{% endfor %}
+ 
+
+
 {% endblock %}
