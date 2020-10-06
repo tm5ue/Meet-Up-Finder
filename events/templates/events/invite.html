@@ -6,18 +6,7 @@
 
 
 {% if user.is_authenticated %}
-<!--    <h1>Make a private event!</h1>-->
-<!---->
-<!---->
-<!--    <p>Who do you want to invite?</p>-->
-<!--    {% for user in object_list%}-->
-<!--    <li class="list-group-item">-->
-<!--    <div class="custom-control custom-checkbox">-->
-<!--        <input type="checkbox" class="custom-control-input" id={{user}}>-->
-<!--        <label class="custom-control-label" for={{user}}>{{ user.email }}</label>-->
-<!--    </div>-->
-<!--    </li>-->
-<!--    {% endfor %}-->
+
  
  
  <form action="{% url 'events:invite_event' %}" method="post">
@@ -36,18 +25,11 @@
     </div>
 
 
-    <li class="list-group-item">
-    Invite:
-    <div class="custom-control custom-checkbox">
-        <input type="checkbox" name="friends" value ={{ user.email }} class="custom-control-input" id={{user}}
-            {% if 'friends' in value %} checked {% endif %}>
-        <label class="custom-control-label" for={{user}}>{{ user.email }}</label>
-    </div>
-    </li>
+ 
     
  
   
-  {{form.users}}
+  {{form.invitees}}
  
     
     
@@ -57,10 +39,7 @@
     
 
     
-<!--    <div class="form-group">-->
-<!--        <label for="friends">Friends:</label>-->
-<!--        <input type="text" name="friends" class="form-control" placeholder="Friends">-->
-<!--    </div>-->
+
     <input type="submit" class="btn btn-primary" value="Submit">
 </form>
 

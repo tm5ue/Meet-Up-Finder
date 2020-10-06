@@ -18,8 +18,8 @@ class Event(models.Model):
     # TODO: tags (sports, music, etc)
     #location =
     #comments = []
-    friends = models.TextField(null=True)
-    users = models.ManyToManyField(User)
+    #friends = models.TextField(null=True)
+    invitees = models.ManyToManyField(User)
 
 
 

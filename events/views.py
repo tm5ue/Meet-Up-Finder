@@ -20,7 +20,7 @@ class Index(ListView):
         Get all Events to display on home page
         :return:
         '''
-        return Event.objects.filter(Q(friends= '')|Q(friends__isnull=True)) #public events
+        return Event.objects.filter(Q(invitees__isnull=True)) #public events
         #(~Q(friends="")|Q(friends=""))
 class AddEvent(TemplateView):
     template_name = 'events/add_event.html'
@@ -69,8 +69,8 @@ class inviteEvent(TemplateView):
             event.author = request.user
             event.pub_date = timezone.localtime()
             event.save()
-            for user in form.cleaned_data['users']:
-                event.users.add(user)
+            for user in form.cleaned_data['invitees']:
+                event.invitees.add(user)
         context = {'form': form}
         return render(request, self.template_name, context)
 #    def get_context_data(self, **kwargs):
@@ -92,7 +92,7 @@ class MyEventsView(generic.ListView):
     template_name = 'events/myEvents.html'
     def get_queryset(self):
         user = User.objects.get(email=self.request.user.email)
-        return Event.objects.filter(Q(author=user))
+        return Event.objects.filter(Q(author=user)|Q(invitees=user))
         #public and private events that you wrote
 class UserView(generic.ListView):
     model= User

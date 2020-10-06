@@ -20,8 +20,8 @@ class EventForm(ModelForm):
 class inviteForm(ModelForm):
     class Meta:
         model = Event
-        fields = ['name', 'description', 'event_date','friends','users']
-    users = forms.ModelMultipleChoiceField(queryset=User.objects.all(),widget=forms.CheckboxSelectMultiple())
+        fields = ['name', 'description', 'event_date','invitees']
+    invitees = forms.ModelMultipleChoiceField(queryset=User.objects.all(),widget=forms.CheckboxSelectMultiple())
 
  
    
