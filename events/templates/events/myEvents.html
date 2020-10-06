@@ -7,24 +7,16 @@
 
 {% if user.is_authenticated %}
     <h1>Events You're Invited To*:</h1>
-        {% for event in object_list%}
-            {% for u in event.invitees.all %}
-                {% ifequal u.invitees user %}
-        <li><a href="{% url 'events:detail' event.id %}">{{ event.name | title }}</a></li>
-            {% endifequal %}
-       {% endfor %}
-{% endfor %}
+
 
 <h1>Events You've Made (and are invited to ;-;):</h1>
         {% for event in object_list%}
           <li><a href="{% url 'events:detail' event.id %}">{{ event.name | title }}</a></li>
         {% endfor %}
 
-    <h1>Events You're Interested In:</h1>
+<h1>Events You're Interested In:</h1>
 
 
-    
-     
 
 {% else %}
     <h1>Log in!</h1>

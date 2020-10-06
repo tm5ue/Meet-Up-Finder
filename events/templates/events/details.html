@@ -16,11 +16,11 @@
 <p>{{ event.pub_date | title }}</p>
 
 
- 
+ <h5> Invites</h5>
 {% for u in event.invitees.all %}
-<h5> Invites</h5>
 <p> {{u}} </p>
 {% empty %}
+<p> Open To All</p>
 {% endfor %}
 
 
