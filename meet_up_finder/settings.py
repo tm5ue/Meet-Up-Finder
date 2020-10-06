@@ -42,7 +42,6 @@ INSTALLED_APPS = [
     'allauth.socialaccount',
     'allauth.socialaccount.providers.google',
     'social_django',
-    'bootstrap4',
 ]
 
 MIDDLEWARE = [
