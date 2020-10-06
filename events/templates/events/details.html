@@ -14,4 +14,18 @@
 <p>{{ event.author | title }}</p>
 <h5>Publish Date </h5>
 <p>{{ event.pub_date | title }}</p>
+
+
+ 
+{% for u in event.invitees.all %}
+<h5> Invites</h5>
+<p> {{u}} </p>
+{% empty %}
+{% endfor %}
+
+
+  
+ 
+
+
 {% endblock %}

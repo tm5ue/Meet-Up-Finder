@@ -7,12 +7,15 @@
 
  
 {% if user.is_authenticated %}
-<h1>Current Events</h1>
-{% for event in object_list%}
-  <li><a href="{% url 'events:detail' event.id %}">{{ event.name | title }}</a></li>
-{% endfor %}
+    
+    <h1>Current Events</h1>
+     
+    {% for event in object_list%}
+    <li><a href="{% url 'events:detail' event.id %}">{{ event.name | title }}</a></li>
+    {% endfor %}
+     
 
 {% else %}
-<h1>Please log in to see events</h1>
+    <h1>Please log in to see events</h1>
 {% endif %}
 {% endblock %}
