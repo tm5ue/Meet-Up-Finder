@@ -93,7 +93,7 @@ class MyEventsView(generic.ListView):
     def get_queryset(self):
         user = User.objects.get(email=self.request.user.email)
         return Event.objects.filter(Q(author=user)|Q(invitees=user))
-        #public and private events that you wrote
+        #public and private events that you wrote / are invited to
 class UserView(generic.ListView):
     model= User
     template_name = 'events/invite.html'
