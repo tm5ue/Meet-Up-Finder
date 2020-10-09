@@ -33,6 +33,8 @@ class SearchResultsView(ListView):
             Q(eventtag__in=EventTag.objects.filter(t__icontains=query))
         ).distinct()
         return event_list
+    # TODO: modify search for multiple keywords
+    # TODO: add filtering
 
 class AddEvent(TemplateView):
     template_name = 'events/add_event.html'
