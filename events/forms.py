@@ -1,6 +1,6 @@
 from django import forms
 from django.forms import ModelForm
-from .models import Event
+from .models import Event, Tag
 from django.contrib.auth.models import User
 
 class DateInput(forms.DateInput):
