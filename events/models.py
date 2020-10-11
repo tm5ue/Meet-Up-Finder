@@ -6,13 +6,12 @@ from django.contrib.auth.models import User
 
 class Event(models.Model):
     name = models.CharField(max_length=200, null=True)
-    description = models.TextField(null=True)
+    description = models.CharField(max_length=2000, null=True)
     pub_date = models.DateTimeField()
-    event_date = models.DateTimeField(null=False, default=timezone.localtime())
+    event_date = models.DateTimeField(null=False, default=timezone.now)
     # start_date = models.DateTimeField(null=False, default=timezone.localtime())
     # end_date = models.DateTimeField(null=False, default=timezone.localtime())
     author = models.CharField(max_length=200, null=False, default="no author")
-    # TODO: fix date input field (find interactive calendar to input date and time)
     # TODO: location (figure out how to integrate maps of some sort similar to https://github.com/caioariede/django-location-field
     # TODO: comments,
     # TODO: tags (sports, music, etc)
