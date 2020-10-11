@@ -20,7 +20,7 @@ deploy:
   provider: heroku
   api_key:
     secure: AQVQPsWCOzFNaqWQ0axpytSn+NbEFD8eJ/2tBs/NNoM2OUb3JxlAWqG6FcLdoMg7w7VGlij7xuZZm3RhzB0aCqMjNDN5VuGN20P+D0RexmQzbhnDOlyZD6PiRdxvDqx1JXVKs6kF4GOlaesu9UbjsVwhS+Lxd2MUd5NybmQwFNNHG105kKQfW11A1diMAzOGceKIOxYuFwDcgTdsNhQzouy4FRb/O1xMmHe/o4V+duQhEFhEt5MKNlhUzBFrV2jVdyh/MW9a3+H++YqUvu6/A8rAAuI5uI6/17Q45FK4X8WwQdL4QRUBLNyAlj/eGg2c63IOk6A+qLXiQPB6CAzNJiz+OfJ9UjDh/czK3jlmotLSa8Zp5/WFrNgfQELNKGEHBowMRnLM5GYEy5KXd6KUJOs2LYDgvkVz/zTISuOuEhiljcMAJO5PTKIZ90FAhP2+OgnVJ0k85hPwJsr01JRTYJIkKY5vB9Iy0VlqxIs63Ng+CTv00EWNDH3YsGCzsl7H3uGHLz9j3TOH+v5ZNQ1DPvgaCjsRCt3UfQDfFGB5L4xboIpMGaRDF6JeOQokX/WG8FntYleVzfw/fXKmlnNwcweywO/w6mSh3rNL4vsYUcckn8TcZNBSNkSpkk/6WJ8bQ8eyuBmXCUfvXQV6fFt/ZOz99Rxu5bD66yYf53GpngI=
-  app: project-1-25
+  app: meetup-finder-1-25
   run: rake db:migrate
   on:
     repo: uva-cs3240-f20/project-1-25
