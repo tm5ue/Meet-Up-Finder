@@ -1,5 +1,7 @@
 from django.db import models
 from django.utils import timezone
+from django.contrib.auth.models import User
+
 # Create your models here.
 
 class Event(models.Model):
@@ -15,6 +17,9 @@ class Event(models.Model):
     # TODO: comments,
     #location =
     #comments = []
+    #friends = models.TextField(null=True)
+    invitees = models.ManyToManyField(User)
+
 
     def add_tags(self, t):
         ''' Add tags from a list to the given event '''
