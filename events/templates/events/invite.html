@@ -1,50 +1,38 @@
 {% extends "base.html" %}
-{% load static %}
+{% block extrahead %}
+{{ form.media }}
+{% endblock %}
 {% block content %}
-
-
-
+    
 {% if user.is_authenticated %}
+    <h1>Add an event</h1>
 
- 
- 
- <form action="{% url 'events:invite_event' %}" method="post">
-    {% csrf_token %}
-    <div class="form-group">
-        <label for="name">Event Name:</label>
-        <input type="text" name="name" class="form-control" placeholder="Name">
-    </div>
-    <div class="form-group">
-        <label for="description">Event Description:</label>
-        <input type="text" name="description" class="form-control" placeholder="Description">
-    </div>
-    <div class="form-group">
-        <label for="event_date">Event Date:</label>
-        <input type="text" name="event_date" class="form-control" placeholder="Event Date">
-    </div>
-
-
- 
+    <form action="{% url 'events:add_event' %}" method="post">
+        {% csrf_token %}
+            <div class="form-group">
+                <label for="name">Event Name:</label>
+                <input type="text" name="name" class="form-control" placeholder="Name">
+            </div>
+            <div class="form-group">
+                <label for="description">Event Description:</label>
+                <input type="text" name="description" class="form-control" placeholder="Description">
+            </div>
+            <div class="form-group">
+                <label for="event_date">Event Date:</label>
+                {{ form.event_date }}
+            </div>
+            <div class="form-group">
+                <label for="tags">Event Tags (List Separated with Semicolons):</label>
+                <input type="text" name="tags" class="form-control" placeholder="Event Tags">
+            </div>
+            {{form.invitees}}
     
- 
-  
-  {{form.invitees}}
- 
-    
-    
- 
-    
-
-    
-
-    
-
-    <input type="submit" class="btn btn-primary" value="Submit">
-</form>
-
+            <br>
+            <input type="submit" class="btn btn-primary" value="Submit" margin-top="15px">
+        </form>
 
 {% else %}
-    <h1>Log in!</h1>
+<h1>Please log in to add events</h1>
 {% endif %}
-{% endblock %}
 
+{% endblock %}

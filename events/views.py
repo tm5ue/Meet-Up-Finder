@@ -11,14 +11,6 @@ from django.contrib.auth.models import User
 from django.db.models import Q
 from bootstrap_datepicker_plus import DateTimePickerInput
 
-class CreateView(generic.edit.CreateView):
-    model = Event
-    fields = ['question_text', 'pub_date']
-    def get_form(self):
-        form = super().get_form()
-        form.fields['pub_date'].widget = DateTimePickerInput()
-        return form
-
 # Create your views here.
 class Index(ListView):
     '''Class for home page'''
@@ -71,10 +63,12 @@ class AddEvent(TemplateView):
         return render(request, self.template_name, {'form': form})
     def get_queryset(self):
         pass
+
 class EventTime(CreateView):
     '''For inputting in the datetime field in the form'''
     model = Event
     form_class = EventForm
+
 class Detail(View):
     template_name = 'events/details.html'
     def get(self, request, event_id):
@@ -83,6 +77,7 @@ class Detail(View):
         context = {'event': event}
         print(context)
         return render(request, self.template_name, context)
+
 class inviteEvent(TemplateView):
     form_class=inviteForm
     template_name = 'events/invite.html'
@@ -94,7 +89,14 @@ class inviteEvent(TemplateView):
         return render(request, self.template_name, {'form': form})
     def post(self, request):
         '''Handles adding a new event'''
+        event_items = {
+            "name": request.POST.get('name', None),
+            "description": request.POST.get('description', None),
+            "event_date": request.POST.get('event_date', None)
+        }
+        form = EventForm(event_items)
         form = inviteForm(request.POST)
+        tags = request.POST.get('tags', None).split(";")
         if form.is_valid():
             event = form.save(commit=False)
             event.author = request.user
