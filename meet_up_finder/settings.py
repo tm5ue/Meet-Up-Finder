@@ -83,7 +83,7 @@ WSGI_APPLICATION = 'meet_up_finder.wsgi.application'
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.postgresql_psycopg2',
-        'NAME': 'meetup_finder',
+        'NAME': 'meetup-finder',
         'USER': 'nickc',
         'PASSWORD': 'meetup-finder',
         'HOST': '127.0.0.1',
