@@ -9,6 +9,15 @@ from .forms import EventForm, inviteForm
 from django.contrib.auth.decorators import user_passes_test
 from django.contrib.auth.models import User
 from django.db.models import Q
+from bootstrap_datepicker_plus import DateTimePickerInput
+
+class CreateView(generic.edit.CreateView):
+    model = Event
+    fields = ['question_text', 'pub_date']
+    def get_form(self):
+        form = super().get_form()
+        form.fields['pub_date'].widget = DateTimePickerInput()
+        return form
 
 # Create your views here.
 class Index(ListView):

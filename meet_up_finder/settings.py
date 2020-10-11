@@ -42,6 +42,8 @@ INSTALLED_APPS = [
     'allauth.socialaccount',
     'allauth.socialaccount.providers.google',
     'social_django',
+    'bootstrap_datepicker_plus',
+    "bootstrap4",
 ]
 
 MIDDLEWARE = [
@@ -138,11 +140,16 @@ AUTHENTICATION_BACKENDS = (
 
 SOCIAL_AUTH_URL_NAMESPACE = 'social'
 
-#try:
-#    SITE_ID = 2
-#except:
-#    SITE_ID = 3
-SITE_ID=3
+
+
+
+try:
+    SITE_ID = 2
+except:
+    SITE_ID = 3
+else:
+    SITE_ID = 1
+ 
 
 LOGIN_REDIRECT_URL = '/'
 LOGOUT_REDIRECT_URL = '/'
