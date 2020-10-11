@@ -17,10 +17,9 @@ class Index(ListView):
     Model=Event
     def get_queryset(self):
         '''
-        Get all Events to display on home page
+        Get public Events to display on home page
         :return:
         '''
-        # return Event.objects.all()
         return Event.objects.filter(Q(invitees__isnull=True)) #public events
 
 class SearchResultsView(ListView):
@@ -77,8 +76,6 @@ class Detail(View):
 class inviteEvent(TemplateView):
     form_class=inviteForm
     template_name = 'events/invite.html'
-    #initial = {User.objects.all(): user.email}
-    #context_object_name = 'objectList'
     def get(self, request):
         '''Handles displaying the empty form'''
         form = self.form_class()
@@ -95,26 +92,12 @@ class inviteEvent(TemplateView):
                 event.invitees.add(user)
         context = {'form': form}
         return render(request, self.template_name, context)
-#    def get_context_data(self, **kwargs):
-#        context = super(inviteEvent, self).get_context_data(**kwargs)
-#        # here's the difference:
-#        context['objectList'] = User.objects.all()
-#        print(context['objectList'])
-#        return context
-     
-#    def get_queryset(self):
-#        return User.objects.all()
-        
-        
-#class inviteEvent(CreateView):
-#    model = Event
-#    fields = ['name', 'description', 'event_date','friends']
         
 class MyEventsView(generic.ListView):
     template_name = 'events/myEvents.html'
     def get_queryset(self):
         user = User.objects.get(email=self.request.user.email)
-        return Event.objects.filter(Q(author=user)|~Q(author=user) & Q(invitees=user)).distinct()
+        return Event.objects.filter(Q(author=user)|~Q(author=user)&Q(invitees=user)).distinct()
         #public and private events that you wrote / are invited to 
 class UserView(generic.ListView):
     model= User
