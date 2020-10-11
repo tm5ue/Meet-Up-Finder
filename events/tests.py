@@ -131,6 +131,19 @@ class SearchResultsTestCase(TestCase):
         self.assertEquals(2, len(returned_events), msg="test_search_valid failed: returned "+str(len(returned_events))+" events instead of 2.")
 
 class InvitesTestCase(TestCase):
+    def setup(self):
+        '''Setup Event testing by creating an Event object with dummy data'''
+
+        user = User.objects.create_user(username='tester',
+                                        email='tester@example.com',
+                                        password="TestPassword")
+        event = Event.objects.create(name='event test name',
+                                     description='test description',
+                                     pub_date=timezone.now(),
+                                     event_date=timezone.now(),
+                                     author=user.username)
+        return event
+
     def test_invite_valid(self):
         '''valid invitation'''
 #        self.client = Client()
