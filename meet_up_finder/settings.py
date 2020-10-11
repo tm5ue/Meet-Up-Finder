@@ -141,11 +141,11 @@ AUTHENTICATION_BACKENDS = (
 SOCIAL_AUTH_URL_NAMESPACE = 'social'
 
 try:
-    SITE_ID = 2
-except:
-    SITE_ID = 3
-else:
     SITE_ID = 1
+except:
+    SITE_ID = 2
+else:
+    SITE_ID = 3
 #SITE_ID=3
 
 LOGIN_REDIRECT_URL = '/'
