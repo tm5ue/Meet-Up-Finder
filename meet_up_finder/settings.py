@@ -43,7 +43,8 @@ INSTALLED_APPS = [
     'allauth.socialaccount.providers.google',
     'social_django',
     'bootstrap_datepicker_plus',
-    "bootstrap4",
+    'bootstrap4',
+    'location_field.apps.DefaultConfig',
 ]
 
 MIDDLEWARE = [
@@ -141,11 +142,11 @@ AUTHENTICATION_BACKENDS = (
 SOCIAL_AUTH_URL_NAMESPACE = 'social'
 
 try:
-    SITE_ID = 1
-except:
     SITE_ID = 2
-else:
+except:
     SITE_ID = 3
+else:
+    SITE_ID = 1
 #SITE_ID=3
 
 LOGIN_REDIRECT_URL = '/'
@@ -157,3 +158,5 @@ SOCIALACCOUNT_PROVIDERS = {
         'AUTH_PARAMS': {'access_type': 'online',}
     }
 }
+
+GOOGLE_MAPS_API_KEY = 'AIzaSyBLxWbenIy7jXNqIWqBBlkE-AOV7T1-K6A'
