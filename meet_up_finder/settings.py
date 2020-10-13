@@ -84,7 +84,7 @@ WSGI_APPLICATION = 'meet_up_finder.wsgi.application'
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.postgresql_psycopg2',
-        'NAME': 'meetup_finder',
+        'NAME': 'meetup-finder',
         'USER': 'nickc',
         'PASSWORD': 'meetup-finder',
         'HOST': '127.0.0.1',
@@ -141,13 +141,13 @@ AUTHENTICATION_BACKENDS = (
 
 SOCIAL_AUTH_URL_NAMESPACE = 'social'
 
-try:
-    SITE_ID = 2
-except:
-    SITE_ID = 3
-else:
-    SITE_ID = 1
-#SITE_ID=3
+#try:
+#    SITE_ID = 1
+#except:
+#    SITE_ID = 2
+#else:
+#    SITE_ID = 3
+SITE_ID=3
 
 LOGIN_REDIRECT_URL = '/'
 LOGOUT_REDIRECT_URL = '/'
