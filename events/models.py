@@ -1,6 +1,8 @@
 from django.db import models
 from django.utils import timezone
 from django.contrib.auth.models import User
+from location_field.models.plain import PlainLocationField
+from geopy.geocoders import Nominatim
 
 # Create your models here.
 
@@ -12,13 +14,11 @@ class Event(models.Model):
     # start_date = models.DateTimeField(null=False, default=timezone.localtime())
     # end_date = models.DateTimeField(null=False, default=timezone.localtime())
     author = models.CharField(max_length=200, null=False, default="no author")
-    # TODO: location (figure out how to integrate maps of some sort similar to https://github.com/caioariede/django-location-field
     # TODO: comments,
-    #location =
     #comments = []
     #friends = models.TextField(null=True)
     invitees = models.ManyToManyField(User)
-
+    location = models.CharField(max_length=2000, null=True)
 
     def add_tags(self, t):
         ''' Add tags from a list to the given event '''
@@ -34,6 +34,28 @@ class Event(models.Model):
 
     def __str__(self):
         return self.name.title()
+
+    def get_location(self):
+        geolocator = Nominatim(user_agent="Event")
+        location = geolocator.geocode(self.location)
+        return location
+
+    def get_latitude(self):
+        geolocator = Nominatim(user_agent="Event")
+        location = geolocator.geocode(self.location)
+        if location is None:
+            return location
+        else:
+            return location.latitude
+
+    def get_longitude(self):
+        geolocator = Nominatim(user_agent="Event")
+        location = geolocator.geocode(self.location)
+        if location is None:
+            return location
+        else:
+            return location.longitude
+
 
 class Tag(models.Model):
     tag = models.CharField(max_length=200, null=True)
