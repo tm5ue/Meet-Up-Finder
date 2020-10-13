@@ -291,18 +291,36 @@ class EventLocationTestCase(TestCase):
     
     def test_consistent_latitude(self):
         '''Check latitude makes sense'''
+        event = self.setup()
+        data = {'name': event.name,
+                'description': event.description,
+                'event_date': event.event_date,
+                'location': event.location,
+                }
         geolocator = Nominatim(user_agent="Test")
         loc = geolocator.geocode("Thornton Hall Charlottesville VA")
         self.assertTrue(event.get_latitude() == loc.latitude)
     
     def test_consistent_longitude(self):
         '''Check longitude makes sense'''
+        event = self.setup()
+        data = {'name': event.name,
+                'description': event.description,
+                'event_date': event.event_date,
+                'location': event.location,
+                }
         geolocator = Nominatim(user_agent="Test")
         loc = geolocator.geocode("Thornton Hall Charlottesville VA")
-        self.assertTrue(event.longitude() == loc.longitude)
+        self.assertTrue(event.get_longitude() == loc.longitude)
     
     def test_consistent_location(self):
         '''Check location makes sense'''
+        event = self.setup()
+        data = {'name': event.name,
+                'description': event.description,
+                'event_date': event.event_date,
+                'location': event.location,
+                }
         geolocator = Nominatim(user_agent="Test")
         loc = geolocator.geocode("Thornton Hall Charlottesville VA")
         self.assertTrue(event.get_location() == loc)
