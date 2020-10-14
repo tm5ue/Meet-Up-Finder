@@ -21,5 +21,5 @@ urlpatterns = [
   
    
     path('events/invite', views.inviteEvent.as_view(), name='invite_event'),
-    path('events/myEvents', views.MyEventsView.as_view(), name='my_events'),
+    path('events/myEvents',views.myEvents,name='my_events'),
 ]

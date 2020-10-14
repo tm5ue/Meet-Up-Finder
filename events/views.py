@@ -106,15 +106,19 @@ class inviteEvent(TemplateView):
 
 register = template.Library()
 
-class MyEventsView(generic.ListView):
-    template_name = 'events/myEvents.html'
-    def get_queryset(self):
-        user = User.objects.get(email=self.request.user.email)
-        return Event.objects.filter(Q(author=user)|Q(invitees=user)).distinct()
-
+        
+def myEvents(request):
+    user = User.objects.get(email=request.user.email)
+    context={
+            'made':Event.objects.filter(Q(author=user)),
+            'invite':Event.objects.filter(Q(invitees=user)),
+        }
+    return render(request,'events/myEvents.html',context)
+    
 class UserView(generic.ListView):
     model= User
     template_name = 'events/invite.html'
     def get_queryset(self):
         return User.objects.all()
     
+
