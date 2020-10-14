@@ -1,6 +1,8 @@
 from django.db import models
 from django.utils import timezone
 from django.contrib.auth.models import User
+from django_google_maps import fields as map_fields
+
 
 # Create your models here.
 
@@ -14,7 +16,8 @@ class Event(models.Model):
     author = models.CharField(max_length=200, null=False, default="no author")
     # TODO: location (figure out how to integrate maps of some sort similar to https://github.com/caioariede/django-location-field
     # TODO: comments,
-    #location =
+    address = map_fields.AddressField(max_length=200, null=True)
+    geolocation = map_fields.GeoLocationField(max_length=100, null=True)
     #comments = []
     #friends = models.TextField(null=True)
     invitees = models.ManyToManyField(User)

@@ -1,0 +1,15 @@
+/*body {*/
+/*    padding-bottom: 10%;*/
+/*}*/
+footer {
+    left: 0;
+    bottom: 0;
+    height: 10%;
+    width: 100%;
+}
+
+#map {
+
+    height: 500px;
+    width: 100%;
+}

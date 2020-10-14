@@ -44,6 +44,7 @@ INSTALLED_APPS = [
     'social_django',
     'bootstrap_datepicker_plus',
     "bootstrap4",
+    'django_google_maps',
 ]
 
 MIDDLEWARE = [
@@ -129,6 +130,9 @@ USE_TZ = True
 # https://docs.djangoproject.com/en/3.1/howto/static-files/
 STATIC_ROOT = os.path.join(os.path.dirname(BASE_DIR), 'static')
 STATIC_URL = '/static/'
+STATICFILES_DIRS = [
+    os.path.join(BASE_DIR, 'static'),
+]
 
 django_heroku.settings(locals())
 
@@ -150,6 +154,10 @@ SITE_ID=3
 
 LOGIN_REDIRECT_URL = '/'
 LOGOUT_REDIRECT_URL = '/'
+
+
+# https://pypi.org/project/django-google-maps/
+GOOGLE_MAPS_API_KEY = 'AIzaSyCnp86opq8HrEDa9k5QWeRzvyyA-0DXTQk'
 
 SOCIALACCOUNT_PROVIDERS = {
     'google': {
