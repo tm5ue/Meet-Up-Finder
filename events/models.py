@@ -1,7 +1,6 @@
 from django.db import models
 from django.utils import timezone
 from django.contrib.auth.models import User
-# from django_google_maps import fields as map_fields
 
 
 # Create your models here.
