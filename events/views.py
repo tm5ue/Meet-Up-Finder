@@ -10,6 +10,9 @@ from django.contrib.auth.decorators import user_passes_test
 from django.contrib.auth.models import User
 from django.db.models import Q
 from bootstrap_datepicker_plus import DateTimePickerInput
+from django import template
+
+
 
 class Index(ListView):
     '''Class for home page'''
@@ -100,12 +103,14 @@ class inviteEvent(TemplateView):
                 event.invitees.add(user)
         context = {'form': form}
         return render(request, self.template_name, context)
-        
+
+register = template.Library()
+
 class MyEventsView(generic.ListView):
     template_name = 'events/myEvents.html'
     def get_queryset(self):
         user = User.objects.get(email=self.request.user.email)
-        return Event.objects.filter(Q(author=user)|~Q(author=user)&Q(invitees=user)).distinct()
+        return Event.objects.filter(Q(author=user)|Q(invitees=user)).distinct()
 
 class UserView(generic.ListView):
     model= User
