@@ -6,18 +6,21 @@
 
 
 {% if user.is_authenticated %}
-    <h1>Events You're Invited To:</h1>
 
-    <h1>Events You've Made:</h1>
-        {% for event in object_list%}
-          <li><a href="{% url 'events:detail' event.id %}">{{ event.name | title }}</a></li>
+<h1>Events You're Invited To:</h1>
+
+    {% for event in invite%}
+      <li><a href="{% url 'events:detail' event.id %}">{{ event.name | title }}</a></li>
+    {% endfor %}
+
+<h1>Events You've Made:</h1>
+        {% for event in made%}
+           <li><a href="{% url 'events:detail' event.id %}">{{ event.name | title }}</a></li>
         {% endfor %}
 
-    <h1>Events You're Interested In:</h1>
+<h1>Events You're Interested In:</h1>
 
 
-    
-     
 
 {% else %}
     <h1>Log in!</h1>

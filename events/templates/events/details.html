@@ -14,17 +14,21 @@
 <p>{{ event.author | title }}</p>
 <h5>Publish Date </h5>
 <p>{{ event.pub_date | title }}</p>
-
-{% if event.friends is not Null %}
-    <h5>Invites </h5>
-    <p>{{ event.friends| title }}</p>
-{% endif %}
-
-<h5> users</h5>
-{% for u in event.users.all %}
-<p> {{u.email}} </p>
+<h5>Tags </h5>
+<p>
+{% if event.eventtag_set.all %}
+{% for eventtag in event.eventtag_set.all %}
+"{{ eventtag.tag | title }}"
 {% endfor %}
- 
-
+{% else %}
+No tags.
+{% endif %}
+</p>
+ <h5> Invites</h5>
+{% for u in event.invitees.all %}
+<p> {{u}} </p>
+{% empty %}
+<p> Open To All</p>
+{% endfor %}
 
 {% endblock %}
