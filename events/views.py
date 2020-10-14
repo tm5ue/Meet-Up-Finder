@@ -88,24 +88,16 @@ class inviteEvent(TemplateView):
         return render(request, self.template_name, {'form': form})
     def post(self, request):
         '''Handles adding a new event'''
-#        event_items = {
-#            "name": request.POST.get('name', None),
-#            "description": request.POST.get('description', None),
-#            "event_date": request.POST.get('event_date', None)
-#        }
-#        form = inviteForm(event_items)
-        
         form = inviteForm(request.POST)
-        tags = request.POST.get('tags', None).split(";")
         if form.is_valid():
+            tags = request.POST.get('tags', None).split(";")
             event = form.save(commit=False)
             event.author = request.user
             event.pub_date = timezone.localtime()
-            event.add_tags(tags)
             event.save()
+            event.add_tags(tags)
             for user in form.cleaned_data['invitees']:
                 event.invitees.add(user)
-            
         context = {'form': form}
         return render(request, self.template_name, context)
         
