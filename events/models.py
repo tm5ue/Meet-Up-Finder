@@ -16,7 +16,6 @@ class Event(models.Model):
     # TODO: comments,
     #location =
     #comments = []
-    #friends = models.TextField(null=True)
     invitees = models.ManyToManyField(User)
 
 

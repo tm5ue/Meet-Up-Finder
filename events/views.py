@@ -11,7 +11,6 @@ from django.contrib.auth.models import User
 from django.db.models import Q
 from bootstrap_datepicker_plus import DateTimePickerInput
 
-# Create your views here.
 class Index(ListView):
     '''Class for home page'''
     template_name = 'events/index.html'
@@ -29,9 +28,12 @@ class SearchResultsView(ListView):
     def get_queryset(self):
         '''Get search criteria and return list of corresponding events'''
         query = self.request.GET.get('q')
+        user = User.objects.get(email=self.request.user.email)
         event_list = Event.objects.filter(
-            Q(name__icontains=query) |
-            Q(eventtag__in=EventTag.objects.filter(t__icontains=query))
+            (Q(invitees__isnull=True)|Q(invitees=user)|Q(author=user))&
+            #either public/invited events/events you wrote
+            (Q(name__icontains=query) |
+            Q(eventtag__in=EventTag.objects.filter(t__icontains=query)))
         ).distinct()
         return event_list
     # TODO: modify search for multiple keywords
@@ -86,21 +88,24 @@ class inviteEvent(TemplateView):
         return render(request, self.template_name, {'form': form})
     def post(self, request):
         '''Handles adding a new event'''
-        event_items = {
-            "name": request.POST.get('name', None),
-            "description": request.POST.get('description', None),
-            "event_date": request.POST.get('event_date', None)
-        }
-        form = EventForm(event_items)
+#        event_items = {
+#            "name": request.POST.get('name', None),
+#            "description": request.POST.get('description', None),
+#            "event_date": request.POST.get('event_date', None)
+#        }
+#        form = inviteForm(event_items)
+        
         form = inviteForm(request.POST)
         tags = request.POST.get('tags', None).split(";")
         if form.is_valid():
             event = form.save(commit=False)
             event.author = request.user
             event.pub_date = timezone.localtime()
+            event.add_tags(tags)
             event.save()
             for user in form.cleaned_data['invitees']:
                 event.invitees.add(user)
+            
         context = {'form': form}
         return render(request, self.template_name, context)
         
@@ -109,7 +114,7 @@ class MyEventsView(generic.ListView):
     def get_queryset(self):
         user = User.objects.get(email=self.request.user.email)
         return Event.objects.filter(Q(author=user)|~Q(author=user)&Q(invitees=user)).distinct()
-        #public and private events that you wrote / are invited to 
+
 class UserView(generic.ListView):
     model= User
     template_name = 'events/invite.html'
