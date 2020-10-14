@@ -20,7 +20,7 @@ class EventForm(ModelForm):
 class inviteForm(ModelForm):
     class Meta:
         model = Event
-        fields = ['name', 'description', 'event_date','invitees',]
+        fields = ['name', 'description', 'event_date','invitees','location',]
         widgets = {
             'event_date': DateTimePickerInput(),
         }
