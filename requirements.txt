@@ -12,11 +12,13 @@ defusedxml==0.6.0
 dj-database-url==0.5.0
 Django==3.1.1
 django-allauth==0.42.0
-django-bootstrap4==2.2.0
 django-bootstrap-datepicker-plus==3.0.5
+django-bootstrap4==2.2.0
 django-crispy-forms==1.9.2
 django-google-api==1.0.1
+django-google-maps==0.12.2
 django-heroku==0.3.1
+django-location-field==2.1.0
 google-api-core==1.22.2
 google-api-python-client==1.12.3
 google-auth==1.22.0
@@ -27,10 +29,11 @@ gunicorn==20.0.4
 heroku==0.1.4
 httplib2==0.18.1
 idna==2.10
+importlib-metadata==1.7.0
 multidict==4.7.6
 oauthlib==3.1.0
 protobuf==3.13.0
-psycopg2==2.8.6
+psycopg2==2.7.5
 psycopg2-binary==2.8.6
 pyasn1==0.4.8
 pyasn1-modules==0.2.8
@@ -47,7 +50,9 @@ social-auth-app-django==4.0.0
 social-auth-core==3.3.3
 soupsieve==2.0.1
 sqlparse==0.3.1
+typing-extensions==3.7.4.3
 uritemplate==3.0.1
 urllib3==1.25.10
 whitenoise==5.2.0
 yarl==1.6.0
+zipp==3.3.0

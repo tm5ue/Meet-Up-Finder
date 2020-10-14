@@ -44,6 +44,7 @@ INSTALLED_APPS = [
     'social_django',
     'bootstrap_datepicker_plus',
     "bootstrap4",
+    'django_google_maps',
 ]
 
 MIDDLEWARE = [
