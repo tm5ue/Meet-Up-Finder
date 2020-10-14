@@ -49,7 +49,8 @@ class AddEvent(TemplateView):
         event_items = {
             "name": request.POST.get('name', None),
             "description": request.POST.get('description', None),
-            "event_date": request.POST.get('event_date', None)
+            "event_date": request.POST.get('event_date', None),
+            "location": request.POST.get('location', None),
         }
         form = EventForm(event_items)
         tags = request.POST.get('tags', None).split(";")
@@ -79,7 +80,7 @@ class Detail(View):
         '''Queries database for an event based on event_id parameter, returns page with details'''
         event = Event.objects.get(id=event_id)
         context = {'event': event}
-        print(context)
+        # print(context)
         return render(request, self.template_name, context)
 
 class inviteEvent(TemplateView):

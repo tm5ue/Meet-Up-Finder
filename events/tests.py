@@ -7,6 +7,7 @@ from events.forms import EventForm, inviteForm
 from django.test import Client
 from events.forms import EventForm, inviteForm
 from django.db.models import Q
+from geopy.geocoders import Nominatim
 
 class EventFormTestCase(TestCase):
     def setup(self):
@@ -29,6 +30,7 @@ class EventFormTestCase(TestCase):
         data = {'name': event.name,
                 'description': event.description,
                 'event_date': event.event_date,
+                'location': event.get_location(),
                 }
         form = EventForm(data=data)
         self.assertTrue(form.is_valid())
@@ -39,7 +41,8 @@ class EventFormTestCase(TestCase):
         event = self.setup()
         data = {'name': '',
                 'description': '',
-                'event_date':  event.event_date}
+                'event_date':  event.event_date,
+                'location': event.get_location(),}
         form = EventForm(data=data)
         self.assertFalse(form.is_valid())
         return data
@@ -247,3 +250,80 @@ class InvitesTestCase(TestCase):
         event = self.setup()
         l = Event.objects.filter(Q(invitees__isnull=True)).count()
         self.assertEquals(l,1)
+
+class EventLocationTestCase(TestCase):
+    def setup(self):
+        '''Make new event with location'''
+
+        user = User.objects.create_user(username='tester',
+                                        email='tester@example.com',
+                                        password="TestPassword")
+        event = Event.objects.create(name='event test name',
+                                     description='test description',
+                                     pub_date=timezone.now(),
+                                     event_date=timezone.now(),
+                                     author=user.username,
+                                     location='Thornton Hall Charlottesville VA',
+                                     )
+        return event
+
+    def test_valid_form(self):
+        '''Test valid form'''
+
+        event = self.setup()
+        data = {'name': event.name,
+                'description': event.description,
+                'event_date': event.event_date,
+                'location': event.location,
+                }
+        form = EventForm(data=data)
+        self.assertTrue(form.is_valid())
+        return data
+
+    def test_invalid_form(self):
+        '''Cannot have an location, thus form is not valid'''
+        event = self.setup()
+        data = {'name': event.name,
+                'description': event.description,
+                'event_date': event.event_date,
+                'location': '',
+                }
+        form = EventForm(data=data)
+        self.assertFalse(form.is_valid())
+        return data
+    
+    def test_consistent_latitude(self):
+        '''Check latitude makes sense'''
+        event = self.setup()
+        data = {'name': event.name,
+                'description': event.description,
+                'event_date': event.event_date,
+                'location': event.location,
+                }
+        geolocator = Nominatim(user_agent="Test")
+        loc = geolocator.geocode("Thornton Hall Charlottesville VA")
+        self.assertTrue(event.get_latitude() == loc.latitude)
+    
+    def test_consistent_longitude(self):
+        '''Check longitude makes sense'''
+        event = self.setup()
+        data = {'name': event.name,
+                'description': event.description,
+                'event_date': event.event_date,
+                'location': event.location,
+                }
+        geolocator = Nominatim(user_agent="Test")
+        loc = geolocator.geocode("Thornton Hall Charlottesville VA")
+        self.assertTrue(event.get_longitude() == loc.longitude)
+    
+    def test_consistent_location(self):
+        '''Check location makes sense'''
+        event = self.setup()
+        data = {'name': event.name,
+                'description': event.description,
+                'event_date': event.event_date,
+                'location': event.location,
+                }
+        geolocator = Nominatim(user_agent="Test")
+        loc = geolocator.geocode("Thornton Hall Charlottesville VA")
+        self.assertTrue(event.get_location() == loc)

@@ -1,6 +1,6 @@
 {% extends "base.html" %}
 {% block extrahead %}
-{{ form.media }}
+    {{ form.media }}
 {% endblock %}
 {% block content %}
     
@@ -20,6 +20,10 @@
             <div class="form-group">
                 <label for="event_date">Event Date:</label>
                 {{ form.event_date }}
+            </div>
+            <div class="form-group">
+                <label for="location">Event Location:</label>
+                <input type="text" name="location" class="form-control" placeholder="Location">
             </div>
             <div class="form-group">
                 <label for="tags">Event Tags (List Separated with Semicolons):</label>

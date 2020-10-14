@@ -14,12 +14,17 @@
         <meta charset="utf-8">
         <title>Meetup Finder</title>
 
+        <link rel="stylesheet" href="{% static 'css/main.css' %}">
+
         <!-- Bootstrap (CSS only) -->
         <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" integrity="sha384-JcKb8q3iqJ61gNV9KGb8thSsNjpSL0n8PARn9HuZOnIxN0hoP+VmmDGMN5t9UJ0Z" crossorigin="anonymous">
 
         <!-- Tempus Dominus Bootstrap 4, Font Awesome -->
         <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/tempusdominus-bootstrap-4/5.1.2/css/tempusdominus-bootstrap-4.min.css" integrity="sha256-XPTBwC3SBoWHSmKasAk01c08M6sIA5gF5+sRxqak2Qs=" crossorigin="anonymous" />
         <link href="https://stackpath.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css" rel="stylesheet" integrity="sha384-wvfXpqpZZVQGK6TAh5PVlGOfQNHSoD2xbE+QkPxCAFlNEevoEH3Sl0sibVcOQVnN" crossorigin="anonymous">
+
+        <!-- MapBox -->
+        <link href='https://api.mapbox.com/mapbox-gl-js/v1.12.0/mapbox-gl.css' rel='stylesheet' />
 
         <nav class="navbar navbar-light bg-light">
             <div class = "container">
@@ -62,6 +67,7 @@
             <nav>
                 {% block content %}
                 {% endblock %}
+                <br>
             </nav>
         </div>
         <!-- Bootstrap JS, Popper.js, and jQuery -->
@@ -75,12 +81,16 @@
         <!-- TempusDominus.js -->
         <script src="https://cdnjs.cloudflare.com/ajax/libs/tempusdominus-bootstrap-4/5.1.2/js/tempusdominus-bootstrap-4.min.js" integrity="sha256-z0oKYg6xiLq3yJGsp/LsY9XykbweQlHl42jHv2XTBz4=" crossorigin="anonymous"></script>
 
+        <!-- MapBox JS -->
+        <script src='https://api.mapbox.com/mapbox-gl-js/v1.12.0/mapbox-gl.js'></script>
     </body>
 
 
-    <footer class="page-footer font-small blue bg-light fixed-bottom">
+    <footer class="font-small blue bg-light">
         <div class="footer-copyright text-center py-3">© 2020 Copyright: Jonathan Mo, Nick Cooney, Simran Kaur, Tanya Mekavibul<br>
             <a target="_blank" rel="noopener noreferrer" href="https://github.com/uva-cs3240-f20/project-1-25/">GitHub</a>
         </div>
     </footer>
+
+
 </html>
