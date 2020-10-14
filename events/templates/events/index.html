@@ -1,29 +1,22 @@
 {% extends "base.html" %}
+{% load static %}
 {% block content %}
 
 {% if user.is_authenticated %}
-    
-    <h1>Current Events</h1>
-     
-    {% for event in object_list%}
-    <li><a href="{% url 'events:detail' event.id %}">{{ event.name | title }}</a></li>
-    {% endfor %}
+    <div class="container">
+        <h1>Current Events</h1>
 
-    <style>
-        .mapboxgl-popup {
-            max-width: 400px;
-            font: 12px/20px 'Helvetica Neue', Arial, Helvetica, sans-serif;
-        }
-    </style>
-
-    <h1>Events Near You<span class="badge badge-primary">New</span></h1>
-    <div class="container" style="display: flex; justify-content: center;"">
-        <div id='map' style='width: 600px; height: 600px;'></div>
+        {% for event in object_list%}
+        <li><a href="{% url 'events:detail' event.id %}">{{ event.name | title }}</a></li>
+        {% endfor %}
     </div>
-    
-    <!-- Buttons for sattelite, street, etc. Messes with events on map... -->
     <br>
-    <div class="container" style="display: flex; justify-content: center;"">
+
+    <div class="container" style="justify-content: center; display: flex">
+        <h1 style="justify-content: center">Events Near You</h1>
+    </div>
+    <!-- Buttons for sattelite, street, etc. Messes with events on map... -->
+    <div class="container" style="display: flex; justify-content: center;">
         <div id="menu" class="btn-group btn-group-toggle" >
             <label class="btn btn-secondary active" for="streets-v11">
                 <input id="streets-v11" type="radio" name="name="rtoggle  autocomplete="off" checked> Streets
@@ -37,7 +30,10 @@
         </div>
     </div>
 
-    <script>
+    <div class="container" style="display: flex; justify-content: center;">
+        <div id='map' style="height: 600px; width: 100%;"></div>
+    </div>
+     <script>
         var longitude = -78.5176329005563; // Default to Charlottesville because why not
         var latitude = 38.008261664962625;
         getLocation();
@@ -45,10 +41,10 @@
         function getLocation() {
             if (navigator.geolocation) {
                 navigator.geolocation.getCurrentPosition(showPosition);
-            } else { 
+            } else {
                 alrt("Geolocation is not supported by this browser.");
             }
-        }    
+        }
 
         function showPosition(position) {
             latitude = position.coords.latitude;
@@ -66,51 +62,56 @@
 
             var layerList = document.getElementById('menu');
             var inputs = layerList.getElementsByTagName('input');
-            
+
             function switchLayer(layer) {
                 var layerId = layer.target.id;
                 map.setStyle('mapbox://styles/mapbox/' + layerId);
             }
-            
+
             for (var i = 0; i < inputs.length; i++) {
                 inputs[i].onclick = switchLayer;
             }
 
             var latitudes = [
                 {% for event in object_list %}
-                    '{{ event.get_latitude }}', 
+                    '{{ event.get_latitude }}',
                 {% endfor %}
             ];
             var longitudes = [
                 {% for event in object_list %}
-                    '{{ event.get_longitude }}', 
+                    '{{ event.get_longitude }}',
                 {% endfor %}
             ];
-            var desciptions = [    
+            var desciptions = [
                 {% for event in object_list %}
-                    '{{ event.description }}', 
+                    '{{ event.description | capfirst }}',
                 {% endfor %}
             ];
             var names = [
                 {% for event in object_list %}
-                    '{{ event.name }}', 
+                    '{{ event.name | title }}',
                 {% endfor %}
             ];
             var dates = [
                 {% for event in object_list %}
-                    '{{ event.event_date }}', 
+                    '{{ event.event_date }}',
                 {% endfor %}
             ];
             var identifiers = [
                 {% for event in object_list %}
-                    '{{ event.name }}' + Math.random().toString(36).substr(2, 5), 
+                    '{{ event.name }}' + Math.random().toString(36).substr(2, 5),
+                {% endfor %}
+            ];
+            var ids = [
+                {% for event in object_list %}
+                    '{{ event.id }}',
                 {% endfor %}
             ];
 
             // Add zoom and rotation controls to the map.
             map.addControl(new mapboxgl.NavigationControl());
 
-            map.on('load', function () {  
+            map.on('load', function () {
                 for (let i = 0; i < names.length; i++) {
                     map.addSource(identifiers[i], {
                         'type': 'geojson',
@@ -121,7 +122,7 @@
                                 'type': 'Feature',
                                 'properties': {
                                     'description':
-                                    '<strong>' + names[i] + '<p>'+ desciptions[i] + '<br>' + dates[i] + '</p>',
+                                    '<strong><a href="/events/' + ids[i] + '/">' + names[i] + '</a>' + '<p>'+ desciptions[i] + '<br>' + dates[i] + '</p>',
                                     'icon': 'information'
                                 },
                                 'geometry': {
@@ -146,41 +147,41 @@
                             'icon-allow-overlap': true
                         }
                     });
-                
+
                     // When a click event occurs on a feature in the places layer, open a popup at the
                     // location of the feature, with description HTML from its properties.
                     map.on('click', identifiers[i], function (e) {
                         var coordinates = e.features[0].geometry.coordinates.slice();
                         var description = e.features[0].properties.description;
-                        
+
                         // Ensure that if the map is zoomed out such that multiple
                         // copies of the feature are visible, the popup appears
                         // over the copy being pointed to.
                         while (Math.abs(e.lngLat.lng - coordinates[0]) > 180) {
                             coordinates[0] += e.lngLat.lng > coordinates[0] ? 360 : -360;
                         }
-                        
+
                         new mapboxgl.Popup()
                         .setLngLat(coordinates)
                         .setHTML(description)
                         .addTo(map);
                     });
-                    
+
                     // Change the cursor to a pointer when the mouse is over the places layer.
                     map.on('mouseenter', identifiers[i], function () {
                         map.getCanvas().style.cursor = 'pointer';
                     });
-                    
+
                     // Change it back to a pointer when it leaves.
                     map.on('mouseleave', identifiers[i], function () {
                         map.getCanvas().style.cursor = '';
-                    }); 
+                    });
                 }
             });
 
         }
     </script>
-     
+
 
 {% else %}
     <h1>Please log in to see events</h1>
