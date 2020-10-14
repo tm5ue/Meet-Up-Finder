@@ -166,13 +166,15 @@ class InvitesTestCase(TestCase):
                                      pub_date=timezone.now(),
                                      event_date=timezone.now(),
                                      author=user.username,
+                                     location='Centreville VA',
                                      ) #ManytoMany to field is not a valid argument
         invitation.invitees.set(inviteList)
         
         data = {'name': invitation.name,
                 'description': invitation.description,
                 'event_date': invitation.event_date,
-                'invitees':invitation.invitees.all() #querySets always need .all()
+                'invitees':invitation.invitees.all(), #querySets always need .all()
+                'location': invitation.location,
                 }
         form = inviteForm(data=data)
         self.assertTrue(form.is_valid())
