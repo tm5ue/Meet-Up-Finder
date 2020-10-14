@@ -10,7 +10,8 @@ from django.contrib.auth.decorators import user_passes_test
 from django.contrib.auth.models import User
 from django.db.models import Q
 from bootstrap_datepicker_plus import DateTimePickerInput
-
+from django.shortcuts import render
+  
 # Create your views here.
 class Index(ListView):
     '''Class for home page'''
@@ -45,7 +46,8 @@ class AddEvent(TemplateView):
         event_items = {
             "name": request.POST.get('name', None),
             "description": request.POST.get('description', None),
-            "event_date": request.POST.get('event_date', None)
+            "event_date": request.POST.get('event_date', None),
+            "location": request.POST.get('location', None),
         }
         form = EventForm(event_items)
         tags = request.POST.get('tags', None).split(";")

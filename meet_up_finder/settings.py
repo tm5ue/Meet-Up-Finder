@@ -45,6 +45,8 @@ INSTALLED_APPS = [
     'bootstrap_datepicker_plus',
     "bootstrap4",
     'django_google_maps',
+    'bootstrap4',
+    'location_field.apps.DefaultConfig',
 ]
 
 MIDDLEWARE = [
@@ -165,3 +167,5 @@ SOCIALACCOUNT_PROVIDERS = {
         'AUTH_PARAMS': {'access_type': 'online',}
     }
 }
+
+GOOGLE_MAPS_API_KEY = 'AIzaSyBLxWbenIy7jXNqIWqBBlkE-AOV7T1-K6A'

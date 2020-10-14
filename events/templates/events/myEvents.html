@@ -3,15 +3,13 @@
 {% block content %}
 
 
-
-
 {% if user.is_authenticated %}
     <h1>Events You're Invited To*:</h1>
 
 
 <h1>Events You've Made (and are invited to ;-;):</h1>
         {% for event in object_list%}
-          <!-- <li><a href="{% url 'events:detail' event.id %}">{{ event.name | title }}</a></li> -->
+          <li><a href="{% url 'events:detail' event.id %}">{{ event.name | title }}</a></li>
         {% endfor %}
 
 <h1>Events You're Interested In:</h1>
