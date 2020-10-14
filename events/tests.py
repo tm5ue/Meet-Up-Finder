@@ -110,6 +110,7 @@ class SearchResultsTestCase(TestCase):
     def test_search_name(self):
         event_list = self.event_setup()
         c = Client()
+        c.login(username='tester', password='TestPassword')
         response = c.get('/search/?q=one')
         returned_events = list(response.context['event_list'])
         self.assertEquals(1, len(returned_events), msg="test_search_valid failed: returned "+str(len(returned_events))+" events instead of 1.")
@@ -118,6 +119,7 @@ class SearchResultsTestCase(TestCase):
     def test_search_tag(self):
         event_list = self.event_setup()
         c = Client()
+        c.login(username='tester', password='TestPassword')
         response = c.get('/search/?q=test1')
         returned_events = list(response.context['event_list'])
         self.assertEquals(1, len(returned_events), msg="test_search_valid failed: returned "+str(len(returned_events))+" events instead of 1.")
@@ -126,6 +128,7 @@ class SearchResultsTestCase(TestCase):
     def test_search_duplicate(self):
         event_list = self.event_setup()
         c = Client()
+        c.login(username='tester', password='TestPassword')
         response = c.get('/search/?q=test2')
         returned_events = list(response.context['event_list'])
         self.assertEquals(2, len(returned_events), msg="test_search_valid failed: returned "+str(len(returned_events))+" events instead of 2.")
