@@ -4,15 +4,25 @@ from django.views import generic
 from django.views.generic import TemplateView, CreateView
 from django.views.generic.list import ListView, View
 from django.utils import timezone
-from .models import Event, Tag, EventTag
-from .forms import EventForm, inviteForm
+from .models import Event, Tag, EventTag, Comment
+from .forms import EventForm, inviteForm, CommentForm
 from django.contrib.auth.decorators import user_passes_test
 from django.contrib.auth.models import User
 from django.db.models import Q
 from bootstrap_datepicker_plus import DateTimePickerInput
 from django import template
-
-
+from django.conf import settings
+# from django.contrib.sites.models import Site
+#
+# class SiteMiddleware(object):
+#     def process_request(self, request):
+#         try:
+#             current_site = Site.objects.get(domain=request.get_host())
+#         except Site.DoesNotExist:
+#             current_site = Site.objects.get(id=settings.DEFAULT_SITE_ID)
+#
+#         request.current_site = current_site
+#         settings.SITE_ID = current_site.id
 
 class Index(ListView):
     '''Class for home page'''
@@ -69,19 +79,59 @@ class AddEvent(TemplateView):
     def get_queryset(self):
         pass
 
+class AddComment(ListView):
+    template_name = 'events/details.html'
+    def post(self, request):
+        comment_items = {
+            "name": request.POST.get('name'),
+            "description": request.POST.get('description'),
+        }
+        form = CommentForm(comment_items)
+        if form.is_valid():
+            comment = form.save(commit=False)
+            comment.author = request.user
+            comment.pub_date = timezone.localtime()
+            comment.save()
+        context = {'form': form}
+        return render(request, self.template_name, context)
+
+    def get(self, request):
+        form = CommentForm
+        return render(request, self.template_name, {'form': form})
+
 class EventTime(CreateView):
     '''For inputting in the datetime field in the form'''
     model = Event
     form_class = EventForm
 
-class Detail(View):
+# class Detail(View):
+def post_detail(request, event_id):
     template_name = 'events/details.html'
-    def get(self, request, event_id):
-        '''Queries database for an event based on event_id parameter, returns page with details'''
-        event = Event.objects.get(id=event_id)
-        context = {'event': event}
-        # print(context)
-        return render(request, self.template_name, context)
+
+    event = Event.objects.get(id=event_id)
+    comments = event.comments.all()
+    new_comment = None
+    if request.method == 'POST':
+        comment_items = {
+            "name": request.POST.get('name'),
+            "description": request.POST.get('description'),
+        }
+        form = CommentForm(comment_items)
+        if form.is_valid():
+            new_comment = form.save(commit=False)
+            new_comment.author = request.user
+            new_comment.pub_date = timezone.localtime()
+            new_comment.post_id = event_id
+            new_comment.save()
+    else: # GET instead of POST
+        form = CommentForm()
+    context = {
+        'event': event,
+        'comments': comments,
+        'new_comment': new_comment,
+        'form': form,
+    }
+    return render(request, template_name, context)
 
 class inviteEvent(TemplateView):
     form_class=inviteForm
@@ -121,5 +171,3 @@ class UserView(generic.ListView):
     template_name = 'events/invite.html'
     def get_queryset(self):
         return User.objects.all()
-    
-
