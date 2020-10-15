@@ -56,7 +56,7 @@
             <h5>Current Comments: </h5>
                 {% for comment in comments %}
                     <ul>
-                        <li>{{ comment.name | title }} -- {{ comment.author | capfirst }} </li>
+                        <li>{{ comment.name | title }} -- {{ comment.author | capfirst }} on {{ comment.pub_date }}</li>
                         <p>&nbsp; &nbsp; &nbsp; &nbsp; {{ comment.description }}</p>
                     </ul>
                 {% endfor %}
