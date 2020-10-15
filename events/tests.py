@@ -2,10 +2,10 @@ from django.test import TestCase, Client
 # Create your tests here.
 from django.contrib.auth.models import User
 from django.utils import timezone
-from events.models import Event, Tag, EventTag
+from events.models import Event, Tag, EventTag, Comment
 from events.forms import EventForm, inviteForm
 from django.test import Client
-from events.forms import EventForm, inviteForm
+from events.forms import EventForm, inviteForm, CommentForm
 from django.db.models import Q
 from geopy.geocoders import Nominatim
 
@@ -46,6 +46,55 @@ class EventFormTestCase(TestCase):
         form = EventForm(data=data)
         self.assertFalse(form.is_valid())
         return data
+
+class CommentFormTestCase(TestCase):
+    def setup(self):
+        '''Setup Event testing by creating User, Event, and Comment objects with dummy data'''
+
+        user = User.objects.create_user(username='tester',
+                                        email='tester@example.com',
+                                        password="TestPassword")
+        event = Event.objects.create(name='event test name',
+                                     description='test description',
+                                     pub_date=timezone.now(),
+                                     event_date=timezone.now(),
+                                     author=user.username,
+                                     id=1)
+        comment = Comment.objects.create(post=event,
+                                         name='comment test name',
+                                         description='comment test description',
+                                         pub_date=timezone.now(),
+                                         author=user.username,
+                                         post_id=event.id)
+        return comment
+
+    def test_valid_comment_form(self):
+        '''Valid comment form, has name and description filled'''
+
+        comment = self.setup()
+        data = {
+            'name': 'comment test',
+            'description': 'description test',
+            'pub_date': comment.pub_date,
+            'author': comment.author,
+            'post_id': comment.post_id,
+        }
+        form = CommentForm(data=data)
+        self.assertTrue(form.is_valid())
+
+    def test_invalid_comment_form(self):
+        '''Invalid comment form, does not have name and description filled'''
+
+        comment = self.setup()
+        data = {
+            'name': '',
+            'description': '',
+            'pub_date': comment.pub_date,
+            'author': comment.author,
+            'post_id': comment.post_id,
+        }
+        form = CommentForm(data=data)
+        self.assertFalse(form.is_valid())
 
 class TagAdditionTestCase(TestCase):
     def event_setup(self):
