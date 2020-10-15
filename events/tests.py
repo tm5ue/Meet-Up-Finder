@@ -70,6 +70,7 @@ class CommentFormTestCase(TestCase):
 
     def test_valid_comment_form(self):
         '''Valid comment form, has name and description filled'''
+
         comment = self.setup()
         data = {
             'name': 'comment test',
