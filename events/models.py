@@ -24,12 +24,13 @@ class Event(models.Model):
         t_set = set(t) # eliminate duplicates
         if next(iter(t_set)) != "":
             for tag_whitespace in t_set:
-                tag = tag_whitespace.strip() # remove leading and trailing whitespace
-                if not Tag.objects.filter(tag=tag):
-                    t = Tag(tag=tag)
-                    t.save()
-                et = EventTag(e=self.name, t=tag, event=self, tag=Tag.objects.get(tag=tag))
-                et.save()
+                tag = tag_whitespace.strip().lower() # remove leading and trailing whitespace + make lowercase
+                if tag != "":
+                    if not Tag.objects.filter(tag=tag):
+                        t = Tag(tag=tag)
+                        t.save()
+                    et = EventTag(e=self.name, t=tag, event=self, tag=Tag.objects.get(tag=tag))
+                    et.save()
 
     def __str__(self):
         return self.name.title()
