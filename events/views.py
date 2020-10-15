@@ -79,26 +79,6 @@ class AddEvent(TemplateView):
     def get_queryset(self):
         pass
 
-class AddComment(ListView):
-    template_name = 'events/details.html'
-    def post(self, request):
-        comment_items = {
-            "name": request.POST.get('name'),
-            "description": request.POST.get('description'),
-        }
-        form = CommentForm(comment_items)
-        if form.is_valid():
-            comment = form.save(commit=False)
-            comment.author = request.user
-            comment.pub_date = timezone.localtime()
-            comment.save()
-        context = {'form': form}
-        return render(request, self.template_name, context)
-
-    def get(self, request):
-        form = CommentForm
-        return render(request, self.template_name, {'form': form})
-
 class EventTime(CreateView):
     '''For inputting in the datetime field in the form'''
     model = Event
