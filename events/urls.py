@@ -16,7 +16,7 @@ urlpatterns = [
     path('logout', LogoutView.as_view(template_name='events/index.html'), name='logout'),
     
     path('events/add', views.AddEvent.as_view(), name='add_event'),
-    path('events/<int:event_id>/', views.Detail.as_view(), name='detail'),
+    path('events/<int:event_id>/', views.post_detail, name='detail'),
     path('search/', views.SearchResultsView.as_view(), name='search_results'),
   
    

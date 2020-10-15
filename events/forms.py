@@ -1,6 +1,6 @@
 from django import forms
 from django.forms import ModelForm
-from .models import Event, Tag
+from .models import Event, Tag, Comment
 from django.contrib.auth.models import User
 from bootstrap_datepicker_plus import DatePickerInput, TimePickerInput, DateTimePickerInput, MonthPickerInput, YearPickerInput
 from location_field.models.plain import PlainLocationField
@@ -16,6 +16,11 @@ class EventForm(ModelForm):
         widgets = {
             'event_date': DateTimePickerInput(),
         }  
+
+class CommentForm(ModelForm):
+    class Meta:
+        model = Comment
+        fields = ['name', 'description']
 
 class inviteForm(ModelForm):
     class Meta:

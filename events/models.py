@@ -55,6 +55,18 @@ class Event(models.Model):
         else:
             return location.longitude
 
+class Comment(models.Model):
+    post = models.ForeignKey(Event, on_delete=models.CASCADE, related_name='comments')
+    name = models.CharField(max_length=80)
+    description = models.TextField()
+    pub_date = models.DateTimeField(auto_now_add=True)
+    author = models.CharField(max_length=200, null=False, default="no author")
+
+    class Meta:
+        ordering = ['pub_date']
+
+    def __str__(self):
+        return 'Comment {} by {}'.format(self.body, self.name)
 
 class Tag(models.Model):
     tag = models.CharField(max_length=200, null=True)
