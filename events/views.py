@@ -49,15 +49,14 @@ class SearchResultsView(ListView):
         queries = normalize_query(self.request.GET.get('q'))
         user = User.objects.get(email=self.request.user.email)
         name_query = reduce(or_, (Q(name__icontains=query) for query in queries))
-        eventtag_query = reduce(or_, (Q(eventtag__in=EventTag.objects.filter(t__icontains=query)) for query in queries))
+        tag_query = reduce(or_, (Q(tags__icontains=query) for query in queries))
         location_query = reduce(or_, (Q(location__icontains=query) for query in queries))
         event_list = Event.objects.filter(
             (Q(invitees__isnull=True) | Q(invitees=user) | Q(author=user)) & #either public/invited events/events you wrote
-            (name_query | eventtag_query | location_query)
+            (name_query | tag_query | location_query)
         ).distinct()
         return event_list  
     # TODO: add filtering
-    # TODO: account for new tags
 
 class AddEvent(TemplateView):
     template_name = 'events/add_event.html'
