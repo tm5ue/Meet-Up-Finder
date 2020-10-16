@@ -149,13 +149,15 @@ class SearchResultsTestCase(TestCase):
                                      description='test description',
                                      pub_date=timezone.now(),
                                      event_date=timezone.now(),
-                                     author=user.username)
+                                     author=user.username, 
+                                     location='Tysons Corner Mall')
         event1.add_tags({"test1", "test2"})
         event2 = Event.objects.create(name='two',
                                      description='test description',
                                      pub_date=timezone.now(),
                                      event_date=timezone.now(),
-                                     author=user.username)
+                                     author=user.username, 
+                                     location='Leesburg Premium Outlets')
         event2.add_tags({"test2", "test3"})
         return [event1, event2]
 
@@ -165,8 +167,8 @@ class SearchResultsTestCase(TestCase):
         c.login(username='tester', password='TestPassword')
         response = c.get('/search/?q=one')
         returned_events = list(response.context['event_list'])
-        self.assertEquals(1, len(returned_events), msg="test_search_valid failed: returned "+str(len(returned_events))+" events instead of 1.")
-        self.assertEquals(event_list[0], returned_events[0], msg="test_search_valid failed: returned "+str(returned_events[0])+" events instead of "+str(event_list[0]))
+        self.assertEquals(1, len(returned_events), msg="test_search_name failed: returned "+str(len(returned_events))+" events instead of 1.")
+        self.assertEquals(event_list[0], returned_events[0], msg="test_search_name failed: returned "+str(returned_events[0])+" events instead of "+str(event_list[0]))
 
     def test_search_tag(self):
         event_list = self.event_setup()
@@ -174,8 +176,8 @@ class SearchResultsTestCase(TestCase):
         c.login(username='tester', password='TestPassword')
         response = c.get('/search/?q=test1')
         returned_events = list(response.context['event_list'])
-        self.assertEquals(1, len(returned_events), msg="test_search_valid failed: returned "+str(len(returned_events))+" events instead of 1.")
-        self.assertEquals(event_list[0], returned_events[0], msg="test_search_valid failed: returned "+str(returned_events[0])+" events instead of "+str(event_list[0]))
+        self.assertEquals(1, len(returned_events), msg="test_search_tag failed: returned "+str(len(returned_events))+" events instead of 1.")
+        self.assertEquals(event_list[0], returned_events[0], msg="test_search_tag failed: returned "+str(returned_events[0])+" events instead of "+str(event_list[0]))
 
     def test_search_duplicate(self):
         event_list = self.event_setup()
@@ -183,7 +185,40 @@ class SearchResultsTestCase(TestCase):
         c.login(username='tester', password='TestPassword')
         response = c.get('/search/?q=test2')
         returned_events = list(response.context['event_list'])
-        self.assertEquals(2, len(returned_events), msg="test_search_valid failed: returned "+str(len(returned_events))+" events instead of 2.")
+        self.assertEquals(2, len(returned_events), msg="test_search_duplicate failed: returned "+str(len(returned_events))+" events instead of 2.")
+
+    def test_search_multiple_tags(self):
+        event_list = self.event_setup()
+        c = Client()
+        c.login(username='tester', password='TestPassword')
+        response = c.get('/search/?q=test1+test3')
+        returned_events = list(response.context['event_list'])
+        self.assertEquals(2, len(returned_events), msg="test_search_duplicate failed: returned "+str(len(returned_events))+" events instead of 2.")
+    
+    def test_search_multiple_names(self):
+        event_list = self.event_setup()
+        c = Client()
+        c.login(username='tester', password='TestPassword')
+        response = c.get('/search/?q=one+two')
+        returned_events = list(response.context['event_list'])
+        self.assertEquals(2, len(returned_events), msg="test_search_duplicate failed: returned "+str(len(returned_events))+" events instead of 2.")
+
+    def test_search_location(self):
+        event_list = self.event_setup()
+        c = Client()
+        c.login(username='tester', password='TestPassword')
+        response = c.get('/search/?q=Leesburg')
+        returned_events = list(response.context['event_list'])
+        self.assertEquals(1, len(returned_events), msg="test_search_location failed: returned "+str(len(returned_events))+" events instead of 1.")
+        self.assertEquals(event_list[1], returned_events[0], msg="test_search_location failed: returned "+str(returned_events[0])+" events instead of "+str(event_list[0]))
+
+    def test_search_multiple_location(self):
+        event_list = self.event_setup()
+        c = Client()
+        c.login(username='tester', password='TestPassword')
+        response = c.get('/search/?q=Leesburg+Tysons')
+        returned_events = list(response.context['event_list'])
+        self.assertEquals(2, len(returned_events), msg="test_search_duplicate failed: returned "+str(len(returned_events))+" events instead of 2.")
 
 class InvitesTestCase(TestCase):
     def setup(self):
