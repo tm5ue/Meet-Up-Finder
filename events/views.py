@@ -139,10 +139,17 @@ register = template.Library()
 
         
 def myEvents(request):
-    user = User.objects.get(email=request.user.email)
-    context={
-            'made':Event.objects.filter(Q(author=user)),
-            'invite':Event.objects.filter(Q(invitees=user)),
+    '''Try except since anonymous user does not have email attribute'''
+    try:
+        user = User.objects.get(email=request.user.email)
+        context = {
+            'made': Event.objects.filter(Q(author=user)),
+            'invite': Event.objects.filter(Q(invitees=user)),
+        }
+    except:
+        context = {
+            'made': None,
+            'invite': None,
         }
     return render(request,'events/myEvents.html',context)
     
