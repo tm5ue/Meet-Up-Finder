@@ -19,6 +19,7 @@ django-crispy-forms==1.9.2
 django-google-api==1.0.1
 django-heroku==0.3.1
 django-location-field==2.1.0
+django-reversion==3.0.8
 geopy==2.0.0
 google-api-core==1.22.2
 google-api-python-client==1.12.3

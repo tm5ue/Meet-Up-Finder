@@ -19,10 +19,8 @@
             <p>{{ event.get_location | title }}</p>
         <h5>Tags </h5>
             <p>
-                {% if event.eventtag_set.all %}
-                    {% for eventtag in event.eventtag_set.all %}
-                    "{{ eventtag.tag | title }}"
-                    {% endfor %}
+                {% if event.tags %}
+                    {{ event.tags }}
                 {% else %}
                     No tags.
                 {% endif %}

@@ -12,10 +12,18 @@ class DateInput(forms.DateInput):
 class EventForm(ModelForm):
     class Meta:
         model = Event
-        fields = ['name', 'description', 'event_date', 'location',]
+        fields = ['name', 'description', 'event_date', 'location']
         widgets = {
             'event_date': DateTimePickerInput(),
-        }  
+        }
+
+class EditEventForm(ModelForm):
+    class Meta:
+        model = Event
+        fields = ['name', 'description', 'event_date', 'location']
+        widgets = {
+            'event_date': DateTimePickerInput(),
+        }
 
 class CommentForm(ModelForm):
     class Meta:
