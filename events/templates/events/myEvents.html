@@ -2,23 +2,31 @@
 {% load static %}
 {% block content %}
 
+<link rel="stylesheet" href="{% static 'events/css/style.css' %}">
 
 {% if user.is_authenticated %}
 
-<h1>Events You're Invited To:</h1>
-
-
-    {% for event in invite%}
-      <li><a href="{% url 'events:detail' event.id %}">{{ event.name | title }}</a></li>
-    {% endfor %}
-
 <h1>Events You've Made:</h1>
         {% for event in made%}
-           <li><a href="{% url 'events:detail' event.id %}">{{ event.name | title }}</a></li>
+           <li>
+               <a href="{% url 'events:detail' event.id %}">{{ event.name | title }}</a>
+               <a href="{% url 'events:edit_event' event.id %}" class="btn btn-primary btn-sm" role="button" aria-pressed="true">Edit</a>
+            </li>
         {% endfor %}
+
+<h1>Events You're Invited To:</h1>
+    {% if invite %}
+        {% for event in invite%}
+          <li><a href="{% url 'events:detail' event.id %}">{{ event.name | title }}</a></li>
+        {% endfor %}
+    {% else %}
+        <p>None yet!</p>
+    {% endif %}
+
 
 <h1>Events You're Interested In:</h1>
 
+<!--TODO-->
 
 
 {% else %}
