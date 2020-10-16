@@ -5,27 +5,17 @@ from django.views.generic import TemplateView, CreateView
 from django.views.generic.list import ListView, View
 from django.utils import timezone
 from .models import Event, Tag, EventTag, Comment
-from .forms import EventForm, inviteForm, CommentForm
+from .forms import EventForm, inviteForm, CommentForm, EditEventForm
 from django.contrib.auth.decorators import user_passes_test
 from django.contrib.auth.models import User
 from django.db.models import Q
+from django.contrib.auth.mixins import LoginRequiredMixin
 from bootstrap_datepicker_plus import DateTimePickerInput
 from django import template
 from django.conf import settings
 from functools import reduce
 from operator import or_
 import re
-# from django.contrib.sites.models import Site
-#
-# class SiteMiddleware(object):
-#     def process_request(self, request):
-#         try:
-#             current_site = Site.objects.get(domain=request.get_host())
-#         except Site.DoesNotExist:
-#             current_site = Site.objects.get(id=settings.DEFAULT_SITE_ID)
-#
-#         request.current_site = current_site
-#         settings.SITE_ID = current_site.id
 
 class Index(ListView):
     '''Class for home page'''
@@ -67,6 +57,7 @@ class SearchResultsView(ListView):
         ).distinct()
         return event_list  
     # TODO: add filtering
+    # TODO: account for new tags
 
 class AddEvent(TemplateView):
     template_name = 'events/add_event.html'
@@ -79,13 +70,15 @@ class AddEvent(TemplateView):
             "location": request.POST.get('location', None),
         }
         form = EventForm(event_items)
-        tags = request.POST.get('tags', None).split(";")
+        tags = request.POST.get('tags', None).split(";").strip()
+        tags = [tag.title().strip() for tag in tags]
+        tags = set(tags)
         if form.is_valid():
             event = form.save(commit=False)
             event.author = request.user
             event.pub_date = timezone.localtime()
+            event.tags = ", ".join(tags)
             event.save()
-            event.add_tags(tags)
         context = {'form': form}
         return render(request, self.template_name, context)
     def get(self, request):
@@ -95,12 +88,31 @@ class AddEvent(TemplateView):
     def get_queryset(self):
         pass
 
+class EditEvent(View):
+    template_name = 'events/edit_event.html'
+    model = Event
+    form_class = EditEventForm
+
+    def post(self, request, event_id):
+        pass
+
+    def get(self, request, event_id):
+        event = Event.objects.get(id=event_id)
+        form = EditEventForm(instance=event)
+        context = {'form': form}
+        return render(request, self.template_name, context)\
+
+    def post(self, request, event_id):
+        event = Event.objects.get(id=event_id)
+        form = EditEventForm(request.POST, instance=event)
+        if form.is_valid(): pass
+
 class EventTime(CreateView):
     '''For inputting in the datetime field in the form'''
     model = Event
     form_class = EventForm
 
-# class Detail(View):
+
 def post_detail(request, event_id):
     template_name = 'events/details.html'
 
@@ -132,6 +144,7 @@ def post_detail(request, event_id):
 class inviteEvent(TemplateView):
     form_class=inviteForm
     template_name = 'events/invite.html'
+
     def get(self, request):
         '''Handles displaying the empty form'''
         form = self.form_class()
@@ -139,13 +152,16 @@ class inviteEvent(TemplateView):
     def post(self, request):
         '''Handles adding a new event'''
         form = inviteForm(request.POST)
+
+        tags = request.POST.get('tags', None).split(";").strip()
+        tags = [tag.title().strip() for tag in tags]
+        tags = set(tags)
         if form.is_valid():
-            tags = request.POST.get('tags', None).split(";")
             event = form.save(commit=False)
             event.author = request.user
             event.pub_date = timezone.localtime()
+            event.tags = ", ".join(tags)
             event.save()
-            event.add_tags(tags)
             for user in form.cleaned_data['invitees']:
                 event.invitees.add(user)
         context = {'form': form}
@@ -153,12 +169,18 @@ class inviteEvent(TemplateView):
 
 register = template.Library()
 
-        
 def myEvents(request):
-    user = User.objects.get(email=request.user.email)
-    context={
-            'made':Event.objects.filter(Q(author=user)),
-            'invite':Event.objects.filter(Q(invitees=user)),
+    '''Try except since anonymous user does not have email attribute'''
+    try:
+        user = User.objects.get(email=request.user.email)
+        context = {
+            'made': Event.objects.filter(Q(author=user)),
+            'invite': Event.objects.filter(Q(invitees=user)),
+        }
+    except:
+        context = {
+            'made': None,
+            'invite': None,
         }
     return render(request,'events/myEvents.html',context)
     
