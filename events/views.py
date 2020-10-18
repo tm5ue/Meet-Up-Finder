@@ -12,6 +12,10 @@ from django.db.models import Q
 from django.contrib.auth.mixins import LoginRequiredMixin
 from bootstrap_datepicker_plus import DateTimePickerInput
 from django import template
+from django.conf import settings
+from functools import reduce
+from operator import or_
+import re
 
 class Index(ListView):
     '''Class for home page'''
@@ -24,21 +28,34 @@ class Index(ListView):
         '''
         return Event.objects.filter(Q(invitees__isnull=True)) #public events
 
+def normalize_query(query_string,
+                    findterms=re.compile(r'"([^"]+)"|(\S+)').findall,
+                    normspace=re.compile(r'\s{2,}').sub):
+    ''' Splits the query string in invidual keywords, getting rid of unecessary spaces
+        and grouping quoted words together.
+        Example:
+
+        >>> normalize_query('  some random  words "with   quotes  " and   spaces')
+        ['some', 'random', 'words', 'with quotes', 'and', 'spaces']
+
+    '''
+    return [normspace(' ', (t[0] or t[1]).strip()) for t in findterms(query_string)]
+
 class SearchResultsView(ListView):
     model = Event
     template_name = 'events/search_results.html'
     def get_queryset(self):
         '''Get search criteria and return list of corresponding events'''
-        query = self.request.GET.get('q')
+        queries = normalize_query(self.request.GET.get('q'))
         user = User.objects.get(email=self.request.user.email)
+        name_query = reduce(or_, (Q(name__icontains=query) for query in queries))
+        tag_query = reduce(or_, (Q(tags__icontains=query) for query in queries))
+        location_query = reduce(or_, (Q(location__icontains=query) for query in queries))
         event_list = Event.objects.filter(
-            (Q(invitees__isnull=True)|Q(invitees=user)|Q(author=user))&
-            #either public/invited events/events you wrote
-            (Q(name__icontains=query) |
-            Q(eventtag__in=EventTag.objects.filter(t__icontains=query)))
+            (Q(invitees__isnull=True) | Q(invitees=user) | Q(author=user)) & #either public/invited events/events you wrote
+            (name_query | tag_query | location_query)
         ).distinct()
-        return event_list
-    # TODO: modify search for multiple keywords
+        return event_list  
     # TODO: add filtering
 
 class AddEvent(TemplateView):
