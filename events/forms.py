@@ -30,6 +30,7 @@ class EventForm(ModelForm):
             'event_date': DateTimePickerInput(),
         }
 
+
 class EditEventForm(ModelForm):
     def __init__(self, *args, **kwargs):
         """Initializes the form with crispy form integration."""
