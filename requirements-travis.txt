@@ -1,6 +1,7 @@
 asgiref==3.2.10
 certifi==2020.6.20
 chardet==3.0.4
+crispy-semantic-ui==1.0.2
 dj-database-url==0.5.0
 Django==3.1.1
 django-heroku==0.3.1
@@ -10,6 +11,8 @@ django-bootstrap-datepicker-plus==3.0.5
 django-google-api==1.0.1
 django-location-field==2.1.0
 django-location-field==2.1.0
+django-reversion==3.0.8
+django-social-share==1.4.0
 geopy==2.0.0
 gunicorn==20.0.4
 heroku==0.1.4

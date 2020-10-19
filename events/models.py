@@ -14,22 +14,10 @@ class Event(models.Model):
     # start_date = models.DateTimeField(null=False, default=timezone.localtime())
     # end_date = models.DateTimeField(null=False, default=timezone.localtime())
     author = models.CharField(max_length=200, null=False, default="no author")
-    # TODO: comments,
-    #comments = []
     invitees = models.ManyToManyField(User)
     location = models.CharField(max_length=2000, null=True)
-
-    def add_tags(self, t):
-        ''' Add tags from a list to the given event '''
-        t_set = set(t) # eliminate duplicates
-        if next(iter(t_set)) != "":
-            for tag_whitespace in t_set:
-                tag = tag_whitespace.strip() # remove leading and trailing whitespace
-                if not Tag.objects.filter(tag=tag):
-                    t = Tag(tag=tag)
-                    t.save()
-                et = EventTag(e=self.name, t=tag, event=self, tag=Tag.objects.get(tag=tag))
-                et.save()
+    tags = models.CharField(max_length=200, null=True)
+    email = models.EmailField(max_length=200, null=True)
 
     def __str__(self):
         return self.name.title()
@@ -55,6 +43,21 @@ class Event(models.Model):
         else:
             return location.longitude
 
+class Photo(models.Model):
+    post = models.ForeignKey(Event, on_delete=models.CASCADE, related_name='photos')
+
+class Comment(models.Model):
+    post = models.ForeignKey(Event, on_delete=models.CASCADE, related_name='comments')
+    name = models.CharField(max_length=80)
+    description = models.TextField()
+    pub_date = models.DateTimeField(auto_now_add=True)
+    author = models.CharField(max_length=200, null=False, default="no author")
+
+    class Meta:
+        ordering = ['pub_date']
+
+    def __str__(self):
+        return 'Comment {} by {}'.format(self.body, self.name)
 
 class Tag(models.Model):
     tag = models.CharField(max_length=200, null=True)

@@ -45,6 +45,8 @@ INSTALLED_APPS = [
     'bootstrap_datepicker_plus',
     'bootstrap4',
     'location_field.apps.DefaultConfig',
+    'crispy_forms',
+    'django_social_share',
 ]
 
 MIDDLEWARE = [
@@ -134,6 +136,7 @@ STATICFILES_DIRS = [
     os.path.join(BASE_DIR, 'static'),
 ]
 
+
 django_heroku.settings(locals())
 
 AUTHENTICATION_BACKENDS = (
@@ -151,7 +154,7 @@ SOCIAL_AUTH_URL_NAMESPACE = 'social'
 #    SITE_ID = 2
 #else:
 #    SITE_ID = 3
-SITE_ID=3
+SITE_ID=5
 
 
 LOGIN_REDIRECT_URL = '/'
