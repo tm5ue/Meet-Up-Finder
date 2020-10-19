@@ -63,7 +63,7 @@ class AddEvent(TemplateView):
     def post(self, request):
         '''Handles adding a new event'''
         form = EventForm(request.POST)
-        tags = request.POST.get('tags', None).split(";")
+        tags = request.POST.get('tags', None).split(",")
         tags = [tag.title().strip() for tag in tags]
         tags = set(tags)
         if form.is_valid():
@@ -149,7 +149,7 @@ class inviteEvent(TemplateView):
         '''Handles adding a new event'''
         form = inviteForm(request.POST)
 
-        tags = request.POST.get('tags', None).split(";")
+        tags = request.POST.get('tags', None).split(",")
         tags = [tag.title().strip() for tag in tags]
         tags = set(tags)
         if form.is_valid():
