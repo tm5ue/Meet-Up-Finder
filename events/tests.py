@@ -5,7 +5,7 @@ from django.utils import timezone
 from events.models import Event, Tag, EventTag, Comment
 from events.forms import EventForm, inviteForm
 from django.test import Client
-from events.forms import EventForm, inviteForm, CommentForm
+from events.forms import EventForm, inviteForm, CommentForm, EditEventForm
 from django.db.models import Q
 from geopy.geocoders import Nominatim
 from django.contrib import auth
@@ -51,6 +51,62 @@ class EventFormTestCase(TestCase):
         form = EventForm(data=data)
         self.assertFalse(form.is_valid())
         return data
+
+class EditEventFormTestCase(TestCase):
+    def setup(self):
+        '''Setup Event testing by creating an Event object with dummy data'''
+
+        user = User.objects.create_user(username='tester',
+                                        email='tester@example.com',
+                                        password="TestPassword")
+        event = Event.objects.create(name='event test name',
+                                     description='test description',
+                                     tags='tag1, tag2, tag3',
+                                     pub_date=timezone.now(),
+                                     event_date=timezone.now(),
+                                     author=user.username)
+        return event
+
+    def test_valid_event_edit(self):
+        '''change the event name'''
+        event = self.setup()
+        data = {
+            'name': "EDITED EVENT",
+            'description': event.description,
+            'event_date': event.event_date,
+            'location': event.get_location(),
+            'tags': event.tags,
+            }
+        form = EditEventForm(data, instance=event)
+        if form.is_valid(): form.save()
+        self.assertEquals(data['name'], event.name)
+
+    def test_invalied_event_edit(self):
+        event = self.setup()
+        '''improperly edit'''
+        data = {
+            'name': "EDITED EVENT",
+            'description': event.description,
+            'event_date': event.event_date,
+            'location': event.get_location(),
+            'tags': event.tags,
+        }
+        form = EditEventForm(data, instance=event)
+        # don't save edits
+        self.assertNotEquals(data['name'], event.name)
+
+    def test_invalid_event_form(self):
+        '''cannot have empty description field'''
+        event = self.setup()
+        data = {
+            'name': "EDITED EVENT",
+            'description': "",
+            'event_date': event.event_date,
+            'location': event.get_location(),
+            'tags': event.tags,
+        }
+        form = EditEventForm(data, instance=event)
+        self.assertFalse(form.is_valid())
 
 class CommentFormTestCase(TestCase):
     def setup(self):
