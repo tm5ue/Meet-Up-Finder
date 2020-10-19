@@ -20,7 +20,10 @@ class EventForm(ModelForm):
 
         self.fields['event_date'].widget = DateTimePickerInput()
         for field_name, field in self.fields.items():
-            layout.append(Field(field_name, placeholder=field.label, style="width: 100%;"))
+            if field_name == 'tags':
+                layout.append(Field(field_name, placeholder=field.label+(" (Separated with Semicolons)"), style="width: 100%;"))
+            else:
+                layout.append(Field(field_name, placeholder=field.label, style="width: 100%;"))
         self.helper.layout.append(Submit('submit', 'Submit Public Event'))
 
     class Meta:
@@ -39,7 +42,10 @@ class EditEventForm(ModelForm):
 
         self.fields['event_date'].widget = DateTimePickerInput()
         for field_name, field in self.fields.items():
-            layout.append(Field(field_name, placeholder=field.label, style="width: 100%;"))
+            if field_name == 'tags':
+                layout.append(Field(field_name, placeholder=field.label+(" (Separated with Semicolons)"), style="width: 100%;"))
+            else:
+                layout.append(Field(field_name, placeholder=field.label, style="width: 100%;"))
         self.helper.layout.append(Submit('submit', 'Save Edits'))
     class Meta:
         model = Event
@@ -62,7 +68,10 @@ class inviteForm(ModelForm):
 
         self.fields['event_date'].widget = DateTimePickerInput()
         for field_name, field in self.fields.items():
-            layout.append(Field(field_name, placeholder=field.label, style="width: 100%;"))
+            if field_name == 'tags':
+                layout.append(Field(field_name, placeholder=field.label+(" (Separated with Semicolons)"), style="width: 100%;"))
+            else:
+                layout.append(Field(field_name, placeholder=field.label, style="width: 100%;"))
         self.helper.layout.append(Submit('submit', 'Submit Private Event'))
 
         # self.helper.layout.append(Layout(
