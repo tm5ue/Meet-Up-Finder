@@ -6,6 +6,21 @@
 
 {% if event_list %}
 <h1>Search Results</h1>
+
+<!--
+ <form method="POST" action="{% url 'events:search_results' %}" style="text-align: center;">
+    Sort By:
+    <input type="radio" id="name" name="sort" value="name">
+    <label for="name">Name</label>
+    <input type="radio" id="tags" name="sort" value="tags">
+    <label for="tags">Tags</label>
+    <input type="radio" id="location" name="sort" value="location">
+    <label for="location">Location</label>
+    <input type="radio" id="all" name="sort" value="all">
+    <label for="all">All</label>
+</form>
+-->
+
 {% for event in event_list %}
     <li>
         <a href="{% url 'events:detail' event.id %}">{{ event.name | title }}</a>
