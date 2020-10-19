@@ -1,38 +1,16 @@
 {% extends "base.html" %}
+{% load crispy_forms_tags %}
+
 {% block extrahead %}
     {{ form.media }}
 {% endblock %}
 {% block content %}
     
 {% if user.is_authenticated %}
-    <h1>Add an event</h1>
+    <h1>Add a Public Event</h1>
 
-    <form action="{% url 'events:add_event' %}" method="post">
-        {% csrf_token %}
-            <div class="form-group">
-                <label for="name">Event Name:</label>
-                <input type="text" name="name" class="form-control" placeholder="Name">
-            </div>
-            <div class="form-group">
-                <label for="description">Event Description:</label>
-                <input type="text" name="description" class="form-control" placeholder="Description">
-            </div>
-            <div class="form-group">
-                <label for="event_date">Event Date:</label>
-                {{ form.event_date }}
-            </div>
-            <div class="form-group">
-                <label for="location">Event Location:</label>
-                <input type="text" name="location" class="form-control" placeholder="Location">
-            </div>
-            <div class="form-group">
-                <label for="tags">Event Tags (List Separated with Semicolons):</label>
-                <input type="text" name="tags" class="form-control" placeholder="Event Tags">
-            </div>
-    
-            <br>
-            <input type="submit" class="btn btn-primary" value="Submit" margin-top="15px">
-        </form>
+            {% csrf_token %}
+            {% crispy form %}
 
 {% else %}
 <h1>Please log in to add events</h1>

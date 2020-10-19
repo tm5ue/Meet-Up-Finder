@@ -62,14 +62,8 @@ class AddEvent(TemplateView):
     template_name = 'events/add_event.html'
     def post(self, request):
         '''Handles adding a new event'''
-        event_items = {
-            "name": request.POST.get('name', None),
-            "description": request.POST.get('description', None),
-            "event_date": request.POST.get('event_date', None),
-            "location": request.POST.get('location', None),
-        }
-        form = EventForm(event_items)
-        tags = request.POST.get('tags', None).split(";").strip()
+        form = EventForm(request.POST)
+        tags = request.POST.get('tags', None).split(";")
         tags = [tag.title().strip() for tag in tags]
         tags = set(tags)
         if form.is_valid():
@@ -77,9 +71,11 @@ class AddEvent(TemplateView):
             event.author = request.user
             event.pub_date = timezone.localtime()
             event.tags = ", ".join(tags)
+            event.email = request.user.email
             event.save()
         context = {'form': form}
-        return render(request, self.template_name, context)
+        return redirect('/')
+
     def get(self, request):
         '''Handles displaying the empty form'''
         form = EventForm()
@@ -99,12 +95,16 @@ class EditEvent(View):
         event = Event.objects.get(id=event_id)
         form = EditEventForm(instance=event)
         context = {'form': form}
-        return render(request, self.template_name, context)\
+        return render(request, self.template_name, context)
 
     def post(self, request, event_id):
         event = Event.objects.get(id=event_id)
         form = EditEventForm(request.POST, instance=event)
-        if form.is_valid(): pass
+        if form.is_valid():
+            form.save()
+        context = {'form': form}
+        return redirect("/events/{}".format(event_id))
+
 
 class EventTime(CreateView):
     '''For inputting in the datetime field in the form'''
@@ -119,11 +119,8 @@ def post_detail(request, event_id):
     comments = event.comments.all()
     new_comment = None
     if request.method == 'POST':
-        comment_items = {
-            "name": request.POST.get('name'),
-            "description": request.POST.get('description'),
-        }
-        form = CommentForm(comment_items)
+
+        form = CommentForm(request.POST)
         if form.is_valid():
             new_comment = form.save(commit=False)
             new_comment.author = request.user
@@ -152,7 +149,7 @@ class inviteEvent(TemplateView):
         '''Handles adding a new event'''
         form = inviteForm(request.POST)
 
-        tags = request.POST.get('tags', None).split(";").strip()
+        tags = request.POST.get('tags', None).split(";")
         tags = [tag.title().strip() for tag in tags]
         tags = set(tags)
         if form.is_valid():
@@ -160,11 +157,12 @@ class inviteEvent(TemplateView):
             event.author = request.user
             event.pub_date = timezone.localtime()
             event.tags = ", ".join(tags)
+            event.email = request.user.email
             event.save()
             for user in form.cleaned_data['invitees']:
                 event.invitees.add(user)
         context = {'form': form}
-        return render(request, self.template_name, context)
+        return redirect('/events/myEvents') # go to myevents after successfully adding event
 
 register = template.Library()
 

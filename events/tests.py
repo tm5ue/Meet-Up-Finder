@@ -18,6 +18,7 @@ class EventFormTestCase(TestCase):
                                         password="TestPassword")
         event = Event.objects.create(name='event test name',
                                      description='test description',
+                                     tags='tag1, tag2, tag3',
                                      pub_date=timezone.now(),
                                      event_date=timezone.now(),
                                      author=user.username)
@@ -31,6 +32,7 @@ class EventFormTestCase(TestCase):
                 'description': event.description,
                 'event_date': event.event_date,
                 'location': event.get_location(),
+                'tags': event.tags,
                 }
         form = EventForm(data=data)
         self.assertTrue(form.is_valid())
@@ -56,6 +58,7 @@ class CommentFormTestCase(TestCase):
                                         password="TestPassword")
         event = Event.objects.create(name='event test name',
                                      description='test description',
+                                     tags='tag1, tag2, tag3',
                                      pub_date=timezone.now(),
                                      event_date=timezone.now(),
                                      author=user.username,
@@ -187,6 +190,7 @@ class InvitesTestCase(TestCase):
                                         password="TestPassword")
         event = Event.objects.create(name='event test name',
                                      description='test description',
+                                     tags='tag1, tag2, tag3',
                                      pub_date=timezone.now(),
                                      event_date=timezone.now(),
                                      author=user.username)
@@ -204,17 +208,21 @@ class InvitesTestCase(TestCase):
                                     password="TestPassword")
         inviteList = User.objects.all()
         invitation = Event.objects.create(name='bday',
-                                     description='fun',
-                                     pub_date=timezone.now(),
-                                     event_date=timezone.now(),
-                                     author=user.username,
+                                          description='fun',
+                                          tags='tag1, tag2, tag3',
+                                          pub_date=timezone.now(),
+                                          location="Bodos",
+                                          event_date=timezone.now(),
+                                          author=user.username,
                                      ) #ManytoMany to field is not a valid argument
         invitation.invitees.set(inviteList)
-        
+
         data = {'name': invitation.name,
                 'description': invitation.description,
                 'event_date': invitation.event_date,
-                'invitees':invitation.invitees.all() #querySets always need .all()
+                'location': invitation.location,
+                'invitees':invitation.invitees.all(), #querySets always need .all()
+                'tags': invitation.tags,
                 }
         form = inviteForm(data=data)
         self.assertTrue(form.is_valid())
@@ -239,7 +247,8 @@ class InvitesTestCase(TestCase):
         data = {'name': invitation.name,
                 'description': invitation.description,
                 'event_date': invitation.event_date,
-                'invitees': ''
+                'invitees': '',
+                'tags': invitation.tags,
                 }
         form = inviteForm(data=data)
         self.assertFalse(form.is_valid())
@@ -302,6 +311,7 @@ class EventLocationTestCase(TestCase):
                                         password="TestPassword")
         event = Event.objects.create(name='event test name',
                                      description='test description',
+                                     tags='tag1, tag2, tag3',
                                      pub_date=timezone.now(),
                                      event_date=timezone.now(),
                                      author=user.username,
@@ -317,6 +327,7 @@ class EventLocationTestCase(TestCase):
                 'description': event.description,
                 'event_date': event.event_date,
                 'location': event.location,
+                'tags': event.tags,
                 }
         form = EventForm(data=data)
         self.assertTrue(form.is_valid())

@@ -6,36 +6,7 @@
 {% block content %}
 
     <h1>Edit event</h1>
+        {% csrf_token %}
         {% crispy form %}
-        <input type="submit" class="btn btn-primary" value="Save Changes" margin-top="15px">
-
-<!--    <form action="{% url 'events:add_event' %}" method="post">-->
-<!--        {% csrf_token %}-->
-<!--            <div class="form-group">-->
-<!--                <label for="name">Event Name:</label>-->
-<!--                <input type="text" name="name" class="form-control" placeholder="Name">-->
-<!--            </div>-->
-<!--            <div class="form-group">-->
-<!--                <label for="description">Event Description:</label>-->
-<!--                <input type="text" name="description" class="form-control" placeholder="Description">-->
-<!--            </div>-->
-<!--            <div class="form-group">-->
-<!--                <label for="event_date">Event Date:</label>-->
-<!--                {{ form.event_date }}-->
-<!--            </div>-->
-<!--            <div class="form-group">-->
-<!--                <label for="location">Event Location:</label>-->
-<!--                <input type="text" name="location" class="form-control" placeholder="Location">-->
-<!--            </div>-->
-<!--            <div class="form-group">-->
-<!--                <label for="tags">Event Tags (List Separated with Semicolons):</label>-->
-<!--                <input type="text" name="tags" class="form-control" placeholder="Event Tags">-->
-<!--            </div>-->
-
-<!--            <br>-->
-<!--            <input type="submit" class="btn btn-primary" value="Save Changes" margin-top="15px">-->
-<!--        </form>-->
-
-
 
 {% endblock %}

@@ -17,6 +17,7 @@ class Event(models.Model):
     invitees = models.ManyToManyField(User)
     location = models.CharField(max_length=2000, null=True)
     tags = models.CharField(max_length=200, null=True)
+    email = models.EmailField(max_length=200, null=True)
 
     def __str__(self):
         return self.name.title()
