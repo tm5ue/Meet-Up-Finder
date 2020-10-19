@@ -1,6 +1,10 @@
 {% extends "base.html" %}
 {% load static %}
 {% load crispy_forms_tags %}
+{% load social_share %}
+
+<link rel="stylesheet" href="{% static 'events/font-awesome-4.7.0/css/font-awesome.min.css' %}">
+
 
 {% block content %}
 
@@ -40,6 +44,15 @@
             {% else %}
                 <p> Open To All</p>
             {% endif %}
+
+        <h5>Share</h5>
+            <ul class="fa-ul">
+                <li><i class="fa-li fa fa-facebook"></i>{% post_to_facebook object_or_url 'Facebook' %}</li>
+                <li><i class="fa-li fa fa-twitter"></i>{% post_to_twitter "Check out {{ event.name | title }} at" object_or_url "Twitter" %}</li>
+                <li><i class="fa-li fa fa-linkedin"></i>{% post_to_linkedin "Check out {{ event.name | title }}" object_or_url "LinkedIn" %}</li>
+                <li><i class="fa-li fa fa-envelope"></i>{% send_email "Check out {{ event.name | title }}" "Event is available at:" object_or_url "Email Invite" %}</li>
+                <li><i class="fa-li fa fa-reddit"></i>{% post_to_reddit "Check out {{ event.name | title }}" object_or_url "Reddit" %}</li>
+            </ul>
 
         <h5>Leave a comment: </h5>
             <form method="post">

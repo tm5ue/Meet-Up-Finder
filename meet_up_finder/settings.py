@@ -46,6 +46,7 @@ INSTALLED_APPS = [
     'bootstrap4',
     'location_field.apps.DefaultConfig',
     'crispy_forms',
+    'django_social_share',
 ]
 
 MIDDLEWARE = [

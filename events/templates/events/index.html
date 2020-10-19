@@ -57,7 +57,7 @@
                 zoom: 9, // starting zoom
             });
             var marker = new mapboxgl.Marker()
-                .setLngLat([longitude, latitude])
+                .setLngLat([position.coords.longitude, position.coords.latitude])
                 .addTo(map);
 
             var layerList = document.getElementById('menu');
