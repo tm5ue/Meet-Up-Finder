@@ -10,6 +10,7 @@ from django.db.models import Q
 from geopy.geocoders import Nominatim
 
 class EventFormTestCase(TestCase):
+
     def setup(self):
         '''Setup Event testing by creating an Event object with dummy data'''
 
