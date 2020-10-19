@@ -27,6 +27,7 @@ class inviteForm(ModelForm):
     invitees = forms.ModelMultipleChoiceField(
         queryset = User.objects.all(),
         widget = forms.CheckboxSelectMultiple(),
+        required=False
     )
 
  
