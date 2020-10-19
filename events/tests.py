@@ -517,7 +517,7 @@ class SystemsTestCase(TestCase):
         c.post('/events/%d/' % self.event1.pk, data={'name':'test','description':'test comment'})
         # system registers comment
         self.assertEquals(1, len(Comment.objects.all()),  msg="test_systems_case14 failed: added "+str(len(Comment.objects.all()))+" comments instead of 1.")
-        # event shows up on event page
+        # comment shows up on event page
         response = c.get('/events/%d/' % self.event1.pk)
         comments = list(response.context['comments'])
         self.assertEquals(1, len(comments), msg="test_systems_case14 failed: returned "+str(len(comments))+" events instead of 1.")    
