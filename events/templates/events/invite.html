@@ -8,7 +8,7 @@
 {% if user.is_authenticated %}
     <h1>Add a Private Event</h1>
 
-    <form action="{% url 'events:invite_event' %}" method="post">
+<!--    <form action="{% url 'events:invite_event' %}" method="post">-->
         {% csrf_token %}
  
         {% crispy form %}
