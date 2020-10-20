@@ -5,7 +5,7 @@ from django.views.generic import TemplateView, CreateView
 from django.views.generic.list import ListView, View
 from django.utils import timezone
 from .models import Event, Tag, EventTag, Comment
-from .forms import EventForm, inviteForm, CommentForm, EditEventForm
+from .forms import EventForm, CommentForm, EditEventForm #,inviteForm
 from django.contrib.auth.decorators import user_passes_test
 from django.contrib.auth.models import User
 from django.db.models import Q
@@ -73,8 +73,14 @@ class AddEvent(TemplateView):
             event.tags = ", ".join(tags)
             event.email = request.user.email
             event.save()
+            for user in form.cleaned_data['invitees']:
+                event.invitees.add(user)
+
         context = {'form': form}
-        return redirect('/')
+        if(event.invitees == None):
+            return redirect('/')
+        else:
+            return redirect('/events/myEvents')
 
     def get(self, request):
         '''Handles displaying the empty form'''
@@ -111,7 +117,6 @@ class EventTime(CreateView):
     model = Event
     form_class = EventForm
 
-
 def post_detail(request, event_id):
     template_name = 'events/details.html'
 
@@ -137,35 +142,6 @@ def post_detail(request, event_id):
     }
     return render(request, template_name, context)
 
-class inviteEvent(TemplateView):
-    form_class=inviteForm
-    template_name = 'events/invite.html'
-
-    def get(self, request):
-        '''Handles displaying the empty form'''
-        form = self.form_class()
-        return render(request, self.template_name, {'form': form})
-    def post(self, request):
-        '''Handles adding a new event'''
-        form = inviteForm(request.POST)
-
-        tags = request.POST.get('tags', None).split(",")
-        tags = [tag.title().strip() for tag in tags]
-        tags = set(tags)
-        if form.is_valid():
-            event = form.save(commit=False)
-            event.author = request.user
-            event.pub_date = timezone.localtime()
-            event.tags = ", ".join(tags)
-            event.email = request.user.email
-            event.save()
-            for user in form.cleaned_data['invitees']:
-                event.invitees.add(user)
-        context = {'form': form}
-        return redirect('/events/myEvents') # go to myevents after successfully adding event
-
-register = template.Library()
-
 def myEvents(request):
     '''Try except since anonymous user does not have email attribute'''
     try:
@@ -180,9 +156,12 @@ def myEvents(request):
             'invite': None,
         }
     return render(request,'events/myEvents.html',context)
-    
-class UserView(generic.ListView):
-    model= User
-    template_name = 'events/invite.html'
-    def get_queryset(self):
-        return User.objects.all()
+
+def profile(request, username):
+    a = get_object_or_404(User, username=username)
+    user = User.objects.get(email=request.user.email)
+    context = {
+        'a' : get_object_or_404(User, username=username),
+        'events': Event.objects.filter(Q(author=a)&(Q(invitees__isnull=True)|Q(invitees=user))),
+    }
+    return render(request,'events/authorInfo.html',context)

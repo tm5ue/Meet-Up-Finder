@@ -1,0 +1,15 @@
+{% extends "base.html" %}
+{% load static %}
+{% block content %}
+
+<div class="container">
+    <h1>
+        {{a| title}}
+    </h1>
+    
+    {% for event in events%}
+    <li><a href="{% url 'events:detail' event.id %}">{{ event.name | title }}</a></li>
+    {% endfor %}
+    
+</div>
+{% endblock %}

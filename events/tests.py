@@ -3,9 +3,8 @@ from django.test import TestCase, Client
 from django.contrib.auth.models import User
 from django.utils import timezone
 from events.models import Event, Tag, EventTag, Comment
-from events.forms import EventForm, inviteForm
 from django.test import Client
-from events.forms import EventForm, inviteForm, CommentForm, EditEventForm
+from events.forms import EventForm, CommentForm, EditEventForm
 from django.db.models import Q
 from geopy.geocoders import Nominatim
 from django.contrib import auth
@@ -257,14 +256,9 @@ class InvitesTestCase(TestCase):
 
     def test_invite_valid(self):
         '''valid invitation'''
-#        self.client = Client()
-#        self.client.login(username='test', password='TestPassword')
         user = User.objects.create_user(username='test',
                                         email='tester@example.com',
                                         password="TestPassword")
-        invited = User.objects.create_user(username='dummyA',
-                                    email='a@example.com',
-                                    password="TestPassword")
         inviteList = User.objects.all()
         invitation = Event.objects.create(name='bday',
                                           description='fun',
@@ -273,6 +267,7 @@ class InvitesTestCase(TestCase):
                                           location="Bodos",
                                           event_date=timezone.now(),
                                           author=user.username,
+
                                      ) #ManytoMany to field is not a valid argument
         invitation.invitees.set(inviteList)
 
@@ -283,22 +278,18 @@ class InvitesTestCase(TestCase):
                 'invitees':invitation.invitees.all(), #querySets always need .all()
                 'tags': invitation.tags,
                 }
-        form = inviteForm(data=data)
+        form = EventForm(data=data)
         self.assertTrue(form.is_valid())
         return data
         
     def test_invite_invalid(self):
-        '''valid invitation'''
-#        self.client = Client()
-#        self.client.login(username='test', password='TestPassword')
+        '''invalid invitation'''
         user = User.objects.create_user(username='test',
                                         email='tester@example.com',
                                         password="TestPassword")
-        invited = User.objects.create_user(username='dummyA',
-                                    email='a@example.com',
-                                    password="TestPassword")
         invitation = Event.objects.create(name='bday',
                                      description='fun',
+                                     tags='tag1, tag2, tag3',
                                      pub_date=timezone.now(),
                                      event_date=timezone.now(),
                                      author=user.username,
@@ -306,10 +297,10 @@ class InvitesTestCase(TestCase):
         data = {'name': invitation.name,
                 'description': invitation.description,
                 'event_date': invitation.event_date,
-                'invitees': '',
+                'invitees': '', #makes form invalid
                 'tags': invitation.tags,
                 }
-        form = inviteForm(data=data)
+        form = EventForm(data=data)
         self.assertFalse(form.is_valid())
         return data
         

@@ -19,7 +19,7 @@ urlpatterns = [
     path('events/<int:event_id>/', views.post_detail, name='detail'),
     path('search/', views.SearchResultsView.as_view(), name='search_results'),
     path('events/<int:event_id>/edit_event', views.EditEvent.as_view(), name='edit_event'),
+    path('user/<str:username>/', views.profile, name='authorDetail'),
    
-    path('events/invite', views.inviteEvent.as_view(), name='invite_event'),
     path('events/myEvents', views.myEvents, name='myEvents'),
 ]
