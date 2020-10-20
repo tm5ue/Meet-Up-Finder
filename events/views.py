@@ -75,9 +75,8 @@ class AddEvent(TemplateView):
             event.save()
             for user in form.cleaned_data['invitees']:
                 event.invitees.add(user)
-
         context = {'form': form}
-        if(event.invitees == None):
+        if(not event.invitees.all()):
             return redirect('/')
         else:
             return redirect('/events/myEvents')
