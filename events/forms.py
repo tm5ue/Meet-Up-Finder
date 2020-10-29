@@ -17,18 +17,20 @@ class EventForm(ModelForm):
            super(EventForm, self).__init__(*args, **kwargs)
            helper = self.helper = FormHelper()
            layout = helper.layout = Layout()
+           self.fields['photo'].required = False
            self.fields['invitees'].required = False
            self.fields['event_date'].widget = DateTimePickerInput()
            for field_name, field in self.fields.items():
                if field_name == 'tags':
-                   layout.append(Field(field_name, placeholder=field.label+(" (Separated with Semicolons)"), style="width: 100%;"))
+                   layout.append(Field(field_name, placeholder=field.label+(" (Separated with Commas)"), style="width: 100%;"))
                else:
                    layout.append(Field(field_name, placeholder=field.label, style="width: 100%;"))
-           self.helper.layout.append(Submit('submit', 'Submit Event'))
+           self.helper.add_input(Submit('submit', 'Submit', css_class='btn-primary btn-sm'))
+
        class Meta:
            model = Event
 
-           fields = ['name', 'description', 'event_date', 'location', 'tags', 'invitees']
+           fields = ['name', 'description', 'event_date', 'location', 'tags', 'invitees', 'photo']
 
            widgets = {
                'event_date': DateTimePickerInput(),
@@ -38,6 +40,7 @@ class EventForm(ModelForm):
            widget = forms.CheckboxSelectMultiple(),
            required=False
        )
+
 
 class EditEventForm(ModelForm):
     def __init__(self, *args, **kwargs):
@@ -49,13 +52,16 @@ class EditEventForm(ModelForm):
         self.fields['event_date'].widget = DateTimePickerInput()
         for field_name, field in self.fields.items():
             if field_name == 'tags':
-                layout.append(Field(field_name, placeholder=field.label+(" (Separated with Semicolons)"), style="width: 100%;"))
+                layout.append(Field(field_name, placeholder=field.label+(" (Separated with Commas)"), style="width: 100%;"))
             else:
                 layout.append(Field(field_name, placeholder=field.label, style="width: 100%;"))
-        self.helper.layout.append(Submit('submit', 'Save Edits'))
+        self.helper.layout.append(ButtonHolder(
+            Submit('submit', 'Save Edits', css_class='btn-primary btn-sm'),
+            HTML("""<a href="{% url 'events:delete_event' event.id %}" class="btn-danger btn-sm" >Delete Event</a>""")))
+
     class Meta:
         model = Event
-        fields = ['name', 'description', 'event_date', 'location', 'tags','invitees']
+        fields = ['name', 'description', 'event_date', 'location', 'tags', 'invitees', 'photo']
         widgets = {
             'event_date': DateTimePickerInput(),
         }
@@ -63,6 +69,7 @@ class EditEventForm(ModelForm):
         queryset = User.objects.all(),
         widget = forms.CheckboxSelectMultiple(),
         )
+
 
 class CommentForm(ModelForm):
     class Meta:

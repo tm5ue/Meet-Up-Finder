@@ -14,10 +14,11 @@ class Event(models.Model):
     # start_date = models.DateTimeField(null=False, default=timezone.localtime())
     # end_date = models.DateTimeField(null=False, default=timezone.localtime())
     author = models.CharField(max_length=200, null=False, default="no author")
-    invitees = models.ManyToManyField(User)
+    invitees = models.ManyToManyField(User, null=True, blank=True)
     location = models.CharField(max_length=2000, null=True)
     tags = models.CharField(max_length=200, null=True)
     email = models.EmailField(max_length=200, null=True)
+    photo = models.ImageField(null=True, upload_to='events/images/', max_length=750)
 
     def __str__(self):
         return self.name.title()
@@ -43,9 +44,6 @@ class Event(models.Model):
         else:
             return location.longitude
 
-class Photo(models.Model):
-    post = models.ForeignKey(Event, on_delete=models.CASCADE, related_name='photos')
-
 class Comment(models.Model):
     post = models.ForeignKey(Event, on_delete=models.CASCADE, related_name='comments')
     name = models.CharField(max_length=80)
@@ -57,7 +55,7 @@ class Comment(models.Model):
         ordering = ['pub_date']
 
     def __str__(self):
-        return 'Comment {} by {}'.format(self.body, self.name)
+        return 'Comment {} by {}'.format(self.description, self.author)
 
 class Tag(models.Model):
     tag = models.CharField(max_length=200, null=True)

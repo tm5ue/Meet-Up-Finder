@@ -8,7 +8,7 @@
     
 {% if user.is_authenticated %}
     <h1>Add an Event</h1>
-        
+
             {% csrf_token %}
             {% crispy form %}
 

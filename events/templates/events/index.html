@@ -2,13 +2,41 @@
 {% load static %}
 {% block content %}
 
+<link rel="stylesheet" href="/static/css/main.css">
+
+
 {% if user.is_authenticated %}
     <div class="container">
         <h1>Current Events</h1>
 
-        {% for event in object_list%}
-        <li><a href="{% url 'events:detail' event.id %}">{{ event.name | title }}</a></li>
-        {% endfor %}
+        <table cellpadding="0" cellspacing="0" align="center" class="table" style="display: inline-block; display: block; border-collapse: collapse" align="center">
+            {% for event in object_list%}
+                {% if forloop.counter|divisibleby:4 or forloop.counter == 1 %}
+                <tr>
+                    <th>
+                    <a href="{% url 'events:detail' event.id %}">
+                        <div class="mh-100" style="width: 330px; height: 330px; background-image: url('/media/{{ event.photo.name }}'); background-size: 330px 330px;">
+                            <p style="font-size: 1.2em; color: black; text-align: center;"> {{ event.name|title }} </p>
+                        </div>
+                    </a>
+                </th>
+                {% else %}
+                <th>
+                    <a href="{% url 'events:detail' event.id %}">
+                        <div class="mh-100"  style="width: 330px; height: 330px; background-image: url('/media/{{ event.photo.name }}'); background-size: 330px 330px;">
+                            <p style="font-size: 1.2em; color: black; text-align: center;"> {{ event.name|title }} </p>
+                        </div>
+                    </a>
+                </th>
+                {% endif %}
+
+                {% if forloop.counter|divisibleby:3 %}
+                </tr>
+                {% elif forloop.last %}
+                </tr>
+                {% endif %}
+            {% endfor %}
+        </table>
     </div>
     <br>
 
