@@ -34,10 +34,8 @@ def normalize_query(query_string,
     ''' Splits the query string in invidual keywords, getting rid of unecessary spaces
         and grouping quoted words together.
         Example:
-
         >>> normalize_query('  some random  words "with   quotes  " and   spaces')
         ['some', 'random', 'words', 'with quotes', 'and', 'spaces']
-
     '''
     return [normspace(' ', (t[0] or t[1]).strip()) for t in findterms(query_string)]
 
@@ -55,14 +53,14 @@ class SearchResultsView(ListView):
             (Q(invitees__isnull=True) | Q(invitees=user) | Q(author=user)) & #either public/invited events/events you wrote
             (name_query | tag_query | location_query)
         ).distinct()
-        return event_list  
+        return event_list
     # TODO: add filtering
 
 class AddEvent(TemplateView):
     template_name = 'events/add_event.html'
     def post(self, request):
         '''Handles adding a new event'''
-        form = EventForm(request.POST)
+        form = EventForm(request.POST, request.FILES)
         tags = request.POST.get('tags', None).split(",")
         tags = [tag.title().strip() for tag in tags]
         tags = set(tags)
@@ -77,7 +75,7 @@ class AddEvent(TemplateView):
                 event.invitees.add(user)
         context = {'form': form}
         if(not event.invitees.all()):
-            return redirect('/')
+            return redirect('/events/{}'.format(event.id))
         else:
             return redirect('/events/myEvents')
 
@@ -99,7 +97,7 @@ class EditEvent(View):
     def get(self, request, event_id):
         event = Event.objects.get(id=event_id)
         form = EditEventForm(instance=event)
-        context = {'form': form}
+        context = {'form': form, 'event': event}
         return render(request, self.template_name, context)
 
     def post(self, request, event_id):
@@ -110,6 +108,10 @@ class EditEvent(View):
         context = {'form': form}
         return redirect("/events/{}".format(event_id))
 
+def delete_event(request, event_id):
+    event = Event.objects.get(id=event_id)
+    event.delete()
+    return redirect("/events/myEvents")
 
 class EventTime(CreateView):
     '''For inputting in the datetime field in the form'''

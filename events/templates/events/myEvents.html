@@ -11,7 +11,8 @@
            <li>
                <a href="{% url 'events:detail' event.id %}">{{ event.name | title }}</a>
                <a href="{% url 'events:edit_event' event.id %}" class="btn btn-primary btn-sm" role="button" aria-pressed="true">Edit</a>
-            </li>
+               <a href="{% url 'events:delete_event' event.id %}" class="btn-danger btn-sm" >Delete</a>
+           </li>
         {% endfor %}
 
 <h1>Events You're Invited To:</h1>
