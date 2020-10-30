@@ -10,28 +10,18 @@
         <h1>Current Events</h1>
 
         <table cellpadding="0" cellspacing="0" align="center" class="table" style="display: inline-block; display: block; border-collapse: collapse" align="center">
-            {% for event in object_list%}
-                {% if forloop.counter|divisibleby:4 or forloop.counter == 1 %}
                 <tr>
+            {% for event in object_list%}
                     <th>
-                    <a href="{% url 'events:detail' event.id %}">
-                        <div class="mh-100" style="width: 330px; height: 330px; background-image: url('/media/{{ event.photo.name }}'); background-size: 330px 330px;">
-                            <p style="font-size: 1.2em; color: black; text-align: center;"> {{ event.name|title }} </p>
-                        </div>
-                    </a>
-                </th>
-                {% else %}
-                <th>
-                    <a href="{% url 'events:detail' event.id %}">
-                        <div class="mh-100"  style="width: 330px; height: 330px; background-image: url('/media/{{ event.photo.name }}'); background-size: 330px 330px;">
-                            <p style="font-size: 1.2em; color: black; text-align: center;"> {{ event.name|title }} </p>
-                        </div>
-                    </a>
-                </th>
-                {% endif %}
-
+                        <a href="{% url 'events:detail' event.id %}">
+                            <div class="mh-100" style="width: 330px; height: 330px; background-image: url('/media/{{ event.photo.name }}'); background-size: 330px 330px;">
+                                <p style="font-size: 1.2em; color: black; text-align: center;"> {{ event.name|title }} </p>
+                            </div>
+                        </a>
+                    </th>
                 {% if forloop.counter|divisibleby:3 %}
                 </tr>
+                <tr>
                 {% elif forloop.last %}
                 </tr>
                 {% endif %}
