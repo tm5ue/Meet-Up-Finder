@@ -4,7 +4,7 @@ from .models import Event, Tag, Comment
 from crispy_forms.helper import FormHelper
 from crispy_forms.layout import Layout, Fieldset, ButtonHolder, Submit, Field, HTML
 from django.contrib.auth.models import User
-from bootstrap_datepicker_plus import DatePickerInput, TimePickerInput, DateTimePickerInput, MonthPickerInput, YearPickerInput
+from bootstrap_datepicker_plus import DateTimePickerInput
 from location_field.models.plain import PlainLocationField
 from geopy.geocoders import Nominatim
 

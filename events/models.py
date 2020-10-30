@@ -3,10 +3,14 @@ from django.utils import timezone
 from django.contrib.auth.models import User
 from location_field.models.plain import PlainLocationField
 from geopy.geocoders import Nominatim
-
+from django.core.files.storage import FileSystemStorage
+from django.conf import settings
+import os
 # Create your models here.
 
 class Event(models.Model):
+    upload_storage = FileSystemStorage(location=settings.UPLOAD_ROOT, base_url='/images')
+
     name = models.CharField(max_length=200, null=True)
     description = models.CharField(max_length=2000, null=True)
     pub_date = models.DateTimeField()
@@ -18,7 +22,8 @@ class Event(models.Model):
     location = models.CharField(max_length=2000, null=True)
     tags = models.CharField(max_length=200, null=True)
     email = models.EmailField(max_length=200, null=True)
-    photo = models.ImageField(null=True, upload_to='events/images/', max_length=750)
+    photo = models.ImageField(null=True, upload_to='images', storage=upload_storage, max_length=750)
+    photourl = models.CharField(max_length=1000, null=True)
 
     def __str__(self):
         return self.name.title()
