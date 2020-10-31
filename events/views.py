@@ -70,6 +70,7 @@ class AddEvent(TemplateView):
             event.pub_date = timezone.localtime()
             event.tags = ", ".join(tags)
             event.email = request.user.email
+            event.photourl = 'https://meetup-finder-static.s3.amazonaws.com/media/images/{}'.format(event.photo.name)
             event.save()
             for user in form.cleaned_data['invitees']:
                 event.invitees.add(user)
@@ -103,7 +104,19 @@ class EditEvent(View):
     def post(self, request, event_id):
         event = Event.objects.get(id=event_id)
         form = EditEventForm(request.POST, instance=event)
+        tags = request.POST.get('tags', None).split(",")
+        tags = [tag.title().strip() for tag in tags]
+        tags = set(tags)
         if form.is_valid():
+            event = form.save(commit=False)
+            event.author = request.user
+            event.pub_date = timezone.localtime()
+            event.tags = ", ".join(tags)
+            event.email = request.user.email
+            event.photourl = 'https://meetup-finder-static.s3.amazonaws.com/media/images/{}'.format(event.photo.name)
+            event.save()
+            for user in form.cleaned_data['invitees']:
+                event.invitees.add(user)
             form.save()
         context = {'form': form}
         return redirect("/events/{}".format(event_id))

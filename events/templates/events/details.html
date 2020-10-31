@@ -13,7 +13,8 @@
         {% if event.email == request.user.email %}
             <a href="{% url 'events:edit_event' event.id %}" class="btn btn-primary btn-small active" role="button" aria-pressed="true">Edit {{event.name | title}} Event</a> <br> <br>
         {% endif %}
-        <img src="/media/{{ event.photo.name }}" alt="{{ event.name|title }} Photo" style="max-width: 30%;" class="img-fluid">
+        <img src="{{ event.photourl }}" alt="{{ event.photourl }}" style="max-width: 30%;" class="img-fluid">
+        <a href="{{ event.photourl }}">{{ event.photourl }}</a>
         <h1>{{ event.name | title }}</h1>
         <h5>Details </h5>
             <p>{{ event.description | capfirst }}</p>

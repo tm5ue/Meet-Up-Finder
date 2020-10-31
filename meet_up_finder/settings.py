@@ -126,6 +126,7 @@ USE_I18N = True
 USE_L10N = True
 
 USE_TZ = True
+django_heroku.settings(locals())
 
 
 # Static files (CSS, JavaScript, Images)
@@ -135,12 +136,20 @@ STATIC_URL = '/static/'
 STATICFILES_DIRS = [
     os.path.join(BASE_DIR, 'static'),
 ]
+STATICFILES_STORAGE = 'storages.backends.s3boto3.S3Boto3Storage'
+AWS_ACCESS_KEY_ID = 'AKIAZCFTTZJRAQO55C4A'
+AWS_SECRET_ACCESS_KEY = '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'
+AWS_STORAGE_BUCKET_NAME = 'meetup-finder-static'
+AWS_S3_CUSTOM_DOMAIN = 'meetup-finder-static.s3.amazonaws.com'
+DEFAULT_FILE_STORAGE = 'meet_up_finder.custom_storage.MediaStorage'
+
+
 MEDIA_URL = '/media/'
 MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
+UPLOAD_ROOT = os.path.join(BASE_DIR, 'static', 'media')
 
 
 
-django_heroku.settings(locals())
 
 AUTHENTICATION_BACKENDS = (
     'django.contrib.auth.backends.ModelBackend',
