@@ -35,10 +35,8 @@ def normalize_query(query_string,
     ''' Splits the query string in invidual keywords, getting rid of unecessary spaces
         and grouping quoted words together.
         Example:
-
         >>> normalize_query('  some random  words "with   quotes  " and   spaces')
         ['some', 'random', 'words', 'with quotes', 'and', 'spaces']
-
     '''
     return [normspace(' ', (t[0] or t[1]).strip()) for t in findterms(query_string)]
 
@@ -56,35 +54,31 @@ class SearchResultsView(ListView):
             (Q(invitees__isnull=True) | Q(invitees=user) | Q(author=user)) & #either public/invited events/events you wrote
             (name_query | tag_query | location_query)
         ).distinct()
-        return event_list  
+        return event_list
     # TODO: add filtering
 
 class AddEvent(TemplateView):
     template_name = 'events/add_event.html'
     def post(self, request):
         '''Handles adding a new event'''
-        event_items = {
-            "name": request.POST.get('name', None),
-            "description": request.POST.get('description', None),
-            "event_date": request.POST.get('event_date', None),
-            "location": request.POST.get('location', None),
-        }
-        form = EventForm(event_items)
-        tags = request.POST.get('tags', None).split(";")
+        form = EventForm(request.POST, request.FILES)
+        tags = request.POST.get('tags', None).split(",")
+        tags = [tag.title().strip() for tag in tags]
+        tags = set(tags)
         if form.is_valid():
             event = form.save(commit=False)
             event.author = request.user
             event.pub_date = timezone.localtime()
+            event.tags = ", ".join(tags)
+            event.email = request.user.email
+            event.photourl = 'https://meetup-finder-static.s3.amazonaws.com/media/images/{}'.format(event.photo.name)
             event.save()
             event.add_tags(tags)
         context = {'form': form}
-        return render(request, self.template_name, context)
-    def get(self, request):
-        '''Handles displaying the empty form'''
-        form = EventForm()
-        return render(request, self.template_name, {'form': form})
-    def get_queryset(self):
-        pass
+        if(not event.invitees.all()):
+            return redirect('/events/{}'.format(event.id))
+        else:
+            return redirect('/events/myEvents')
 
     def get(self, request):
         '''Handles displaying the empty form'''
@@ -132,13 +126,25 @@ class EditEvent(View):
     def get(self, request, event_id):
         event = Event.objects.get(id=event_id)
         form = EditEventForm(instance=event)
-        context = {'form': form}
+        context = {'form': form, 'event': event}
         return render(request, self.template_name, context)
 
     def post(self, request, event_id):
         event = Event.objects.get(id=event_id)
         form = EditEventForm(request.POST, instance=event)
+        tags = request.POST.get('tags', None).split(",")
+        tags = [tag.title().strip() for tag in tags]
+        tags = set(tags)
         if form.is_valid():
+            event = form.save(commit=False)
+            event.author = request.user
+            event.pub_date = timezone.localtime()
+            event.tags = ", ".join(tags)
+            event.email = request.user.email
+            event.photourl = 'https://meetup-finder-static.s3.amazonaws.com/media/images/{}'.format(event.photo.name)
+            event.save()
+            for user in form.cleaned_data['invitees']:
+                event.invitees.add(user)
             form.save()
         context = {'form': form}
         
@@ -247,3 +253,4 @@ def attending(request, event_id):
         event.attendees.add(user.id)
 
     return redirect('/events/' + str(event_id))
+
