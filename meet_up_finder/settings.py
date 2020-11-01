@@ -47,6 +47,7 @@ INSTALLED_APPS = [
     'location_field.apps.DefaultConfig',
     'crispy_forms',
     'django_social_share',
+    's3direct',
 ]
 
 MIDDLEWARE = [
@@ -142,7 +143,7 @@ AWS_SECRET_ACCESS_KEY = 'Ikavhq+eVQxfgXKiR2fGlCveibvI2fxqkqQsMCQH'
 AWS_STORAGE_BUCKET_NAME = 'meetup-finder-static'
 AWS_S3_CUSTOM_DOMAIN = 'meetup-finder-static.s3.amazonaws.com'
 DEFAULT_FILE_STORAGE = 'meet_up_finder.custom_storage.MediaStorage'
-
+AWS_S3_REGION_NAME = 'us-east-1'
 
 MEDIA_URL = '/media/'
 MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
@@ -166,7 +167,7 @@ SOCIAL_AUTH_URL_NAMESPACE = 'social'
 #    SITE_ID = 2
 #else:
 #    SITE_ID = 3
-SITE_ID= 6
+SITE_ID= 8
 
 
 LOGIN_REDIRECT_URL = '/'
