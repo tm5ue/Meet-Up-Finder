@@ -174,7 +174,7 @@ SOCIAL_AUTH_URL_NAMESPACE = 'social'
 #    SITE_ID = 2
 #else:
 #    SITE_ID = 3
-SITE_ID= 7
+SITE_ID= 8
 
 
 LOGIN_REDIRECT_URL = '/'
