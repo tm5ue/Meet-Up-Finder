@@ -18,6 +18,7 @@ class EventForm(ModelForm):
            helper = self.helper = FormHelper()
            layout = helper.layout = Layout()
            self.fields['invitees'].required = False
+           self.fields['tags'].required = False
            self.fields['event_date'].widget = DateTimePickerInput()
            for field_name, field in self.fields.items():
                if field_name == 'tags':
@@ -68,8 +69,3 @@ class CommentForm(ModelForm):
     class Meta:
         model = Comment
         fields = ['name', 'description']
-
-
-
- 
-   

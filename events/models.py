@@ -15,9 +15,23 @@ class Event(models.Model):
     # end_date = models.DateTimeField(null=False, default=timezone.localtime())
     author = models.CharField(max_length=200, null=False, default="no author")
     invitees = models.ManyToManyField(User)
+    users_bookmarked = models.ManyToManyField(User, related_name="bookmarked_users")
+    attendees = models.ManyToManyField(User, related_name="users_attending")
     location = models.CharField(max_length=2000, null=True)
     tags = models.CharField(max_length=200, null=True)
     email = models.EmailField(max_length=200, null=True)
+
+    def add_tags(self, t):
+        ''' Add tags from a list to the given event '''
+        t_set = set(t) # eliminate duplicates
+        if next(iter(t_set)) != "":
+            for tag_whitespace in t_set:
+                tag = tag_whitespace.strip() # remove leading and trailing whitespace
+                if not Tag.objects.filter(tag=tag):
+                    t = Tag(tag=tag)
+                    t.save()
+                et = EventTag(e=self.name, t=tag, event=self, tag=Tag.objects.get(tag=tag))
+                et.save()
 
     def __str__(self):
         return self.name.title()

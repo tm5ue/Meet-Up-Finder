@@ -1,33 +1,102 @@
 {% extends "base.html" %}
 {% load static %}
 {% block content %}
+{% load events_extras %}
 
 <link rel="stylesheet" href="{% static 'events/css/style.css' %}">
 
 {% if user.is_authenticated %}
 
-<h1>Events You've Made:</h1>
-        {% for event in made%}
-           <li>
-               <a href="{% url 'events:detail' event.id %}">{{ event.name | title }}</a>
-               <a href="{% url 'events:edit_event' event.id %}" class="btn btn-primary btn-sm" role="button" aria-pressed="true">Edit</a>
-            </li>
-        {% endfor %}
+<br>
+<div class="accordion" id="event-accordian">
+    <div class="card">
+      <div class="card-header" id="headingOne">
+        <h2 class="mb-0">
+          <button class="btn btn-link btn-block text-left" type="button" data-toggle="collapse" data-target="#collapseOne" aria-expanded="true" aria-controls="collapseOne" style="color:green">
+            Events You Made
+          </button>
+        </h2>
+      </div>
+  
+      <div id="collapseOne" class="collapse show" aria-labelledby="headingOne" data-parent="#event-accordian">
+        <div class="card-body">
+            <ul class="list-group list-group-flush">
+                {% for event in made %}
+                    <li class="list-group-item"><a href="{% url 'events:detail' event.id %}">{{ event.name | title }}</a></li>
+                {% endfor %}
+            </ul>
+        </div>
+      </div>
+    </div>
 
-<h1>Events You're Invited To:</h1>
+    <div class="card">
+      <div class="card-header" id="headingTwo">
+        <h2 class="mb-0">
+          <button class="btn btn-link btn-block text-left collapsed" type="button" data-toggle="collapse" data-target="#collapseTwo" aria-expanded="false" aria-controls="collapseTwo" style="color:green">
+            Events You Bookmarked
+          </button>
+        </h2>
+      </div>
+      <div id="collapseTwo" class="collapse" aria-labelledby="headingTwo" data-parent="#event-accordian">
+        <div class="card-body">
+            {% if bookmark %}
+                <ul class="list-group list-group-flush">
+                    {% for event in bookmark %}
+                    <li class="list-group-item"><a href="{% url 'events:detail' event.id %}">{{ event.name | title }}</a></li>
+                    {% endfor %}
+                </ul>
+            {% else %}
+                <p>None yet!</p>
+            {% endif %}
+        </div>
+      </div>
+    </div>
+
+    <div class="card">
+      <div class="card-header" id="headingThree">
+        <h2 class="mb-0">
+          <button class="btn btn-link btn-block text-left collapsed" type="button" data-toggle="collapse" data-target="#collapseThree" aria-expanded="false" aria-controls="collapseThree" style="color:green">
+            Events You Signed Up For
+          </button>
+        </h2>
+      </div>
+      <div id="collapseThree" class="collapse" aria-labelledby="headingThree" data-parent="#event-accordian">
+        <div class="card-body">
+            {% if attendees %}
+                <ul class="list-group list-group-flush">
+                    {% for event in attendees %}
+                        <li class="list-group-item"><a href="{% url 'events:detail' event.id %}">{{ event.name | title }}</a></li>
+                    {% endfor %}
+                </ul>
+            {% else %}
+                <p>None yet!</p>
+            {% endif %}
+        </div>
+      </div>
+    </div>
+
+    <!-- Only show if invited to any events -->
     {% if invite %}
-        {% for event in invite%}
-          <li><a href="{% url 'events:detail' event.id %}">{{ event.name | title }}</a></li>
-        {% endfor %}
-    {% else %}
-        <p>None yet!</p>
-    {% endif %}
-
-
-<h1>Events You're Interested In:</h1>
-
-<!--TODO-->
-
+    <div class="card">
+        <div class="card-header" id="headingFour">
+          <h2 class="mb-0">
+            <button class="btn btn-link btn-block text-left collapsed" type="button" data-toggle="collapse" data-target="#collapseFour" aria-expanded="false" aria-controls="collapseFour" style="color:green">
+              Events You Are Invited To
+            </button>
+          </h2>
+        </div>
+        <div id="collapseFour" class="collapse" aria-labelledby="headingFour" data-parent="#event-accordian">
+          <div class="card-body">
+            <ul class="list-group list-group-flush">
+                {% for event in invite %}
+                    <li class="list-group-item"><a href="{% url 'events:detail' event.id %}">{{ event.name | title }}</a></li>
+                {% endfor %}
+        </ul>
+          </div>
+        </div>
+      </div>
+      {% endif %}
+  </div>
 
 {% else %}
     <h1>Please log in to see your events!</h1>
