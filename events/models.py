@@ -18,7 +18,7 @@ class Event(models.Model):
     # start_date = models.DateTimeField(null=False, default=timezone.localtime())
     # end_date = models.DateTimeField(null=False, default=timezone.localtime())
     author = models.CharField(max_length=200, null=False, default="no author")
-    invitees = models.ManyToManyField(User, null=True, blank=True)
+    invitees = models.ManyToManyField(User, blank=True)
     users_bookmarked = models.ManyToManyField(User, related_name="bookmarked_users")
     attendees = models.ManyToManyField(User, related_name="users_attending")
     location = models.CharField(max_length=2000, null=True)
