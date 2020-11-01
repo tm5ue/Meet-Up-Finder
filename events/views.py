@@ -150,19 +150,12 @@ class EditEvent(View):
             recipients.append(user.email)
         
         send_mail(subject, message, email_from, recipients)
-
-        # message = (
-        #         'Change to Event You Signed Up For',
-        #         'Hello there, there has been a change in an event you are signed up for!',
-        #         'npc4crc@virginia.edu',
-        #         ['npc4crc@virginia.edu'],
-        # )
-        # send_mass_mail((message))
-
-        # for user in event.attendees.all() :
-        #     something
-        
         return redirect("/events/{}".format(event_id))
+
+def delete_event(request, event_id):
+    event = Event.objects.get(id=event_id)
+    event.delete()
+    return redirect("/events/myEvents")
 
 def post_detail(request, event_id):
     template_name = 'events/details.html'
