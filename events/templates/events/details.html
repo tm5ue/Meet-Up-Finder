@@ -2,54 +2,153 @@
 {% load static %}
 {% load crispy_forms_tags %}
 {% load social_share %}
+{% load events_extras %}
 
 <link rel="stylesheet" href="{% static 'events/font-awesome-4.7.0/css/font-awesome.min.css' %}">
 
-
-{% block content %}
+{% block content_event %}
 
 {% load socialaccount %}
-    <div class="container">
-        {% if event.email == request.user.email %}
-            <a href="{% url 'events:edit_event' event.id %}" class="btn btn-primary btn-small active" role="button" aria-pressed="true">Edit {{event.name | title}} Event</a> <br> <br>
-        {% endif %}
-        <img src="{{ event.photourl }}" alt="{{ event.photourl }}" style="max-width: 30%;" class="img-fluid">
-        <a href="{{ event.photourl }}">{{ event.photourl }}</a>
-        <h1>{{ event.name | title }}</h1>
-        <h5>Details </h5>
-            <p>{{ event.description | capfirst }}</p>
-        <h5>Event Date </h5>
-            <p>{{ event.event_date | title }}</p>
 
-        <h5>Publish Date </h5>
-            <p>{{ event.pub_date | title }}</p>
-        <h5>Event Location </h5>
-            <p>{{ event.location | title }}</p>
-        <h5>Tags </h5>
+<div class="containment", style="padding: 1em; margin-left: 1%; margin-right: 1%;">
+        
+    <div name="upper_content" style="width: 100%;">
+        <div style="padding: 1em; background-color: #EDEDED; border-radius: 10px; width: 80%; float: left;">
+            <h1 class="display-3">{{ event.name | title }}
+                <div style="width: 15%; float: right; background-color: #EDEDED;">
+                    
+                    <!-- Bookmarking  -->
+                    <form method='post' action='bookmark', style="display: inline; float:right ">
+                        {% csrf_token %}   
+                        <!-- If already bookmarked  -->
+                        {% if event.users_bookmarked|is_marked:request.user %}
+                            <button type="submit" id="bookmark" class="btn btn-link vtn-lg" data-toggle="tooltip" data-placement="bottom" title="Change Bookmark Status" onclick="mark()" value="marked">
+                                <svg width="1em" height="1em" viewBox="0 0 16 16" class="bi bi-bookmark-check-fill" fill="currentColor" xmlns="http://www.w3.org/2000/svg"> <path fill-rule="evenodd" d="M4 0a2 2 0 0 0-2 2v13.5a.5.5 0 0 0 .74.439L8 13.069l5.26 2.87A.5.5 0 0 0 14 15.5V2a2 2 0 0 0-2-2H4zm6.854 5.854a.5.5 0 0 0-.708-.708L7.5 7.793 6.354 6.646a.5.5 0 1 0-.708.708l1.5 1.5a.5.5 0 0 0 .708 0l3-3z"/></svg>
+                            </button>
+                        {% else %}
+                            <button type="submit" id="bookmark" class="btn btn-link vtn-lg" data-toggle="tooltip" data-placement="bottom" title="Change Bookmark Status" onclick="mark()" value="unmarked">
+                                <svg width="1em" height="1em" viewBox="0 0 16 16" class="bi bi-bookmark-plus" fill="currentColor" xmlns="http://www.w3.org/2000/svg">
+                                    <path fill-rule="evenodd" d="M2 2a2 2 0 0 1 2-2h8a2 2 0 0 1 2 2v13.5a.5.5 0 0 1-.777.416L8 13.101l-5.223 2.815A.5.5 0 0 1 2 15.5V2zm2-1a1 1 0 0 0-1 1v12.566l4.723-2.482a.5.5 0 0 1 .554 0L13 14.566V2a1 1 0 0  0-1-1H4z"/>
+                                    <path fill-rule="evenodd" d="M8 4a.5.5 0 0 1 .5.5V6H10a.5.5 0 0 1 0 1H8.5v1.5a.5.5 0 0 1-1 0V7H6a.5.5 0 0 1 0-1h1.5V4.5A.5.5 0 0 1 8 4z"/>
+                                </svg>
+                            </button>
+                        {% endif %}
+                    </form>
+                </div>
+            </h1>
+            <p class="lead"><p>{{ event.event_date | title }} @ {{ event.get_location | title }}</p>
+            <hr class="my-4">
+            <h5>Details </h5><p>{{ event.description | capfirst }}</p>
             <p>
+                <a href data-toggle="collapse" data-target="#collapse" aria-expanded="false" aria-controls="collapse">
+                  More Info
+                </a>
+              </p>
+              <div class="collapse" id="collapse">
+                <div class="card card-body">
+                    <h5>Publish Date </h5>
+                    <p>{{ event.pub_date | title }}</p>
+                    <h5>Author </h5>
+                    {% with name=event.author %}
+                        <p><a href="{% url 'events:authorDetail' name %}">{{ event.author | title }}</a></p>
+                    {% endwith %}
+                    <h5>Contact </h5>
+                        <p><a href="mailto:{{ event.email }}">{{ event.email }}</a></p>
+                </div>
+              </div>
+            
+            <hr class="my-4">
+            <!-- Needs to be fixed for multiple tags -->
                 {% if event.tags %}
-                    {{ event.tags }}
-                {% else %}
-                    No tags.
+                    <a href="{% url 'events:search_results' %}?q={{ event.tags }}" > #{{ event.tags }} </a>                                     
                 {% endif %}
             </p>
-        <h5>Author </h5>
-            {% with name=event.author %}
-                <p><a href="{% url 'events:authorDetail' name %}">{{ event.author | title }}</a></p>
-            {% endwith %}
-        <h5>Contact </h5>
-            <p><a href="mailto:{{ event.email }}">{{ event.email }}</a></p>
+        </div>    
 
-        <h5>Invites</h5>
-            {% if event.invitees.all %}
-                {% for u in event.invitees.all %}
-                    <p> {{u}} </p>
-                {% endfor %}
-            {% else %}
-                <p> Open To All</p>
+        <div style="width: 18%; float: right;">
+            {% if event.author == request.user.username %}
+                <a href="{% url 'events:edit_event' event.id %}" class="btn btn-primary btn-lg btn-block" role="button" aria-pressed="true">Edit Event</a>
+                <br>
             {% endif %}
+            
+            <!-- Attendance  -->
+            <form method='post' action='attending', style="display: inline;">
+                {% csrf_token %}   
+                <!-- If already attending  -->
+                {% if event.attendees|is_marked:request.user %}
+                    <button type="submit" class="btn btn-danger btn-lg btn-block" title="Change Attendance Status" onclick="mark_attend()" value="attending">No Longer Interested...</button>
+                {% else %}
+                    <button type="submit" class="btn btn-success btn-lg btn-block" title="Change Attendance Status" onclick="mark_attend()" value="attending">Sign Me Up!</button>                 
+                {% endif %}
+            </form>
+            <br>
+        </div>
 
-        <h5>Share</h5>
+        <div style="width: 18%; float: right;">
+            <button type="button" class="btn btn-primary btn-lg btn-block" data-toggle="modal" data-target="#attendee-model">
+                <h5>See Who's Attending</h5>
+            </button>
+
+            <!-- Only see invitees if not public -->
+            {% if event.invitees.all %}
+                <br>
+                <button type="button" class="btn btn-primary btn-lg btn-block" data-toggle="modal" data-target="#invitee-model">
+                    <h5>See Who's Invited</h5>
+                </button>
+            {% endif %}
+  
+            <!-- Attendee Modal -->
+            <div class="modal fade" id="attendee-model" tabindex="-1" aria-labelledby="mlabel" aria-hidden="true">
+                <div class="modal-dialog modal-dialog-scrollable">
+                <div class="modal-content">
+                    <div class="modal-header">
+                    <h5 class="modal-title" id="mlabel">Event Attendees ({{ event.attendees.all.count }})</h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                    </div>
+                    <div class="modal-body">
+                        {% if event.attendees.all %}
+                            {% for u in event.attendees.all %}
+                                <p> {{u}} </p>
+                            {% endfor %}
+                        {% else %}
+                            <p> No One is Attending Yet!</p>
+                        {% endif %}
+                    </div>
+                    <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                    </div>
+                </div>
+                </div>
+            </div>
+
+            <!-- Invitee Modal -->
+            <div class="modal fade" id="invitee-model" tabindex="-1" aria-labelledby="mlabel" aria-hidden="true">
+                <div class="modal-dialog modal-dialog-scrollable">
+                <div class="modal-content">
+                    <div class="modal-header">
+                    <h5 class="modal-title" id="mlabel">Event Invitees  ({{ event.invitees.all.count }})</h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                    </div>
+                    <div class="modal-body">
+                        {% for u in event.invitees.all %}
+                            <p> {{u}} </p>
+                        {% endfor %}
+                    </div>
+                    <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                    </div>
+                </div>
+                </div>
+            </div>
+        </div>
+
+        <div style="width: 18%; float: right;">
+            <br>
+            <h5>Share</h5>
             <ul class="fa-ul">
                 <li><i class="fa-li fa fa-facebook"></i>{% post_to_facebook object_or_url 'Facebook' %}</li>
                 <li><i class="fa-li fa fa-twitter"></i>{% post_to_twitter "Check out {{ event.name | title }} at" object_or_url "Twitter" %}</li>
@@ -57,8 +156,13 @@
                 <li><i class="fa-li fa fa-envelope"></i>{% send_email "Check out {{ event.name | title }}" "Event is available at:" object_or_url "Email Invite" %}</li>
                 <li><i class="fa-li fa fa-reddit"></i>{% post_to_reddit "Check out {{ event.name | title }}" object_or_url "Reddit" %}</li>
             </ul>
+        </div>
 
-        <h5>Leave a comment: </h5>
+    </div>
+
+    <div name="lower_content" style="width: 100%">
+
+        <h5 class="w-50">Leave a comment: </h5>
             <form method="post">
                 {% csrf_token %}
                 <div class="form-group">
@@ -67,24 +171,33 @@
                 </div>
                 <div class="form-group">
                     <label for="description">Comment Description: </label>
-                    <input type="text" name="description" class="form-control" placeholder="Comment Description" style="width: 50%;">
+                    <textarea name="description" class="form-control" placeholder="Comment Description" style="width: 50%;"></textarea>
                 </div>
                 <input type="submit" class="btn btn-primary btn-sm" value="Submit Comment" margin-top="15px">
             </form>
 
-
         {% if comments %}
             <br>
             <h5>Current Comments: </h5>
+
                 {% for comment in comments %}
-                    <ul>
-                        <li>{{ comment.name | title }} -- {{ comment.author | capfirst }} on {{ comment.pub_date }}</li>
-                        <p>&nbsp; &nbsp; &nbsp; &nbsp; {{ comment.description }}</p>
-                    </ul>
+                    <div class="media" style="background-color: #ececec; border-radius: 10px;">
+                        <img src="https://avatars3.githubusercontent.com/u/969623?s=400&v=4" class="mr-3" alt="..." width="80" height="80" style="border-radius: 10px;">
+                        <div class="media-body">
+                            <h5 class="mt-0">{{ comment.name | title }}</h5>
+                            {{ comment.description }}
+                            <div style="float: right; margin-left: 1%; margin-right: 1%;">
+                                {{ comment.author | capfirst }} on {{ comment.pub_date }} 
+                            </div>
+                        </div>
+                    </div>
+                    <br>
                 {% endfor %}
         {% else %}
             <br>
             <p>Be the first to comment!</p>
         {% endif %}
     </div>
+</div>
+
 {% endblock %}

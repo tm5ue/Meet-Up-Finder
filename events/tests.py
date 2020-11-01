@@ -370,6 +370,130 @@ class InvitesTestCase(TestCase):
         l = Event.objects.filter(Q(invitees__isnull=True)).count()
         self.assertEquals(l,1)
 
+class Register_BookmarkTest(TestCase):
+    def setup(self):
+        '''Setup Event testing by creating an Event object with dummy data'''
+
+        user = User.objects.create_user(username='tester',
+                                        email='tester@example.com',
+                                        password="TestPassword")
+        event = Event.objects.create(name='event test name',
+                                     description='test description',
+                                     tags='tag1, tag2, tag3',
+                                     pub_date=timezone.now(),
+                                     event_date=timezone.now(),
+                                     author=user.username)
+        return event
+
+    def test_attend_valid(self):
+        '''valid register for event'''
+        user = User.objects.create_user(username='test',
+                                        email='tester@example.com',
+                                        password="TestPassword")
+        attendList = User.objects.all()
+        event = Event.objects.create(name='bday',
+                                          description='fun',
+                                          tags='tag1, tag2, tag3',
+                                          pub_date=timezone.now(),
+                                          location="Bodos",
+                                          event_date=timezone.now(),
+                                          author=user.username,
+
+                                     ) #ManytoMany to field is not a valid argument
+        event.attendees.set(attendList)
+
+        data = {'name': event.name,
+                'description': event.description,
+                'event_date': event.event_date,
+                'location': event.location,
+                'invitees':event.invitees.all(), #querySets always need .all()
+                'tags': event.tags,
+                }
+        form = EventForm(data=data)
+        self.assertTrue(form.is_valid())
+        return data
+        
+    def test_attend_invalid(self):
+        '''invalid register for event'''
+        user = User.objects.create_user(username='test',
+                                        email='tester@example.com',
+                                        password="TestPassword")
+        event = Event.objects.create(name='bday',
+                                          description='fun',
+                                          tags='tag1, tag2, tag3',
+                                          pub_date=timezone.now(),
+                                          location="Bodos",
+                                          event_date=timezone.now(),
+                                          author=user.username,
+
+                                     ) #ManytoMany to field is not a valid argument
+
+        data = {'name': event.name,
+                'description': event.description,
+                'event_date': event.event_date,
+                'location': event.location,
+                'invitees':event.invitees.all(), #querySets always need .all()
+                'tags': event.tags,
+                }
+        form = EventForm(data=data)
+        self.assertTrue(form.is_valid())
+        return data
+    
+    def test_bookmark_valid(self):
+        '''valid bookmark'''
+        user = User.objects.create_user(username='test',
+                                        email='tester@example.com',
+                                        password="TestPassword")
+        bookmarkList = User.objects.all()
+        event = Event.objects.create(name='bday',
+                                          description='fun',
+                                          tags='tag1, tag2, tag3',
+                                          pub_date=timezone.now(),
+                                          location="Bodos",
+                                          event_date=timezone.now(),
+                                          author=user.username,
+
+                                     ) #ManytoMany to field is not a valid argument
+        event.users_bookmarked.set(bookmarkList)
+
+        data = {'name': event.name,
+                'description': event.description,
+                'event_date': event.event_date,
+                'location': event.location,
+                'invitees':event.invitees.all(), #querySets always need .all()
+                'tags': event.tags,
+                }
+        form = EventForm(data=data)
+        self.assertTrue(form.is_valid())
+        return data
+        
+    def test_bookmark_invalid(self):
+        '''invalid bookmark'''
+        user = User.objects.create_user(username='test',
+                                        email='tester@example.com',
+                                        password="TestPassword")
+        event = Event.objects.create(name='bday',
+                                          description='fun',
+                                          tags='tag1, tag2, tag3',
+                                          pub_date=timezone.now(),
+                                          location="Bodos",
+                                          event_date=timezone.now(),
+                                          author=user.username,
+
+                                     ) #ManytoMany to field is not a valid argument
+
+        data = {'name': event.name,
+                'description': event.description,
+                'event_date': event.event_date,
+                'location': event.location,
+                'invitees':event.invitees.all(), #querySets always need .all()
+                'tags': event.tags,
+                }
+        form = EventForm(data=data)
+        self.assertTrue(form.is_valid())
+        return data
+        
+
 class EventLocationTestCase(TestCase):
     def setup(self):
         '''Make new event with location'''

@@ -95,6 +95,14 @@ DATABASES = {
 }
 
 
+EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
+EMAIL_HOST = 'smtp.gmail.com'
+EMAIL_USE_TLS = True
+EMAIL_PORT = 587
+EMAIL_HOST_USER = 'meetup.finder.1.25'
+EMAIL_HOST_PASSWORD = 'PH2SQTZVhPGp891dkak9ciXTibINyJQPMOmmb6fIBUL4c6dedxrN9H22rnGiBHpC88CqeFVDwDKJRXcFQBzjB4ekQByz51bDFIF'
+
+
 # Password validation
 # https://docs.djangoproject.com/en/3.1/ref/settings/#auth-password-validators
 
@@ -119,7 +127,7 @@ AUTH_PASSWORD_VALIDATORS = [
 
 LANGUAGE_CODE = 'en-us'
 
-TIME_ZONE = 'EST5EDT'
+TIME_ZONE = 'EST'
 
 USE_I18N = True
 
