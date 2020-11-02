@@ -50,6 +50,22 @@ class Event(models.Model):
         location = geolocator.geocode(self.location)
         return location
 
+    def get_city(self):
+        geolocator = Nominatim(user_agent="Event")
+        location = geolocator.geocode(self.location, addressdetails=True)
+        if location is None or 'city' not in location.raw['address']:
+            return "no city"
+        else:
+            return location.raw['address']['city']
+
+    def get_country(self):
+        geolocator = Nominatim(user_agent="Event")
+        location = geolocator.geocode(self.location, addressdetails=True)
+        if location is None or 'country_code' not in location.raw['address']:
+            return "no country code"
+        else:
+            return location.raw['address']['country_code']
+
     def get_latitude(self):
         geolocator = Nominatim(user_agent="Event")
         location = geolocator.geocode(self.location)

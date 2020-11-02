@@ -16,6 +16,7 @@ from django.conf import settings
 from functools import reduce
 from operator import or_
 from django.core.mail import send_mass_mail, send_mail
+import requests
 import re
 
 class Index(ListView):
@@ -40,22 +41,56 @@ def normalize_query(query_string,
     '''
     return [normspace(' ', (t[0] or t[1]).strip()) for t in findterms(query_string)]
 
-class SearchResultsView(ListView):
-    model = Event
-    template_name = 'events/search_results.html'
-    def get_queryset(self):
-        '''Get search criteria and return list of corresponding events'''
-        queries = normalize_query(self.request.GET.get('q'))
-        user = User.objects.get(email=self.request.user.email)
-        name_query = reduce(or_, (Q(name__icontains=query) for query in queries))
-        tag_query = reduce(or_, (Q(tags__icontains=query) for query in queries))
-        location_query = reduce(or_, (Q(location__icontains=query) for query in queries))
-        event_list = Event.objects.filter(
-            (Q(invitees__isnull=True) | Q(invitees=user) | Q(author=user)) & #either public/invited events/events you wrote
-            (name_query | tag_query | location_query)
-        ).distinct()
-        return event_list
-    # TODO: add filtering
+# class SearchResultsView(ListView):
+#     model = Event
+#     template_name = 'events/search_results.html'
+#     def get_queryset(self):
+#         '''Get search criteria and return list of corresponding events'''
+#         queries = normalize_query(self.request.GET.get('q'))
+#         user = User.objects.get(email=self.request.user.email)
+#         name_query = reduce(or_, (Q(name__icontains=query) for query in queries))
+#         tag_query = reduce(or_, (Q(tags__icontains=query) for query in queries))
+#         location_query = reduce(or_, (Q(location__icontains=query) for query in queries))
+#         event_list = Event.objects.filter(
+#             (Q(invitees__isnull=True) | Q(invitees=user) | Q(author=user)) & #either public/invited events/events you wrote
+#             (name_query | tag_query | location_query)
+#         ).distinct()
+#         return event_list
+
+def get_search(request):
+    if request.method == 'GET':
+        queries = normalize_query(request.GET.get('q'))
+        user = User.objects.get(email=request.user.email)
+        if len(queries) == 0:
+            return redirect(request.META['HTTP_REFERER'])
+        else:
+            name_query = reduce(or_, (Q(name__icontains=query) for query in queries))
+            tag_query = reduce(or_, (Q(tags__icontains=query) for query in queries))
+            location_query = reduce(or_, (Q(location__icontains=query) for query in queries))
+            events_list_all = Event.objects.filter(
+                (Q(invitees__isnull=True) | Q(invitees=user) | Q(author=user)) & #either public/invited events/events you wrote
+                (name_query | tag_query | location_query)
+            ).distinct()
+            events_list_name = Event.objects.filter(
+                (Q(invitees__isnull=True) | Q(invitees=user) | Q(author=user)) & #either public/invited events/events you wrote
+                (name_query)
+            ).distinct()
+            events_list_tag = Event.objects.filter(
+                (Q(invitees__isnull=True) | Q(invitees=user) | Q(author=user)) & #either public/invited events/events you wrote
+                (tag_query)
+            ).distinct()
+            events_list_location = Event.objects.filter(
+                (Q(invitees__isnull=True) | Q(invitees=user) | Q(author=user)) & #either public/invited events/events you wrote
+                (location_query)
+            ).distinct()
+            context = {
+                'query':request.GET.get('q'), 
+                'event_list_all':events_list_all,
+                'event_list_name':events_list_name,
+                'event_list_tag':events_list_tag,
+                'event_list_location':events_list_location,
+            }
+            return render(request, 'events/search_results.html', context)
 
 class AddEvent(TemplateView):
     template_name = 'events/add_event.html'
@@ -177,11 +212,28 @@ def post_detail(request, event_id):
             new_comment.save()
     else: # GET instead of POST
         form = CommentForm()
+    tags = event.tags.split(",")
+    tags = [tag.title().strip() for tag in tags]
+
+    #url = 'https://history.openweathermap.org/data/2.5/aggregated/day?q={}&month={}&day={}&appid=581b376804136c9e6934a1745697ebf4'
+    url = 'http://api.openweathermap.org/data/2.5/weather?lat={}&lon={}&units=imperial&appid=581b376804136c9e6934a1745697ebf4'
+    lat = event.get_latitude()
+    lon = event.get_longitude()
+    city_weather = requests.get(url.format(lat, lon)).json() #request the API data and convert the JSON to Python data types
+    print(city_weather)
+    weather = {
+        'temperature' : city_weather['main']['temp'],
+        'description' : city_weather['weather'][0]['description'],
+        'icon' : city_weather['weather'][0]['icon']
+    }
+
     context = {
         'event': event,
+        'tags': tags,
         'comments': comments,
         'new_comment': new_comment,
         'form': form,
+        'weather': weather
     }
     return render(request, template_name, context)
 
