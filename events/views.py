@@ -221,11 +221,14 @@ def post_detail(request, event_id):
     lon = event.get_longitude()
     city_weather = requests.get(url.format(lat, lon)).json() #request the API data and convert the JSON to Python data types
     print(city_weather)
-    weather = {
-        'temperature' : city_weather['main']['temp'],
-        'description' : city_weather['weather'][0]['description'],
-        'icon' : city_weather['weather'][0]['icon']
-    }
+    if 'main' in city_weather:
+        weather = {
+            'temperature' : city_weather['main']['temp'],
+            'description' : city_weather['weather'][0]['description'],
+            'icon' : city_weather['weather'][0]['icon']
+        }
+    else:
+        weather = "none"
 
     context = {
         'event': event,

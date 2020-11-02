@@ -73,6 +73,7 @@
         
         <hr class="my-4">
         <h5>Current Weather at Event Location</h5>
+        {% if weather != "none" %}
         <div class="box">
             <article class="media">
                 <div class="media-left">
@@ -92,6 +93,9 @@
                 </div>
             </article>
         </div>
+        {% else %}
+        Cannot display weather at this time!
+        {% endif %}
         </p>
 
         </div>    
