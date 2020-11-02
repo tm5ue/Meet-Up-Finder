@@ -35,7 +35,7 @@
                     </form>
                 </div>
             </h1>
-            <img src="{{ event.photo.url }}" alt="{{ event.photo.url }}" width="500px"> <a href="{{ event.photourl }}">{{ event.photo.url }}</a>
+            <a href="{{ event.photourl }}"><img src="{{ event.photo.url }}" alt="{{ event.photo.url }}" width="400px"></a>
 
             <p class="lead"><p>{{ event.event_date | title }} @ {{ event.get_location | title }}</p>
             <hr class="my-4">

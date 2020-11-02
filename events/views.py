@@ -148,7 +148,7 @@ class EditEvent(View):
         context = {'form': form}
         
         subject = 'Change to Event You Signed Up For'
-        message = 'Hey There!\n\n It looks like there has been a change to an event you signed up for! The event in question is: '+ event.name +'.\n\n Come see the changes at http://127.0.0.1:8000/events/'+ str(event.id) +'/. \n\n See you soon,\n Kool Katz - Event Finder Team'
+        message = 'Hey There!\n\n It looks like there has been a change to an event you signed up for! The event in question is: '+ event.name +'.\n\n Come see the changes at https://meetup-finder-1-25.herokuapp.com/events/'+ str(event.id) +'/. \n\n See you soon,\n Kool Katz - Event Finder Team'
         email_from = settings.EMAIL_HOST_USER
         recipients = []
         for user in event.attendees.all():
