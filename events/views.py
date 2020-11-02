@@ -101,7 +101,6 @@ class AddEvent(TemplateView):
             event.tags = ", ".join(tags)
             event.email = request.user.email
             event.photo = request.FILES['photo']
-            event.photourl = 'https://meetup-finder-static.s3.amazonaws.com/media/images/{}'.format(event.photo.name)
             event.save()
             for user in form.cleaned_data['invitees']:
                 event.invitees.add(user)
@@ -141,7 +140,6 @@ class EditEvent(View):
             event.tags = ", ".join(tags)
             event.email = request.user.email
             event.photo = request.FILES['photo']
-            event.photourl = 'https://meetup-finder-static.s3.amazonaws.com/media/images/{}'.format(event.photo.name)
             event.save()
             for user in form.cleaned_data['invitees']:
                 event.invitees.add(user)
@@ -185,7 +183,6 @@ def post_detail(request, event_id):
         'new_comment': new_comment,
         'form': form,
     }
-    print(event.photourl)
     return render(request, template_name, context)
 
 def myEvents(request):

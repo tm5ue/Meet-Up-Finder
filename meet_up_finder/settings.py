@@ -9,6 +9,7 @@ https://docs.djangoproject.com/en/3.1/ref/settings/
 
 import os
 import django_heroku
+import cloudinary
 from pathlib import Path
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
@@ -48,6 +49,8 @@ INSTALLED_APPS = [
     'crispy_forms',
     'django_social_share',
     's3direct',
+    'cloudinary_storage',
+    'cloudinary',
 ]
 
 MIDDLEWARE = [
@@ -145,13 +148,22 @@ STATIC_URL = '/static/'
 STATICFILES_DIRS = [
     os.path.join(BASE_DIR, 'static'),
 ]
-STATICFILES_STORAGE = 'storages.backends.s3boto3.S3Boto3Storage'
-AWS_ACCESS_KEY_ID = 'AKIAZCFTTZJRAQO55C4A'
-AWS_SECRET_ACCESS_KEY = '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'
-AWS_STORAGE_BUCKET_NAME = 'meetup-finder-static'
-AWS_S3_CUSTOM_DOMAIN = 'meetup-finder-static.s3.amazonaws.com'
-DEFAULT_FILE_STORAGE = 'meet_up_finder.custom_storage.MediaStorage'
-AWS_S3_REGION_NAME = 'us-east-1'
+
+cloudinary.config(
+    cloud_name = 'htihw3kd8',
+    api_key = '112137812855327',
+    api_secret = 'W2lxNdVbBABtS8FM7yIQryRhe_A'
+)
+DEFAULT_FILE_STORAGE = 'cloudinary_storage.storage.MediaCloudinaryStorage'
+
+
+# STATICFILES_STORAGE = 'storages.backends.s3boto3.S3Boto3Storage'
+# AWS_ACCESS_KEY_ID = 'AKIAZCFTTZJRAQO55C4A'
+# AWS_SECRET_ACCESS_KEY = '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'
+# AWS_STORAGE_BUCKET_NAME = 'meetup-finder-static'
+# AWS_S3_CUSTOM_DOMAIN = 'meetup-finder-static.s3.amazonaws.com'
+# DEFAULT_FILE_STORAGE = 'meet_up_finder.custom_storage.MediaStorage'
+# AWS_S3_REGION_NAME = 'us-east-1'
 
 MEDIA_URL = '/media/'
 MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
@@ -175,7 +187,7 @@ SOCIAL_AUTH_URL_NAMESPACE = 'social'
 #    SITE_ID = 2
 #else:
 #    SITE_ID = 3
-SITE_ID= 9
+SITE_ID= 10
 
 
 LOGIN_REDIRECT_URL = '/'
