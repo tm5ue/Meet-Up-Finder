@@ -17,7 +17,7 @@ class EventForm(ModelForm):
            super(EventForm, self).__init__(*args, **kwargs)
            helper = self.helper = FormHelper()
            layout = helper.layout = Layout()
-           self.fields['photo'].required = True
+           self.fields['photo'].required = False
            self.fields['invitees'].required = False
            self.fields['tags'].required = False
            self.fields['event_date'].widget = DateTimePickerInput()
