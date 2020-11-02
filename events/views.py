@@ -135,7 +135,8 @@ class AddEvent(TemplateView):
             event.pub_date = timezone.localtime()
             event.tags = ", ".join(tags)
             event.email = request.user.email
-            event.photo = request.FILES['photo']
+            if (len(request.FILES) != 0):
+                event.photo = request.FILES['photo']
             event.save()
             for user in form.cleaned_data['invitees']:
                 event.invitees.add(user)
@@ -174,7 +175,8 @@ class EditEvent(View):
             event.pub_date = timezone.localtime()
             event.tags = ", ".join(tags)
             event.email = request.user.email
-            event.photo = request.FILES['photo']
+            if (len(request.FILES) != 0):
+                event.photo = request.FILES['photo']
             event.save()
             for user in form.cleaned_data['invitees']:
                 event.invitees.add(user)
@@ -183,7 +185,7 @@ class EditEvent(View):
         context = {'form': form}
         
         subject = 'Change to Event You Signed Up For'
-        message = 'Hey There!\n\n It looks like there has been a change to an event you signed up for! The event in question is: '+ event.name +'.\n\n Come see the changes at http://127.0.0.1:8000/events/'+ str(event.id) +'/. \n\n See you soon,\n Kool Katz - Event Finder Team'
+        message = 'Hey There!\n\n It looks like there has been a change to an event you signed up for! The event in question is: '+ event.name +'.\n\n Come see the changes at https://meetup-finder-1-25.herokuapp.com/events/'+ str(event.id) +'/. \n\n See you soon,\n Kool Katz - Event Finder Team'
         email_from = settings.EMAIL_HOST_USER
         recipients = []
         for user in event.attendees.all():

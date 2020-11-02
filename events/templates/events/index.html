@@ -14,8 +14,8 @@
             {% for event in object_list%}
                     <th>
                         <a href="{% url 'events:detail' event.id %}">
-                            <div class="mh-100" style="width: 330px; height: 330px; background-image: url('{{ event.photo.url }}'); background-size: 330px 330px;">
-                                <p style="font-size: 1.2em; color: black; text-align: center;"> {{ event.name|title }} </p>
+                            <div class="mh-100" style="width: 330px; height: 330px; background-image: url('{{ event.photo.url }}'); background-size: 330px 330px; border-radius: 16px;">
+                                <p style="font-size: 1.2em; color: black; text-align: center; background: rgba(104, 104, 104, 0.7); border-radius: 19px 19px 3px 3px;"> {{ event.name|title }} </p>
                             </div>
                         </a>
                     </th>
