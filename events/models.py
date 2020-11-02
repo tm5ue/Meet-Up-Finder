@@ -81,6 +81,7 @@ class Event(models.Model):
             return location
         else:
             return location.longitude
+
 # https://alphacoder.xyz/image-upload-with-django-and-cloudinary/
 @receiver(pre_delete, sender=Event)
 def photo_delete(sender, instance, **kwargs):

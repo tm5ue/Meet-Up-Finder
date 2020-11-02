@@ -135,7 +135,8 @@ class AddEvent(TemplateView):
             event.pub_date = timezone.localtime()
             event.tags = ", ".join(tags)
             event.email = request.user.email
-            event.photo = request.FILES['photo']
+            if (len(request.FILES) != 0):
+                event.photo = request.FILES['photo']
             event.save()
             for user in form.cleaned_data['invitees']:
                 event.invitees.add(user)
@@ -174,7 +175,8 @@ class EditEvent(View):
             event.pub_date = timezone.localtime()
             event.tags = ", ".join(tags)
             event.email = request.user.email
-            event.photo = request.FILES['photo']
+            if (len(request.FILES) != 0):
+                event.photo = request.FILES['photo']
             event.save()
             for user in form.cleaned_data['invitees']:
                 event.invitees.add(user)

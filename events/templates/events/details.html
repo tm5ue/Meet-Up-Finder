@@ -35,9 +35,9 @@
                     </form>
                 </div>
             </h1>
-            <a href="{{ event.photourl }}"><img src="{{ event.photo.url }}" alt="{{ event.photo.url }}" width="400px"></a>
+            <a href="{{ event.photourl }}"><img src="{{ event.photo.url }}" alt="{{ event.photo.url }}" width="400px" style="border-radius: 15px;"></a>
 
-            <p class="lead"><p>{{ event.event_date | title }} @ {{ event.get_location | title }}</p>
+            <p class="lead"><p>{{event.event_date.time | title}}, {{event.event_date.day | stringformat:"02d" | title}}/{{event.event_date.month|stringformat:"02d" | title}}/{{event.event_date.year | title}} @ {{ event.get_location | title }}</p>
             <hr class="my-4">
             <h5>Details </h5><p>{{ event.description | capfirst }}</p>
             <p>
@@ -218,7 +218,9 @@
                             <h5 class="mt-0">{{ comment.name | title }}</h5>
                             {{ comment.description }}
                             <div style="float: right; margin-left: 1%; margin-right: 1%;">
-                                {{ comment.author | capfirst }} on {{ comment.pub_date }} 
+                                {% with name=comment.author %}
+                                    <a href="{% url 'events:authorDetail' name %}">{{ comment.author | capfirst }}</a> on {{ comment.pub_date }} 
+                                {% endwith %}
                             </div>
                         </div>
                     </div>
