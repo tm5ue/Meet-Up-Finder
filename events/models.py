@@ -5,6 +5,10 @@ from location_field.models.plain import PlainLocationField
 from geopy.geocoders import Nominatim
 from django.core.files.storage import FileSystemStorage
 from django.conf import settings
+from cloudinary.models import CloudinaryField
+from django.db.models.signals import pre_delete
+from django.dispatch import receiver
+import cloudinary
 import os
 # Create your models here.
 
@@ -24,8 +28,7 @@ class Event(models.Model):
     location = models.CharField(max_length=2000, null=True)
     tags = models.CharField(max_length=200, null=True)
     email = models.EmailField(max_length=200, null=True)
-    photo = models.ImageField(null=True, upload_to='images', storage=upload_storage, max_length=750)
-    photourl = models.CharField(max_length=1000, null=True)
+    photo = CloudinaryField('image', null=True)
 
     def add_tags(self, t):
         ''' Add tags from a list to the given event '''
@@ -62,6 +65,11 @@ class Event(models.Model):
             return location
         else:
             return location.longitude
+# https://alphacoder.xyz/image-upload-with-django-and-cloudinary/
+@receiver(pre_delete, sender=Event)
+def photo_delete(sender, instance, **kwargs):
+    '''Automatically delete from cloudinary when delete from database'''
+    cloudinary.uploader.destroy(instance.photo.public_id)
 
 class Comment(models.Model):
     post = models.ForeignKey(Event, on_delete=models.CASCADE, related_name='comments')
