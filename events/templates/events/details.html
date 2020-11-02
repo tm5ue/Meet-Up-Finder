@@ -59,11 +59,41 @@
               </div>
             
             <hr class="my-4">
-            <!-- Needs to be fixed for multiple tags -->
-                {% if event.tags %}
-                    <a href="{% url 'events:search_results' %}?q={{ event.tags }}" > #{{ event.tags }} </a>                                     
+            <h5>Tags</h5>
+                {% if tags %}
+                    {% for tag in tags %} 
+                        {% if tag == '' %}
+                            No tags.
+                        {% else %}
+                            <a href="{% url 'events:search_results' %}?q={{ tag }}" > #{{ tag }} </a>  
+                        {% endif %}     
+                    {% endfor %}                              
                 {% endif %}
             </p>
+        
+        <hr class="my-4">
+        <h5>Current Weather at Event Location</h5>
+        <div class="box">
+            <article class="media">
+                <div class="media-left">
+                    <figure class="image is-50x50">
+                        <img src="http://openweathermap.org/img/w/{{ weather.icon }}.png" alt="Image">
+                    </figure>
+                </div>
+                <div class="media-content">
+                    <div class="content">
+                        <p>
+                            <span class="title">{{ weather.city }}</span>
+                            <br>
+                            <span class="subtitle">{{ weather.temperature }}° F</span>
+                            <br> {{ weather.description }}
+                        </p>
+                    </div>
+                </div>
+            </article>
+        </div>
+        </p>
+
         </div>    
 
         <div style="width: 18%; float: right;">
