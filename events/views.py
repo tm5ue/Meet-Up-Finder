@@ -19,6 +19,15 @@ from django.core.mail import send_mass_mail, send_mail
 import requests
 import re
 
+import os
+from datetime import timedelta
+import datetime
+import pytz
+
+import httplib2
+from googleapiclient.discovery import build
+from oauth2client.service_account import ServiceAccountCredentials
+
 class Index(ListView):
     '''Class for home page'''
     template_name = 'events/index.html'
@@ -285,7 +294,22 @@ def bookmark(request, event_id):
         event.users_bookmarked.add(user.id)
 
     return redirect('/events/' + str(event_id))
+    
+#service account email and credentials
 
+ 
+#service_account_email = "project-1-25@hip-cyclist-290500.iam.gserviceaccount.com"
+
+SCOPES = ["https://www.googleapis.com/auth/calendar"]
+def build_service():
+    DIRNAME = os.path.dirname(__file__)
+    credentials = ServiceAccountCredentials.from_json_keyfile_name(
+        os.path.join(DIRNAME, 'creds.json'),
+        scopes=SCOPES
+    )
+    service = build("calendar", "v3", credentials=credentials)
+    return service
+ 
 def attending(request, event_id):
     '''See if user clicking to attend is already attending, if so remove, if not add'''
     user = request.user
@@ -297,8 +321,33 @@ def attending(request, event_id):
             already_attending = True
     if (already_attending):
         event.attendees.remove(user.id)
+        #service.events().delete(calendarId='primary', eventId='eventId').execute()
     else:
         event.attendees.add(user.id)
+#        service = build_service()
+#        addEvent = {
+#          'summary': "idk",
+#          'location':  "event.location",
+#          'description': "event.description",
+#          'start': {
+#            'date': "2020-11-11",
+#          },
+#          'end': {
+#            'date': "2020-11-11",
+#          },
+##          'attendees': [
+##            {'email': user.email},
+##          ],
+#        }
+#        addEvent= service.events().insert(calendarId='9vrf01e5bdhqh6cbq46n1oovas@group.calendar.google.com', body=addEvent).execute()
+#        print(addEvent)
+
 
     return redirect('/events/' + str(event_id))
+    
+ 
+        
+        
+            
+        
 

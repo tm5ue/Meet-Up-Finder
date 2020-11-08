@@ -202,6 +202,30 @@
 
 
 {% else %}
-    <h1>Please log in to see events</h1>
+
+<link href="https://fonts.googleapis.com/css2?family=Zilla+Slab:wght@300&display=swap" rel="stylesheet">
+     <style>
+     body {
+       background-image: url("{% static 'cat.jpg' %}");
+       background-size:1600px 900px;
+     }
+     h1{
+         color:#B58F12;
+         font-family: 'Zilla Slab',serif;
+     }
+     footer {
+         bottom: 0;
+         width:100%;
+         position: absolute;
+     }
+     </style>
+    <div class="container text-center">
+    <h1>Welcome to Event Finder by Kool Katz!</h1>
+    <p>Feel free to log in and explore our site</p>
+    
+    </div>
+    
+
+
 {% endif %}
 {% endblock %}
