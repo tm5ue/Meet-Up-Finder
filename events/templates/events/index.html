@@ -202,30 +202,32 @@
 
 
 {% else %}
-
-<link href="https://fonts.googleapis.com/css2?family=Zilla+Slab:wght@300&display=swap" rel="stylesheet">
-     <style>
-     body {
-       background-image: url("{% static 'cat.jpg' %}");
-       background-size:1600px 900px;
-     }
-     h1{
-         color:#B58F12;
-         font-family: 'Zilla Slab',serif;
-     }
-     footer {
-         bottom: 0;
-         width:100%;
-         position: absolute;
-     }
-     </style>
-    <div class="container text-center">
-    <h1>Welcome to Event Finder by Kool Katz!</h1>
-    <p>Feel free to log in and explore our site</p>
     
-    </div>
-    
-
-
+    <link href="https://fonts.googleapis.com/css2?family=Zilla+Slab:wght@300&display=swap" rel="stylesheet">
+         <style>
+         body {
+           background-image: url("{% static 'cat.jpg' %}");
+           background-size:1600px 900px;
+         }
+         h1{
+             color:#D17B43;
+             font-family: 'Zilla Slab',serif;
+             font-size: 50px;
+         }
+         p{
+             color:#B58F12;
+             font-family: 'Zilla Slab',serif;
+             font-size: 23px;
+         }
+         footer {
+             bottom: 0;
+             width:100%;
+             position: absolute;
+         }
+         </style>
+        <div class="container text-center">
+        <h1>Welcome to Event Finder by Kool Katz!</h1>
+        <p>Feel free to log in and explore our site. Find events based off of interests, location, and more! Click on an event to see the details such as the event description, author information, and even current weather of the event location. Don't forget to share your experiences by dropping a comment on the events!</p>
+        </div>
 {% endif %}
 {% endblock %}

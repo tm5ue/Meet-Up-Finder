@@ -103,6 +103,31 @@
   </div>
 
 {% else %}
-    <h1>Please log in to see your events!</h1>
+    <link href="https://fonts.googleapis.com/css2?family=Zilla+Slab:wght@300&display=swap" rel="stylesheet">
+         <style>
+         body {
+           background-image: url("{% static 'cat.jpg' %}");
+           background-size:1600px 900px;
+         }
+         h1{
+             color:#D17B43;
+             font-family: 'Zilla Slab',serif;
+             font-size: 50px;
+         }
+         p{
+             color:#B58F12;
+             font-family: 'Zilla Slab',serif;
+             font-size: 25px;
+         }
+         footer {
+             bottom: 0;
+             width:100%;
+             position: absolute;
+         }
+         </style>
+        <div class="container text-center">
+        <h1>Events</h1>
+        <p>This page will show all your events, including ones you've created, were invited to, are interested in, and are attending! This is also where you can edit and delete previous events you have made. Once an event is edited, all attendees will be notified about the changes via email. </p>
+        </div>
 {% endif %}
 {% endblock %}
