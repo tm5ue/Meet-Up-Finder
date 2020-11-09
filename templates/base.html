@@ -53,7 +53,7 @@
             }
         </style>
 
-        <nav class="navbar">
+        <nav class="navbar" style="background-color:#f4f2e3">
             <div class = "container">
             <a class="hbtn info" href="{% url 'events:index' %}">Home</a>
             <div class="md-form mt-0" style="max-width: 500px; width: 100%;">
@@ -87,19 +87,20 @@
                     }
                     </style>
                     <div class="dropdown">
-                      Welcome, {{ user.username }} !
+                      <a href="{% url 'events:authorDetail' user %}">Welcome, {{ user.username }}</a>!
                       <div class="dropdown-content">
                         <a class="hbtn info" href="{% url 'events:logout'  %}">Logout</a>
                       </div>
                     </div>
-                    {% else %}
-                        <a class="hbtn info" href="{% provider_login_url 'google' %}">Login</a>
-                    {% endif %}
+                {% else %}
+                   <a class="hbtn info" href="{% provider_login_url 'google' %}">Login</a>
+        {% endif %}
             </div>
         </nav>
     </header>
 
-    <body>
+    <body style="background-color:#f4f2e3">
+        <div style="background-color:#f4f2e3">
         {% block content_event %}
         {% endblock %}
                 
@@ -123,9 +124,19 @@
 
         <!-- MapBox JS -->
         <script src='https://api.mapbox.com/mapbox-gl-js/v1.12.0/mapbox-gl.js'></script>
+        </div>
+
+        <style>
+            a:hover {
+                color: #a26035;
+            }
+            a {
+                color: #D17B43;
+            }
+        </style>
     </body>
 
-    <footer class="font-small blue bg-light">
+    <footer class="font-small blue bg-light" style="position: relative; bottom: 0;">
         <div class="footer-copyright text-center py-3">© 2020 Copyright: Jonathan Mo, Nick Cooney, Simran Kaur, Tanya Mekavibul<br>
             <a target="_blank" rel="noopener noreferrer" href="https://github.com/uva-cs3240-f20/project-1-25/">GitHub</a>
         </div>

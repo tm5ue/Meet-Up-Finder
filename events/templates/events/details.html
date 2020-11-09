@@ -12,9 +12,9 @@
 <div class="containment", style="padding: 1em; margin-left: 1%; margin-right: 1%;">
         
     <div name="upper_content" style="width: 100%;">
-        <div style="padding: 1em; background-color: #EDEDED; border-radius: 10px; width: 80%; float: left;">
+        <div style="padding: 1em; background-color: #FFFFFF; border-radius: 10px; width: 80%; float: left;">
             <h1 class="display-3">{{ event.name | title }}
-                <div style="width: 15%; float: right; background-color: #EDEDED;">
+                <div style="width: 15%; float: right;">
                     
                     <!-- Bookmarking  -->
                     <form method='post' action='bookmark', style="display: inline; float:right ">
@@ -37,7 +37,7 @@
             </h1>
             <a href="{{ event.photourl }}"><img src="{{ event.photo.url }}" alt="{{ event.photo.url }}" width="400px" style="border-radius: 15px;"></a>
 
-            <p class="lead"><p>{{event.event_date.time | title}}, {{event.event_date.day | stringformat:"02d" | title}}/{{event.event_date.month|stringformat:"02d" | title}}/{{event.event_date.year | title}} @ {{ event.get_location | title }}</p>
+            <p class="lead"><p>{{event.event_date}} @ <a href="https://maps.google.com/?q={{ event.get_location | title }}">{{ event.get_location | title }}</a></p>
             <hr class="my-4">
             <h5>Details </h5><p>{{ event.description | capfirst }}</p>
             <p>
@@ -46,7 +46,7 @@
                 </a>
               </p>
               <div class="collapse" id="collapse">
-                <div class="card card-body">
+                <div class="card card-body" style="background-color: #ECECEC;">
                     <h5>Publish Date </h5>
                     <p>{{ event.pub_date | title }}</p>
                     <h5>Author </h5>
@@ -54,7 +54,7 @@
                         <p><a href="{% url 'events:authorDetail' name %}">{{ event.author | title }}</a></p>
                     {% endwith %}
                     <h5>Contact </h5>
-                        <a target="_blank" rel="noopener noreferrer" href="{{ event.email }}">{{ event.email }}</a>
+                        <a target="_blank" rel="noopener noreferrer" href="mailto:{{ event.email }}">{{ event.email }}</a>
                 </div>
               </div>
             
@@ -120,20 +120,20 @@
         </div>
 
         <div style="width: 18%; float: right;">
-            <button type="button" class="btn btn-primary btn-lg btn-block" data-toggle="modal" data-target="#attendee-model">
+            <button type="button" class="btn btn-primary btn-lg btn-block" data-toggle="modal" data-target="#attendee-modal">
                 <h5>See Who's Attending</h5>
             </button>
 
             <!-- Only see invitees if not public -->
             {% if event.invitees.all %}
                 <br>
-                <button type="button" class="btn btn-primary btn-lg btn-block" data-toggle="modal" data-target="#invitee-model">
+                <button type="button" class="btn btn-primary btn-lg btn-block" data-toggle="modal" data-target="#invitee-modal">
                     <h5>See Who's Invited</h5>
                 </button>
             {% endif %}
   
             <!-- Attendee Modal -->
-            <div class="modal fade" id="attendee-model" tabindex="-1" aria-labelledby="mlabel" aria-hidden="true">
+            <div class="modal fade" id="attendee-modal" tabindex="-1" aria-labelledby="mlabel" aria-hidden="true">
                 <div class="modal-dialog modal-dialog-scrollable">
                 <div class="modal-content">
                     <div class="modal-header">
@@ -145,7 +145,9 @@
                     <div class="modal-body">
                         {% if event.attendees.all %}
                             {% for u in event.attendees.all %}
-                                <p> {{u}} </p>
+                                {% with name=user %}
+                                    <a href="{% url 'events:authorDetail' name %}">{{ user | capfirst}}</a>
+                                {% endwith %}
                             {% endfor %}
                         {% else %}
                             <p> No One is Attending Yet!</p>
@@ -159,7 +161,7 @@
             </div>
 
             <!-- Invitee Modal -->
-            <div class="modal fade" id="invitee-model" tabindex="-1" aria-labelledby="mlabel" aria-hidden="true">
+            <div class="modal fade" id="invitee-modal" tabindex="-1" aria-labelledby="mlabel" aria-hidden="true">
                 <div class="modal-dialog modal-dialog-scrollable">
                 <div class="modal-content">
                     <div class="modal-header">
@@ -185,7 +187,8 @@
             <br>
             <h5>Share</h5>
             <ul class="fa-ul">
-                <li><i class="fa-li fa fa-facebook"></i>{% post_to_facebook object_or_url 'Facebook' %}</li>
+                <!-- Getting rid of FaceBook until they realize we're not l33t h4x0rs -->
+                <!-- <li><i class="fa-li fa fa-facebook"></i>{% post_to_facebook object_or_url 'Facebook' %}</li> -->
                 <li><i class="fa-li fa fa-twitter"></i>{% post_to_twitter "Check out {{ event.name | title }} at" object_or_url "Twitter" %}</li>
                 <li><i class="fa-li fa fa-linkedin"></i>{% post_to_linkedin "Check out {{ event.name | title }}" object_or_url "LinkedIn" %}</li>
                 <li><i class="fa-li fa fa-envelope"></i>{% send_email "Check out {{ event.name | title }}" "Event is available at:" object_or_url "Email Invite" %}</li>
@@ -216,7 +219,7 @@
             <h5>Current Comments: </h5>
 
                 {% for comment in comments %}
-                    <div class="media" style="background-color: #ececec; border-radius: 10px;">
+                    <div class="media" style="background-color: #FFFFFF; border-radius: 10px;">
                         <img src="https://avatars3.githubusercontent.com/u/969623?s=400&v=4" class="mr-3" alt="..." width="80" height="80" style="border-radius: 10px;">
                         <div class="media-body">
                             <h5 class="mt-0">{{ comment.name | title }}</h5>

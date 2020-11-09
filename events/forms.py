@@ -52,6 +52,7 @@ class EditEventForm(ModelForm):
         self.fields['invitees'].required = False
         self.fields['event_date'].widget = DateTimePickerInput()
         self.fields['tags'].required = False
+        self.fields['photo'].required = False
         for field_name, field in self.fields.items():
             if field_name == 'tags':
                 layout.append(Field(field_name, placeholder=field.label+(" (Separated with Commas)"), style="width: 100%;"))

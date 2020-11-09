@@ -18,7 +18,6 @@ from operator import or_, and_
 from django.core.mail import send_mass_mail, send_mail
 import requests
 import re
-
 import os
 from googleapiclient.discovery import build
 from oauth2client.service_account import ServiceAccountCredentials
@@ -32,6 +31,9 @@ class Index(ListView):
         Get public Events to display on home page
         :return:
         '''
+        for event in Event.objects.filter(Q(invitees__isnull=True)) :
+            if (event.event_date < timezone.now()):
+                event.delete()
         return Event.objects.filter(Q(invitees__isnull=True)) #public events
 
 def normalize_query(query_string,
@@ -360,11 +362,4 @@ def attending(request, event_id):
 #        print(addEvent)
 
 
-    return redirect('/events/' + str(event_id))
-    
- 
-        
-        
-            
-        
-
+    return redirect('/events/' + str(event_id))       
