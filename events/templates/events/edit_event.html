@@ -8,12 +8,8 @@
 {% if event.author == request.user.username %}
     <h1>Edit {{ event.name|title }}</h1>
     
-    <form method="post">
-        {% csrf_token %}
-        {{ form|crispy }}
-        <br>
-        <button type="submit" class="btn btn-primary btn-sm">Submit</button>
-    </form>
+    {% csrf_token %}
+    {% crispy form %}
 
 {% else %}
     <link href="https://fonts.googleapis.com/css2?family=Zilla+Slab:wght@300&display=swap" rel="stylesheet">

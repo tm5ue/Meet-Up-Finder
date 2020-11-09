@@ -61,6 +61,7 @@ class EditEventForm(ModelForm):
         self.helper.layout.append(ButtonHolder(
             Submit('submit', 'Save Edits', css_class='btn-primary btn-sm'),
             HTML("""<a href="{% url 'events:delete_event' event.id %}" class="btn-danger btn-sm" >Delete Event</a>""")))
+        self.helper.form_method = 'POST'
 
     class Meta:
         model = Event
