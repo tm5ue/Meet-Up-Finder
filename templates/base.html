@@ -25,38 +25,79 @@
 
         <!-- MapBox -->
         <link href='https://api.mapbox.com/mapbox-gl-js/v1.12.0/mapbox-gl.css' rel='stylesheet' />
+        
+        <link href="https://fonts.googleapis.com/css2?family=Hepta+Slab&display=swap" rel="stylesheet">
+        <style>
+            h1{
+                color: #D17B43;
+                font-family: 'Hepta Slab',serif;
+                font-weight:600;
+            }
+            .hbtn {
+                border: 2px solid #D17B43;
+                background-color: #FFF8DC;
+                color: black;
+                padding: 7px 15px;
+                font-size: 16px;
+                cursor: pointer;
+                border-radius: 16px;
+            }
+            .info {
+                border-color: #D17B43;
+                color: #D17B43;
+            }
+            .info:hover {
+                background: #FFFFF0;
+                color: #F4A460;
+                border-color: #F4A460;
+            }
+        </style>
 
-        <nav class="navbar navbar-light bg-light">
+        <nav class="navbar">
             <div class = "container">
-            <a class="navbar-brand" href="{% url 'events:index' %}">Home</a>
-            
+            <a class="hbtn info" href="{% url 'events:index' %}">Home</a>
             <div class="md-form mt-0" style="max-width: 500px; width: 100%;">
                 <form action="{% url 'events:search_results' %}" method="get">
                     <input name="q" type="text" class="form-control" placeholder="Search...">
                 </form>
             </div>
-
-            <ul class="nav">
-                <li class="nav-item active">
-                    <a class="nav-link" href="{% url 'events:add_event' %}">Add an event</a>
-                </li>
-                <li class="nav-item active">
-                    <a class="nav-link" href="{% url 'events:myEvents'%}">My Events</a>
-                </li>
-                <li class="nav-item">
-                    {% if user.is_authenticated %}
-                        <p>Welcome, {{ user.username }} !</p>
-                        <a class="nav-link" href="{% url 'events:logout'  %}">Logout</a>
-
+            <a class="hbtn info" href="{% url 'events:add_event' %}">Add an event</a>
+            <a class="hbtn info" href="{% url 'events:myEvents'%}">My Events</a>
+            {% if user.is_authenticated %}
+                    <style>
+                    .dropdown {
+                      position: relative;
+                      display: inline-block;
+                      border: 2px solid #D17B43;
+                      background-color: #FFF8DC;
+                      color: #D17B43;
+                      padding: 7px 15px;
+                      font-size: 16px;
+                      cursor: pointer;
+                      border-radius: 16px;
+                    }
+                    .dropdown-content {
+                      display: none;
+                      position: absolute;
+                      min-width: 500px;
+                      line-height:50px;
+                    }
+                    .dropdown:hover .dropdown-content {
+                      display: block;
+                    }
+                    </style>
+                    <div class="dropdown">
+                      Welcome, {{ user.username }} !
+                      <div class="dropdown-content">
+                        <a class="hbtn info" href="{% url 'events:logout'  %}">Logout</a>
+                      </div>
+                    </div>
                     {% else %}
-                        <a class="nav-link" href="{% provider_login_url 'google' %}">Login</a>
+                        <a class="hbtn info" href="{% provider_login_url 'google' %}">Login</a>
                     {% endif %}
-                </li>
-            </ul>
             </div>
         </nav>
     </header>
-
 
     <body>
         {% block content_event %}
@@ -84,12 +125,10 @@
         <script src='https://api.mapbox.com/mapbox-gl-js/v1.12.0/mapbox-gl.js'></script>
     </body>
 
-
     <footer class="font-small blue bg-light">
         <div class="footer-copyright text-center py-3">© 2020 Copyright: Jonathan Mo, Nick Cooney, Simran Kaur, Tanya Mekavibul<br>
             <a target="_blank" rel="noopener noreferrer" href="https://github.com/uva-cs3240-f20/project-1-25/">GitHub</a>
         </div>
     </footer>
-
 
 </html>

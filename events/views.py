@@ -20,13 +20,10 @@ import requests
 import re
 
 import os
-from datetime import timedelta
-import datetime
-import pytz
-
-import httplib2
 from googleapiclient.discovery import build
 from oauth2client.service_account import ServiceAccountCredentials
+
+ 
 
 class Index(ListView):
     '''Class for home page'''
@@ -296,20 +293,29 @@ def bookmark(request, event_id):
     return redirect('/events/' + str(event_id))
     
 #service account email and credentials
-
- 
 #service_account_email = "project-1-25@hip-cyclist-290500.iam.gserviceaccount.com"
+from google_auth_oauthlib.flow import InstalledAppFlow
+import pickle
 
-SCOPES = ["https://www.googleapis.com/auth/calendar"]
-def build_service():
-    DIRNAME = os.path.dirname(__file__)
-    credentials = ServiceAccountCredentials.from_json_keyfile_name(
-        os.path.join(DIRNAME, 'creds.json'),
-        scopes=SCOPES
-    )
-    service = build("calendar", "v3", credentials=credentials)
-    return service
- 
+#SCOPES = ["https://www.googleapis.com/auth/calendar"]
+#DIRNAME = os.path.dirname(__file__)
+#flow= InstalledAppFlow.from_client_secrets_file(os.path.join(DIRNAME, 'ccreds.json'),scopes=SCOPES)
+#credentials=flow.run_console()
+#pickle.dump(credentials,open("token.pkl","wb"))
+#credentials=pickle.load(open("token.pkl","rb"))
+#service = build("calendar", "v3", credentials=credentials)
+
+#def build_service():
+#    DIRNAME = os.path.dirname(__file__)
+#    credentials = ServiceAccountCredentials.from_json_keyfile_name(
+#        os.path.join(DIRNAME, 'creds.json'),
+#        scopes=SCOPES
+#    )
+    #service = build("calendar", "v3", credentials=credentials)
+    #return service
+#service = build_service()
+
+
 def attending(request, event_id):
     '''See if user clicking to attend is already attending, if so remove, if not add'''
     user = request.user
@@ -321,25 +327,23 @@ def attending(request, event_id):
             already_attending = True
     if (already_attending):
         event.attendees.remove(user.id)
-        #service.events().delete(calendarId='primary', eventId='eventId').execute()
+#        service = build("calendar", "v3", credentials=credentials)
+#        service.events().delete(calendarId='primary', eventId=addEvent.eventId).execute()
     else:
         event.attendees.add(user.id)
-#        service = build_service()
 #        addEvent = {
-#          'summary': "idk",
-#          'location':  "event.location",
-#          'description': "event.description",
-#          'start': {
-#            'date': "2020-11-11",
-#          },
-#          'end': {
-#            'date': "2020-11-11",
-#          },
-##          'attendees': [
-##            {'email': user.email},
-##          ],
-#        }
-#        addEvent= service.events().insert(calendarId='9vrf01e5bdhqh6cbq46n1oovas@group.calendar.google.com', body=addEvent).execute()
+#                   'summary': event.name,
+#                   'location':  event.location,
+#                   'description': event.description,
+#                   'start': {
+#                     'date': "2020-11-11",
+#                   },
+#                   'end': {
+#                     'date': "2020-11-11",
+#                   },
+#                 }
+#        service = build("calendar", "v3", credentials=credentials)
+#        addEvent= service.events().insert(calendarId='primary', body=addEvent).execute()
 #        print(addEvent)
 
 
