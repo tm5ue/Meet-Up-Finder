@@ -22,7 +22,6 @@ urlpatterns = [
     path('events/<int:event_id>/bookmark', views.bookmark),
     path('events/<int:event_id>/attending', views.attending),
     
-#    path('search/', views.SearchResultsView.as_view(), name='search_results'),
     path('search/', views.get_search, name='search_results'),
     path('events/<int:event_id>/edit_event/', views.EditEvent.as_view(), name='edit_event'),
     path('user/<str:username>/', views.profile, name='authorDetail'),
