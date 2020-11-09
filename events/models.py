@@ -58,7 +58,7 @@ class Event(models.Model):
         else:
             return location.raw['address']['city']
 
-    def get_city(self):
+    def get_state(self):
         geolocator = Nominatim(user_agent="Event")
         location = geolocator.geocode(self.location, addressdetails=True)
         if location is None or 'state' not in location.raw['address']:
