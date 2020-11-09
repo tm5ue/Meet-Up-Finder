@@ -1,26 +1,34 @@
 {% extends "base.html" %}
+{% load crispy_forms_tags %}
 {% load static %}
+
+{% block extrahead %}
+    {{ form.media }}
+{% endblock %}
+
 {% block content %}
 
-{% load socialaccount %}
+{% if no_query %}
+<h1>Please Enter Search Criteria into Search Bar!</h1>
 
-{% if event_list_all %}
+{% else %}
+{% if user.is_authenticated %}
+{% if event_list %}
 <div class="container text-center">
 <h1>Search Results for: "{{ query }}"</h1>
 </div>
 
- <!-- <form method="POST" action="{% url 'events:search_results' %}" style="text-align: center;">
+<form method="POST" action="{% url 'events:search_results' %}" style="text-align: center;">
+    {% csrf_token %}
     Sort By:
-    <input type="radio" id="name" name="sort" value="name">
+    <input type="checkbox" id="name" {% if "name" in criteria %}checked{% endif %} name="criteria" value="name">
     <label for="name">Name</label>
-    <input type="radio" id="tags" name="sort" value="tags">
+    <input type="checkbox" id="tags" {% if "tags" in criteria %}checked{% endif %} name="criteria" value="tags">
     <label for="tags">Tags</label>
-    <input type="radio" id="location" name="sort" value="location">
+    <input type="checkbox" id="location" {% if "location" in criteria %}checked{% endif %} name="criteria" value="location">
     <label for="location">Location</label>
-    <input type="radio" id="all" name="sort" value="all">
-    <label for="all">All</label>
-    <input type="submit" value="Filter" class='btn-primary btn-sm'>
-</form> -->
+    <input type="submit" value="Filter">
+</form> 
 
 <style>
     li{
@@ -36,7 +44,7 @@
         position:absolute;
     }
 </style>
-{% for event in event_list_all %}
+{% for event in event_list %}
 <div class="container text-center">
     <li>
         <a href="{% url 'events:detail' event.id %}">{{ event.name | title }}</a>
@@ -44,7 +52,72 @@
 </div>
 {% endfor %}
 {% else %}
+    {% if criteria %}
+    <div class="container text-center">
+        <h1>Search Results for: "{{ query }}"</h1>
+        </div>
+        
+        <form method="POST" action="{% url 'events:search_results' %}" style="text-align: center;">
+            {% csrf_token %}
+            Sort By:
+            <input type="checkbox" id="name" {% if "name" in criteria %}checked{% endif %} name="criteria" value="name">
+            <label for="name">Name</label>
+            <input type="checkbox" id="tags" {% if "tags" in criteria %}checked{% endif %} name="criteria" value="tags">
+            <label for="tags">Tags</label>
+            <input type="checkbox" id="location" {% if "location" in criteria %}checked{% endif %} name="criteria" value="location">
+            <label for="location">Location</label>
+            <input type="submit" value="Filter">
+        </form> 
+        
+        <style>
+            li{
+                font-size: 25px;
+            }
+            a:hover {
+                color: #f6d6ad;
+            }
+            a {
+                color: #ffd57e;
+            }
+            footer{
+                position:absolute;
+            }
+        </style>
+        <div class="container text-center">
+        <p>No events...</p>
+        </div>
+    {% else %}
     <h1>No Results for "{{ query }}"... Try Another Search!</h1>
+    {% endif %}
 {% endif %}
 
+{% else %}
+<link href="https://fonts.googleapis.com/css2?family=Zilla+Slab:wght@300&display=swap" rel="stylesheet">
+       <style>
+       body {
+         background-image: url("{% static 'cat.jpg' %}");
+         background-size:1600px 900px;
+       }
+       h1{
+           color:#D17B43;
+           font-family: 'Zilla Slab',serif;
+           font-size: 50px;
+       }
+       p{
+           color:#B58F12;
+           font-family: 'Zilla Slab',serif;
+           font-size: 26px;
+       }
+       footer {
+           bottom: 0;
+           width:100%;
+           position: absolute;
+       }
+       </style>
+      <div class="container text-center">
+      <h1>Search for Events</h1>
+      <p>Log in to find public events created by people within your community and around the world!</p>
+      </div>
+{% endif %}
+{% endif %}
 {% endblock %}

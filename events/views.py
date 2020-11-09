@@ -14,7 +14,7 @@ from bootstrap_datepicker_plus import DateTimePickerInput
 from django import template
 from django.conf import settings
 from functools import reduce
-from operator import or_
+from operator import or_, and_
 from django.core.mail import send_mass_mail, send_mail
 import requests
 import re
@@ -22,8 +22,6 @@ import re
 import os
 from googleapiclient.discovery import build
 from oauth2client.service_account import ServiceAccountCredentials
-
- 
 
 class Index(ListView):
     '''Class for home page'''
@@ -45,58 +43,73 @@ def normalize_query(query_string,
         >>> normalize_query('  some random  words "with   quotes  " and   spaces')
         ['some', 'random', 'words', 'with quotes', 'and', 'spaces']
     '''
-    return [normspace(' ', (t[0] or t[1]).strip()) for t in findterms(query_string)]
-
-# class SearchResultsView(ListView):
-#     model = Event
-#     template_name = 'events/search_results.html'
-#     def get_queryset(self):
-#         '''Get search criteria and return list of corresponding events'''
-#         queries = normalize_query(self.request.GET.get('q'))
-#         user = User.objects.get(email=self.request.user.email)
-#         name_query = reduce(or_, (Q(name__icontains=query) for query in queries))
-#         tag_query = reduce(or_, (Q(tags__icontains=query) for query in queries))
-#         location_query = reduce(or_, (Q(location__icontains=query) for query in queries))
-#         event_list = Event.objects.filter(
-#             (Q(invitees__isnull=True) | Q(invitees=user) | Q(author=user)) & #either public/invited events/events you wrote
-#             (name_query | tag_query | location_query)
-#         ).distinct()
-#         return event_list
+    if query_string is not None:
+        returned = [normspace(' ', (t[0] or t[1]).strip()) for t in findterms(query_string)]
+    else:
+        returned = ""
+    return returned
 
 def get_search(request):
     if request.method == 'GET':
         queries = normalize_query(request.GET.get('q'))
-        user = User.objects.get(email=request.user.email)
-        if len(queries) == 0:
-            return redirect(request.META['HTTP_REFERER'])
+        authentication = request.user.is_authenticated
+        if (authentication):
+            user = User.objects.get(email=request.user.email)
+            if len(queries) == 0:
+                no_query = 'true'
+                return render(request, 'events/search_results.html', {'no_query':no_query})
+            else:
+                name_query = reduce(or_, (Q(name__icontains=query) for query in queries))
+                tag_query = reduce(or_, (Q(tags__icontains=query) for query in queries))
+                location_query = reduce(or_, (Q(location__icontains=query) for query in queries))
+                # TODO: fix location query to search for city, state, country instead of user input
+
+                event_list_all = Event.objects.filter(
+                    (Q(invitees__isnull=True) | Q(invitees=user) | Q(author=user)) & #either public/invited events/events you wrote
+                    (name_query | tag_query | location_query)
+                ).distinct()
+
+                context = {
+                    'query':request.GET.get('q'), 
+                    'event_list':event_list_all,
+                }
+                response = render(request, 'events/search_results.html', context)
+                response.set_cookie('query', request.GET.get('q'))
+                return response
         else:
-            name_query = reduce(or_, (Q(name__icontains=query) for query in queries))
-            tag_query = reduce(or_, (Q(tags__icontains=query) for query in queries))
-            location_query = reduce(or_, (Q(location__icontains=query) for query in queries))
-            events_list_all = Event.objects.filter(
-                (Q(invitees__isnull=True) | Q(invitees=user) | Q(author=user)) & #either public/invited events/events you wrote
-                (name_query | tag_query | location_query)
-            ).distinct()
-            events_list_name = Event.objects.filter(
-                (Q(invitees__isnull=True) | Q(invitees=user) | Q(author=user)) & #either public/invited events/events you wrote
-                (name_query)
-            ).distinct()
-            events_list_tag = Event.objects.filter(
-                (Q(invitees__isnull=True) | Q(invitees=user) | Q(author=user)) & #either public/invited events/events you wrote
-                (tag_query)
-            ).distinct()
-            events_list_location = Event.objects.filter(
-                (Q(invitees__isnull=True) | Q(invitees=user) | Q(author=user)) & #either public/invited events/events you wrote
-                (location_query)
-            ).distinct()
-            context = {
-                'query':request.GET.get('q'), 
-                'event_list_all':events_list_all,
-                'event_list_name':events_list_name,
-                'event_list_tag':events_list_tag,
-                'event_list_location':events_list_location,
-            }
-            return render(request, 'events/search_results.html', context)
+            return render(request, 'events/search_results.html', {})
+    if request.method == 'POST':
+        q = request.COOKIES['query']
+        queries = normalize_query(q)
+        user = User.objects.get(email=request.user.email)
+        name_query = reduce(or_, (Q(name__icontains=query) for query in queries))
+        tag_query = reduce(or_, (Q(tags__icontains=query) for query in queries))
+        location_query = reduce(or_, (Q(location__icontains=query) for query in queries))
+        invitee_list = [Q(invitees__isnull=True), Q(invitees=user), Q(author=user)]
+        query_list = []
+        criteria = request.POST.getlist('criteria')
+        if 'name' in criteria:
+            query_list.append(name_query)
+        if 'tags' in criteria:
+            query_list.append(tag_query)
+        if 'location' in criteria:
+            query_list.append(location_query)
+        if len(criteria) == 0:
+            query_list = [name_query, tag_query, location_query]
+        invitee_criteria = reduce(or_, invitee_list)
+        query_criteria = reduce(or_, query_list)
+        ultimate_query = [invitee_criteria, query_criteria]
+        final_query = reduce(and_, ultimate_query)
+        event_list = Event.objects.filter(final_query).distinct()
+        context = {
+            'query':q, 
+            'event_list':event_list,
+            'criteria':criteria,
+        }
+        response = render(request, 'events/search_results.html', context)
+        response.set_cookie('query', q)
+        return response
+
 
 class AddEvent(TemplateView):
     template_name = 'events/add_event.html'
@@ -228,7 +241,7 @@ def post_detail(request, event_id):
     lat = event.get_latitude()
     lon = event.get_longitude()
     city_weather = requests.get(url.format(lat, lon)).json() #request the API data and convert the JSON to Python data types
-    print(city_weather)
+    # print(city_weather)
     if 'main' in city_weather:
         weather = {
             'temperature' : city_weather['main']['temp'],

@@ -58,6 +58,14 @@ class Event(models.Model):
         else:
             return location.raw['address']['city']
 
+    def get_city(self):
+        geolocator = Nominatim(user_agent="Event")
+        location = geolocator.geocode(self.location, addressdetails=True)
+        if location is None or 'state' not in location.raw['address']:
+            return "no state"
+        else:
+            return location.raw['address']['state']
+
     def get_country(self):
         geolocator = Nominatim(user_agent="Event")
         location = geolocator.geocode(self.location, addressdetails=True)
@@ -86,7 +94,8 @@ class Event(models.Model):
 @receiver(pre_delete, sender=Event)
 def photo_delete(sender, instance, **kwargs):
     '''Automatically delete from cloudinary when delete from database'''
-    cloudinary.uploader.destroy(instance.photo.public_id)
+    if instance.photo:
+        cloudinary.uploader.destroy(instance.photo.public_id)
 
 class Comment(models.Model):
     post = models.ForeignKey(Event, on_delete=models.CASCADE, related_name='comments')
