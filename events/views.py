@@ -294,8 +294,8 @@ def bookmark(request, event_id):
     
 #service account email and credentials
 #service_account_email = "project-1-25@hip-cyclist-290500.iam.gserviceaccount.com"
-from google_auth_oauthlib.flow import InstalledAppFlow
-import pickle
+#from google_auth_oauthlib.flow import InstalledAppFlow
+#import pickle
 
 #SCOPES = ["https://www.googleapis.com/auth/calendar"]
 #DIRNAME = os.path.dirname(__file__)
