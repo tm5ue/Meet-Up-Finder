@@ -10,15 +10,8 @@
 {% if user.is_authenticated %}
     <h1>Add an Event</h1>
 
-            <form method="post">
-                {% csrf_token %}
-                {{ form|crispy }}
-                <br>
-                <button type="submit" class="btn btn-primary btn-sm">Submit</button>
-            </form>
-  <div>
-
-  </div>
+    {% csrf_token %}
+    {% crispy form %}
 
 {% else %}
 <link href="https://fonts.googleapis.com/css2?family=Zilla+Slab:wght@300&display=swap" rel="stylesheet">
