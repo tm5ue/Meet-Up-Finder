@@ -5,6 +5,7 @@
 
 <link rel="stylesheet" href="{% static 'events/css/style.css' %}">
 
+<!-- This site crashes when a user that is not logged in tries to access -->
 {% if user.is_authenticated %}
 
 <br>
@@ -21,13 +22,19 @@
       <div id="collapseOne" class="collapse show" aria-labelledby="headingOne" data-parent="#event-accordian">
         <div class="card-body">
             <ul class="list-group list-group-flush">
-                {% for event in made %}
-                    <li class="list-group-item">
-                        <a href="{% url 'events:detail' event.id %}">{{ event.name | title }}</a>
-                        <a href="{% url 'events:edit_event' event.id %}" class="btn btn-primary btn-sm">Edit</a>
-                        <a href="{% url 'events:delete_event' event.id %}" class="btn btn-danger btn-sm">Delete</a>
-                    </li>
+              {% if events.all %}
+                {% for event in events %}
+                  <li class="list-group-item">
+                      <a href="{% url 'events:detail' event.id %}">{{ event.name | title }}</a>
+                      <div style="display:inline; float: right;">
+                      <a href="{% url 'events:edit_event' event.id %}" class="btn btn-primary btn-sm">Edit</a>
+                      <a href="{% url 'events:delete_event' event.id %}" class="btn btn-danger btn-sm">Delete</a>
+                      </div>
+                  </li>
                 {% endfor %}
+              {% else %}
+                <p>None yet!</p>
+              {% endif %}
             </ul>
         </div>
       </div>
@@ -130,9 +137,21 @@
          footer {
              bottom: 0;
              width:100%;
-             position: absolute;
+             position: relative;
          }
-         </style>
+         #fixed-height {
+            height: 100px;
+            background-color: #57c975;
+          }
+          #remaining-height {
+          background-color: #d9deda;
+          position: absolute;
+          top: 100px;
+          bottom: 0;
+          width: 100%;
+        }
+        </style>
+
         <div class="container text-center">
         <h1>Events</h1>
         <p>This page will show all your events, including ones you've created, were invited to, are interested in, and are attending! This is also where you can edit and delete previous events you have made. Once an event is edited, all attendees will be notified about the changes via email. </p>

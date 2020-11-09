@@ -5,8 +5,40 @@
 {% endblock %}
 {% block content %}
 
+{% if event.author == request.user.username %}
     <h1>Edit {{ event.name|title }}</h1>
+    
+    <form method="post">
         {% csrf_token %}
-        {% crispy form %}
+        {{ form|crispy }}
+        <br>
+        <button type="submit" class="btn btn-primary btn-sm">Submit</button>
+    </form>
 
+{% else %}
+    <link href="https://fonts.googleapis.com/css2?family=Zilla+Slab:wght@300&display=swap" rel="stylesheet">
+    <style>
+        /* This one does not have the cat image, something was causing issues... */
+        h1{
+            color:#D17B43;
+            font-family: 'Zilla Slab',serif;
+            font-size: 50px;
+        }
+        p{
+            color:#B58F12;
+            font-family: 'Zilla Slab',serif;
+            font-size: 26px;
+        }   
+        footer {
+            bottom: 0;
+            width:100%;
+            position: relative;
+        }
+    </style>
+    <div class="container text-center">
+            <h1>Edit Events</h1>
+            <p>Looks like you are not the creator of this event! If you wish to suggest an edit, please contact <a target="_blank" rel="noopener noreferrer" href="mailto:{{ event.email }}">{{ event.email }}</a>.</p>
+        </div>
+{% endif %}
+    
 {% endblock %}

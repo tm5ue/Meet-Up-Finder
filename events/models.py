@@ -86,7 +86,8 @@ class Event(models.Model):
 @receiver(pre_delete, sender=Event)
 def photo_delete(sender, instance, **kwargs):
     '''Automatically delete from cloudinary when delete from database'''
-    cloudinary.uploader.destroy(instance.photo.public_id)
+    if not (instance.photo is None):
+        cloudinary.uploader.destroy(instance.photo.public_id)
 
 class Comment(models.Model):
     post = models.ForeignKey(Event, on_delete=models.CASCADE, related_name='comments')

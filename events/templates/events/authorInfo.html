@@ -6,25 +6,103 @@
         font-size: 25px;
     }
     a:hover {
-        color: #f6d6ad;
+        color: #a26035;
     }
     a {
-        color: #ffd57e;
+        color: #D17B43;
     }
     footer{
         position:absolute;
     }
 </style>
 
-<div class="container text-center">
+{% if user.is_authenticated %}
+<div>
     <h1>
         {{a| title}}
     </h1>
-    
-    {% for event in events %}
-    <div class="container text-center">
-    <li><a href="{% url 'events:detail' event.id %}">{{ event.name | title }}</a></li></div>
-    {% endfor %}
+    <hr>
+
+    <h3 style="color:#D17B43">
+        Events {{a| title}} Has Made
+    </h3>
+    <ul class="list-group">
+        {% if events %}
+            {% for event in events %}
+                <li class="list-group-item">
+                    <a href="{% url 'events:detail' event.id %}">{{ event.name | title }}</a>
+                    {% if event.author == request.user.username %}
+                        <div style="display:inline; float: right;">
+                            <a href="{% url 'events:edit_event' event.id %}" class="btn btn-primary btn-sm">Edit</a>
+                            <a href="{% url 'events:delete_event' event.id %}" class="btn btn-danger btn-sm">Delete</a>
+                        </div>
+                    {% endif %}
+                </li>
+            {% endfor %}
+        {% else %}
+            <ul class="list-group">
+                <li class="list-group-item">None yet!</li>
+            </ul>
+        {% endif %}
+    </ul>
+
+    <br>
+    <h3 style="color:#D17B43">
+        Events {{a| title}} is Signed Up For
+    </h3>
+    <ul class="list-group">
+        {% if attendees %}
+            <ul class="list-group">
+                {% for event in attendees %}
+                    <li class="list-group-item"><a href="{% url 'events:detail' event.id %}">{{ event.name | title }}</a></li>
+                {% endfor %}
+            </ul>
+        {% else %}
+            <ul class="list-group">
+                <li class="list-group-item">None yet!</li>
+            </ul>
+        {% endif %}
+    </ul>
 
 </div>
+{% else %}
+    <link href="https://fonts.googleapis.com/css2?family=Zilla+Slab:wght@300&display=swap" rel="stylesheet">
+         <style>
+         body {
+           background-image: url("{% static 'cat.jpg' %}");
+           background-size:1600px 900px;
+         }
+         h1{
+             color:#D17B43;
+             font-family: 'Zilla Slab',serif;
+             font-size: 50px;
+         }
+         p{
+             color:#B58F12;
+             font-family: 'Zilla Slab',serif;
+             font-size: 25px;
+         }
+         footer {
+             bottom: 0;
+             width:100%;
+             position: relative;
+         }
+         #fixed-height {
+            height: 100px;
+            background-color: #57c975;
+          }
+          #remaining-height {
+          background-color: #d9deda;
+          position: absolute;
+          top: 100px;
+          bottom: 0;
+          width: 100%;
+        }
+        </style>
+
+        <div class="container text-center">
+        <h1>Events</h1>
+        <p>This page will show all the user profile for {{a| title}}! Once you sign in, you will be able to see what events {{a| title}} has created and signed up for.</p>
+        </div>
+{% endif %}
 {% endblock %}
