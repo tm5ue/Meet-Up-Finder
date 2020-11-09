@@ -12,7 +12,7 @@
     <div class="card">
       <div class="card-header" id="headingOne">
         <h2 class="mb-0">
-          <button class="btn btn-link btn-block text-left" type="button" data-toggle="collapse" data-target="#collapseOne" aria-expanded="true" aria-controls="collapseOne" style="color:green">
+          <button class="btn btn-link btn-block text-left" type="button" data-toggle="collapse" data-target="#collapseOne" aria-expanded="true" aria-controls="collapseOne" style="color:#D17B43">
             Events You Made
           </button>
         </h2>
@@ -36,7 +36,7 @@
     <div class="card">
       <div class="card-header" id="headingTwo">
         <h2 class="mb-0">
-          <button class="btn btn-link btn-block text-left collapsed" type="button" data-toggle="collapse" data-target="#collapseTwo" aria-expanded="false" aria-controls="collapseTwo" style="color:green">
+          <button class="btn btn-link btn-block text-left collapsed" type="button" data-toggle="collapse" data-target="#collapseTwo" aria-expanded="false" aria-controls="collapseTwo" style="color:#D17B43">
             Events You Bookmarked
           </button>
         </h2>
@@ -59,7 +59,7 @@
     <div class="card">
       <div class="card-header" id="headingThree">
         <h2 class="mb-0">
-          <button class="btn btn-link btn-block text-left collapsed" type="button" data-toggle="collapse" data-target="#collapseThree" aria-expanded="false" aria-controls="collapseThree" style="color:green">
+          <button class="btn btn-link btn-block text-left collapsed" type="button" data-toggle="collapse" data-target="#collapseThree" aria-expanded="false" aria-controls="collapseThree" style="color:#D17B43">
             Events You Signed Up For
           </button>
         </h2>
@@ -78,13 +78,21 @@
         </div>
       </div>
     </div>
-
+    <style>
+        a:hover {
+            color: #e5c5b5;
+        }
+        a{
+            font-size:19px;
+            color: #d49a89;
+        }
+    </style>
     <!-- Only show if invited to any events -->
     {% if invite %}
     <div class="card">
         <div class="card-header" id="headingFour">
           <h2 class="mb-0">
-            <button class="btn btn-link btn-block text-left collapsed" type="button" data-toggle="collapse" data-target="#collapseFour" aria-expanded="false" aria-controls="collapseFour" style="color:green">
+            <button class="btn btn-link btn-block text-left collapsed" type="button" data-toggle="collapse" data-target="#collapseFour" aria-expanded="false" aria-controls="collapseFour" style="color:#D17B43">
               Events You Are Invited To
             </button>
           </h2>
@@ -103,6 +111,31 @@
   </div>
 
 {% else %}
-    <h1>Please log in to see your events!</h1>
+    <link href="https://fonts.googleapis.com/css2?family=Zilla+Slab:wght@300&display=swap" rel="stylesheet">
+         <style>
+         body {
+           background-image: url("{% static 'cat.jpg' %}");
+           background-size:1600px 900px;
+         }
+         h1{
+             color:#D17B43;
+             font-family: 'Zilla Slab',serif;
+             font-size: 50px;
+         }
+         p{
+             color:#B58F12;
+             font-family: 'Zilla Slab',serif;
+             font-size: 25px;
+         }
+         footer {
+             bottom: 0;
+             width:100%;
+             position: absolute;
+         }
+         </style>
+        <div class="container text-center">
+        <h1>Events</h1>
+        <p>This page will show all your events, including ones you've created, were invited to, are interested in, and are attending! This is also where you can edit and delete previous events you have made. Once an event is edited, all attendees will be notified about the changes via email. </p>
+        </div>
 {% endif %}
 {% endblock %}

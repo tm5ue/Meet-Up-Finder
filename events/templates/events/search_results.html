@@ -5,8 +5,9 @@
 {% load socialaccount %}
 
 {% if event_list_all %}
+<div class="container text-center">
 <h1>Search Results for: "{{ query }}"</h1>
-
+</div>
 
  <!-- <form method="POST" action="{% url 'events:search_results' %}" style="text-align: center;">
     Sort By:
@@ -21,11 +22,26 @@
     <input type="submit" value="Filter" class='btn-primary btn-sm'>
 </form> -->
 
-
+<style>
+    li{
+        font-size: 25px;
+    }
+    a:hover {
+        color: #f6d6ad;
+    }
+    a {
+        color: #ffd57e;
+    }
+    footer{
+        position:absolute;
+    }
+</style>
 {% for event in event_list_all %}
+<div class="container text-center">
     <li>
         <a href="{% url 'events:detail' event.id %}">{{ event.name | title }}</a>
     </li>
+</div>
 {% endfor %}
 {% else %}
     <h1>No Results for "{{ query }}"... Try Another Search!</h1>
