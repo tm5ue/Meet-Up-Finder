@@ -22,8 +22,8 @@
       <div id="collapseOne" class="collapse show" aria-labelledby="headingOne" data-parent="#event-accordian">
         <div class="card-body">
             <ul class="list-group list-group-flush">
-              {% if events.all %}
-                {% for event in events %}
+              {% if made %}
+                {% for event in made %}
                   <li class="list-group-item">
                       <a href="{% url 'events:detail' event.id %}">{{ event.name | title }}</a>
                       <div style="display:inline; float: right;">

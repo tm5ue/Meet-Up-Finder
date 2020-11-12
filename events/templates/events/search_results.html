@@ -27,7 +27,7 @@
     <label for="tags">Tags</label>
     <input type="checkbox" id="location" {% if "location" in criteria %}checked{% endif %} name="criteria" value="location">
     <label for="location">Location</label>
-    <input type="submit" value="Filter">
+    <input type="submit" class="btn btn-success btn-sm" value="Filter">
 </form> 
 
 <style>
@@ -44,13 +44,21 @@
         position:absolute;
     }
 </style>
-{% for event in event_list %}
-<div class="container text-center">
-    <li>
-        <a href="{% url 'events:detail' event.id %}">{{ event.name | title }}</a>
-    </li>
-</div>
-{% endfor %}
+
+<ul class="list-group">
+    {% for event in event_list %}
+        <li class="list-group-item">
+            <a href="{% url 'events:detail' event.id %}">{{ event.name | title }}</a>
+            {% if event.author == request.user.username %}
+                <div style="display:inline; float: right;">
+                    <a href="{% url 'events:edit_event' event.id %}" class="btn btn-primary btn-sm">Edit</a>
+                    <a href="{% url 'events:delete_event' event.id %}" class="btn btn-danger btn-sm">Delete</a>
+                    </div>
+            {% endif %}
+        </li>
+    {% endfor %}
+</ul>
+
 {% else %}
     {% if criteria %}
     <div class="container text-center">

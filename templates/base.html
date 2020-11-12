@@ -79,7 +79,6 @@
                     .dropdown-content {
                       display: none;
                       position: absolute;
-                      min-width: 500px;
                       line-height:50px;
                     }
                     .dropdown:hover .dropdown-content {
@@ -87,7 +86,7 @@
                     }
                     </style>
                     <div class="dropdown">
-                      <a href="{% url 'events:authorDetail' user %}">Welcome, {{ user.username }}</a>!
+                      <a href="{% url 'events:authorDetail' user %}">Welcome, {{ user.username | capfirst }}</a>!
                       <div class="dropdown-content">
                         <a class="hbtn info" href="{% url 'events:logout'  %}">Logout</a>
                       </div>

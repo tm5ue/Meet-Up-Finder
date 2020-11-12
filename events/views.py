@@ -21,6 +21,7 @@ import re
 import os
 from googleapiclient.discovery import build
 from oauth2client.service_account import ServiceAccountCredentials
+import datetime
 
 class Index(ListView):
     '''Class for home page'''
@@ -32,7 +33,7 @@ class Index(ListView):
         :return:
         '''
         for event in Event.objects.filter(Q(invitees__isnull=True)) :
-            if (event.event_date < timezone.now()):
+            if (event.event_date < (timezone.now() - datetime.timedelta(days=1))):
                 event.delete()
         return Event.objects.filter(Q(invitees__isnull=True)) #public events
 
