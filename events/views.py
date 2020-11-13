@@ -272,7 +272,7 @@ def myEvents(request):
             'made': Event.objects.filter(Q(author=user)),
             'invite': Event.objects.filter(Q(invitees=user)),
             'bookmark': Event.objects.filter(Q(users_bookmarked=user)),
-            'attendees': Event.objects.filter(Q(attendees=user)),
+            'attendees': Event.objects.filter(Q(attendees=user)&((Q(invitees__isnull=True)|Q(invitees=user)|Q(author=user)))).distinct(), #youre attending and either it's public, you're invited, or you made the event
         }
     except:
         context = {
@@ -288,7 +288,9 @@ def profile(request, username):
     user = User.objects.get(email=request.user.email)
     context = {
         'a' : get_object_or_404(User, username=username),
-        'events': Event.objects.filter(Q(author=a)&(Q(invitees__isnull=True)|Q(invitees=user))),
+        'events': Event.objects.filter(Q(author=a)&(Q(invitees__isnull=True)|Q(invitees=user)|Q(author=user))).distinct(),
+        'attendees': Event.objects.filter(Q(attendees=a)&(Q(invitees__isnull=True)|Q(invitees=user)|Q(author=user))).distinct(),
+        
     }
     return render(request,'events/authorInfo.html',context)
 
@@ -308,28 +310,7 @@ def bookmark(request, event_id):
 
     return redirect('/events/' + str(event_id))
     
-#service account email and credentials
-#service_account_email = "project-1-25@hip-cyclist-290500.iam.gserviceaccount.com"
-#from google_auth_oauthlib.flow import InstalledAppFlow
-#import pickle
 
-#SCOPES = ["https://www.googleapis.com/auth/calendar"]
-#DIRNAME = os.path.dirname(__file__)
-#flow= InstalledAppFlow.from_client_secrets_file(os.path.join(DIRNAME, 'ccreds.json'),scopes=SCOPES)
-#credentials=flow.run_console()
-#pickle.dump(credentials,open("token.pkl","wb"))
-#credentials=pickle.load(open("token.pkl","rb"))
-#service = build("calendar", "v3", credentials=credentials)
-
-#def build_service():
-#    DIRNAME = os.path.dirname(__file__)
-#    credentials = ServiceAccountCredentials.from_json_keyfile_name(
-#        os.path.join(DIRNAME, 'creds.json'),
-#        scopes=SCOPES
-#    )
-    #service = build("calendar", "v3", credentials=credentials)
-    #return service
-#service = build_service()
 
 
 def attending(request, event_id):
@@ -337,30 +318,19 @@ def attending(request, event_id):
     user = request.user
     event = Event.objects.filter(id=event_id).first()
     already_attending = False
-
+    
     for attendee in event.attendees.all() :
         if (user == attendee) :
             already_attending = True
     if (already_attending):
         event.attendees.remove(user.id)
-#        service = build("calendar", "v3", credentials=credentials)
-#        service.events().delete(calendarId='primary', eventId=addEvent.eventId).execute()
     else:
         event.attendees.add(user.id)
-#        addEvent = {
-#                   'summary': event.name,
-#                   'location':  event.location,
-#                   'description': event.description,
-#                   'start': {
-#                     'date': "2020-11-11",
-#                   },
-#                   'end': {
-#                     'date': "2020-11-11",
-#                   },
-#                 }
-#        service = build("calendar", "v3", credentials=credentials)
-#        addEvent= service.events().insert(calendarId='primary', body=addEvent).execute()
-#        print(addEvent)
-
+        
+#    for invitee in event.invitees.all():
+#        for attendees in event.attendees.all():
+#            if (invitee != attendee):
+#                event.attendees.remove(invitee.id)
+    
 
     return redirect('/events/' + str(event_id))       

@@ -11,9 +11,7 @@
     a {
         color: #D17B43;
     }
-    footer{
-        position:absolute;
-    }
+
 </style>
 
 {% if user.is_authenticated %}
@@ -82,11 +80,15 @@
              font-family: 'Zilla Slab',serif;
              font-size: 25px;
          }
-         footer {
-             bottom: 0;
-             width:100%;
-             position: relative;
+         .wrapper {
+           min-height: 100%;
+           margin-bottom: -50px;
          }
+         .footer,
+         .push {
+           height: 50px;
+         }
+
          #fixed-height {
             height: 100px;
             background-color: #57c975;

@@ -145,13 +145,14 @@
                     <div class="modal-body">
                         {% if event.attendees.all %}
                             {% for u in event.attendees.all %}
-                                {% with name=user %}
-                                    <a href="{% url 'events:authorDetail' name %}">{{ user | capfirst}}</a>
+                                {% with name=u %}
+                                    <p><a href="{% url 'events:authorDetail' name %}">{{ u | title }}</a></p>
                                 {% endwith %}
                             {% endfor %}
                         {% else %}
                             <p> No One is Attending Yet!</p>
                         {% endif %}
+
                     </div>
                     <div class="modal-footer">
                     <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
