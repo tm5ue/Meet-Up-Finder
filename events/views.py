@@ -26,16 +26,21 @@ import datetime
 class Index(ListView):
     '''Class for home page'''
     template_name = 'events/index.html'
-    Model=Event
     def get_queryset(self):
+        
         '''
-        Get public Events to display on home page
+        Get public and private Events to display on home page
         :return:
         '''
         for event in Event.objects.filter(Q(invitees__isnull=True)) :
             if (event.event_date < (timezone.now() - datetime.timedelta(days=1))):
                 event.delete()
-        return Event.objects.filter(Q(invitees__isnull=True)) #public events
+        try:
+            user = self.request.user
+            return Event.objects.filter(Q(invitees__isnull=True)|Q(invitees=user)|Q(author=user)).distinct()
+        except:
+            return None
+          
 
 def normalize_query(query_string,
                     findterms=re.compile(r'"([^"]+)"|(\S+)').findall,
@@ -290,7 +295,6 @@ def profile(request, username):
         'a' : get_object_or_404(User, username=username),
         'events': Event.objects.filter(Q(author=a)&(Q(invitees__isnull=True)|Q(invitees=user)|Q(author=user))).distinct(),
         'attendees': Event.objects.filter(Q(attendees=a)&(Q(invitees__isnull=True)|Q(invitees=user)|Q(author=user))).distinct(),
-        
     }
     return render(request,'events/authorInfo.html',context)
 
@@ -318,7 +322,7 @@ def attending(request, event_id):
     user = request.user
     event = Event.objects.filter(id=event_id).first()
     already_attending = False
-    
+     
     for attendee in event.attendees.all() :
         if (user == attendee) :
             already_attending = True

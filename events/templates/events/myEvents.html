@@ -8,6 +8,21 @@
 <!-- This site crashes when a user that is not logged in tries to access -->
 {% if user.is_authenticated %}
 
+<style>
+.wrapper {
+  min-height: 100%;
+  margin-bottom: -50px;
+}
+.footer{
+    position: absolute;
+    bottom: 0;
+}
+.push {
+  height: 50px;
+}
+
+</style>
+
 <br>
 <div class="accordion" id="event-accordian">
     <div class="card">
@@ -116,6 +131,8 @@
       </div>
       {% endif %}
   </div>
+<div class="editable-alias" style="display:block; height: 310px; width: 100%;">&nbsp;</div>
+ 
 
 {% else %}
     <link href="https://fonts.googleapis.com/css2?family=Zilla+Slab:wght@300&display=swap" rel="stylesheet">
