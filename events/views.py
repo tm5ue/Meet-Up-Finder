@@ -32,7 +32,7 @@ class Index(ListView):
         Get public and private Events to display on home page
         :return:
         '''
-        for event in Event.objects.filter(Q(invitees__isnull=True)) :
+        for event in Event.objects.all() :
             if (event.event_date < (timezone.now() - datetime.timedelta(days=1))):
                 event.delete()
         try:
