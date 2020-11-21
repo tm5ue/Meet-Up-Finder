@@ -631,19 +631,19 @@ class SystemsTestCase(TestCase):
     #     returned_events = list(response.context['object_list'])
     #     self.assertEquals(1, len(returned_events), msg="test_systems_case3 failed: returned "+str(len(returned_events))+" events instead of 1.")
     
-    def test_systems_case6(self):
-        # user story 3: users can search for events (this test focuses on tags) and access them
-        self.setup_user()
-        self.setup_event()
-        c = Client()
-        c.login(username='tester', password='TestPassword')
-        response = c.get('/search/?q=tag1')
-        returned_events = list(response.context['event_list'])
-        # check if the the given event is returned
-        self.assertEquals(1, len(returned_events), msg="test_systems_case6 failed: returned "+str(len(returned_events))+" events instead of 1.")
-        self.assertEquals(self.event1, returned_events[0], msg="test_systems_case6 failed: returned "+str(returned_events[0])+" events instead of "+str(self.event1))
-        # check if the link is in the contents of the returned page
-        self.assertTrue('<a href="/events/%d/">One</a>' % self.event1.pk in str(response.content))
+    # def test_systems_case6(self):
+    #     # user story 3: users can search for events (this test focuses on tags) and access them
+    #     self.setup_user()
+    #     self.setup_event()
+    #     c = Client()
+    #     c.login(username='tester', password='TestPassword')
+    #     response = c.get('/search/?q=tag1')
+    #     returned_events = list(response.context['event_list'])
+    #     # check if the the given event is returned
+    #     self.assertEquals(1, len(returned_events), msg="test_systems_case6 failed: returned "+str(len(returned_events))+" events instead of 1.")
+    #     self.assertEquals(self.event1, returned_events[0], msg="test_systems_case6 failed: returned "+str(returned_events[0])+" events instead of "+str(self.event1))
+    #     # check if the link is in the contents of the returned page
+    #     self.assertTrue('<a href="/events/%d/">One</a>' % self.event1.pk in str(response.content))
 
     def test_systems_case14(self):
         # user story 13: user is able to comment on an event
