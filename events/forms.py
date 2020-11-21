@@ -22,7 +22,9 @@ class EventForm(ModelForm):
            self.fields['tags'].required = False
            self.fields['event_date'].widget = DateTimePickerInput()
            for field_name, field in self.fields.items():
-               if field_name == 'tags':
+               if (field_name == 'location'):
+                   layout.append(Field(field_name, placeholder=field.label+(" (ex. 111 Apple Dr, Glensville, FL 12345)"), style="width: 100%;"))
+               elif (field_name == 'tags'):
                    layout.append(Field(field_name, placeholder=field.label+(" (Separated with Commas)"), style="width: 100%;"))
                else:
                    layout.append(Field(field_name, placeholder=field.label, style="width: 100%;"))
