@@ -14,12 +14,10 @@ from django.core.files.uploadedfile import SimpleUploadedFile
 from PIL import Image
 import os
 from io import BytesIO
-
 from django.urls import reverse
 import json
 
 TEST_IMAGE_PATH = os.path.join(os.getcwd(), 'media/events/images/test_image.jpg')
-# TODO: fix unit tests with photos
 
 class EventFormTestCase(TestCase):
     def setup(self):
@@ -175,7 +173,7 @@ class SearchResultsTestCase(TestCase):
 
         user = User.objects.create_user(username='tester',
                                         email='tester@example.com',
-                                        password="TestPassword")
+                                        password='TestPassword')
         event1 = Event.objects.create(name='one',
                                      description='test description',
                                      pub_date=timezone.now(),
@@ -576,7 +574,6 @@ class EventLocationTestCase(TestCase):
 
 class SystemsTestCase(TestCase):
     def setup_user(self):
-        '''Setup Objects for Systems Testing'''
         self.user1 = User.objects.create_user(username='tester',
                                         email='tester@example.com',
                                         password="TestPassword")
@@ -599,53 +596,30 @@ class SystemsTestCase(TestCase):
                                      author=self.user1.username, 
                                      tags='tag2, tag3', 
                                      location='Leesburg Premium Outlets',)
-
-    # def test_systems_case2(self):
-    #     # user story 4: user is able to create an event
-    #     self.setup_user()
-    #     c = Client()
-    #     c.login(username='tester', password='TestPassword')
-    #     # user creates an event
-    #     c.post('/events/add', data={'name':'event test name','description':'test description', 'location':'Charlottesville', 'tags':'tag1, tag2, tag3'})
-    #     # system registers event
-    #     events_message = "test_systems_case2 failed: added {} events instead of 1.".format(len(Event.objects.all()))
-    #     self.assertEquals(1, len(Event.objects.all()),  msg=events_message)
-    #     # event shows up on front page
-    #     response = c.get('')
-    #     returned_events = list(response.context['object_list'])
-    #     # ret_message =
-    #     self.assertEquals(1, len(returned_events), msg="test_systems_case2 failed: returned "+str(len(returned_events))+" events instead of 1.".format(len(returned_events)))
-
-    # def test_systems_case3(self):
-    #     # user story 4: events are seen by everyone
-    #     # test user creates an event
-    #     self.setup_user()
-    #     c = Client()
-    #     c.login(username='tester', password='TestPassword')
-    #     c.post('/events/add', data={'name':'event test name','description':'test description', 'tags':'tag1, tag2, tag3','event_date':timezone.now(), 'location':'Charlottesville'})
-    #     c.logout()
-    #     # visiting user logs in and sees event
-    #     c.login(username='visitor', password='VisitPassword')
-    #     self.assertEquals(self.user2, auth.get_user(c)) # to ensure that a new user is viewing the events
-    #     response = c.get('')
-    #     returned_events = list(response.context['object_list'])
-    #     self.assertEquals(1, len(returned_events), msg="test_systems_case3 failed: returned "+str(len(returned_events))+" events instead of 1.")
+        self.event3 = Event.objects.create(name='three',
+                                     description='test description',
+                                     pub_date=timezone.now(),
+                                     event_date=timezone.now(),
+                                     author=self.user1.username,
+                                     tags='private',
+                                     location='Charlottesville',)
+        self.event3.invitees.add(self.user1)
     
-    # def test_systems_case6(self):
-    #     # user story 3: users can search for events (this test focuses on tags) and access them
-    #     self.setup_user()
-    #     self.setup_event()
-    #     c = Client()
-    #     c.login(username='tester', password='TestPassword')
-    #     response = c.get('/search/?q=tag1')
-    #     returned_events = list(response.context['event_list'])
-    #     # check if the the given event is returned
-    #     self.assertEquals(1, len(returned_events), msg="test_systems_case6 failed: returned "+str(len(returned_events))+" events instead of 1.")
-    #     self.assertEquals(self.event1, returned_events[0], msg="test_systems_case6 failed: returned "+str(returned_events[0])+" events instead of "+str(self.event1))
-    #     # check if the link is in the contents of the returned page
-    #     self.assertTrue('<a href="/events/%d/">One</a>' % self.event1.pk in str(response.content))
+    def test_systems_case1(self):
+        # user story 3: users can search for events (this test focuses on tags) and access them
+        self.setup_user()
+        self.setup_event()
+        c = Client()
+        c.login(username='tester', password='TestPassword')
+        response = c.get('/search/?q=tag1')
+        returned_events = list(response.context['event_list'])
+        # check if the the given event is returned
+        self.assertEquals(1, len(returned_events), msg="test_systems_case6 failed: returned "+str(len(returned_events))+" events instead of 1.")
+        self.assertEquals(self.event1, returned_events[0], msg="test_systems_case6 failed: returned "+str(returned_events[0])+" events instead of "+str(self.event1))
+        # check if the link is in the contents of the returned page
+        self.assertTrue('<a href="/events/%d/">' % self.event1.pk in str(response.content), msg=response.content)
 
-    def test_systems_case14(self):
+    def test_systems_case2(self):
         # user story 13: user is able to comment on an event
         self.setup_user()
         self.setup_event()
@@ -657,5 +631,22 @@ class SystemsTestCase(TestCase):
         # comment shows up on event page
         response = c.get('/events/%d/' % self.event1.pk)
         comments = list(response.context['comments'])
-        self.assertEquals(1, len(comments), msg="test_systems_case14 failed: returned "+str(len(comments))+" events instead of 1.")    
-    
+        self.assertEquals(1, len(comments), msg="test_systems_case14 failed: returned "+str(len(comments))+" events instead of 1.")  
+
+    def test_systems_case3(self):
+        # user story 8: users should be able to make private events
+        self.setup_user()
+        self.setup_event()
+        c = Client()
+        c.login(username='tester', password='TestPassword')
+        response = c.get('')
+        returned_events = list(response.context['object_list'])
+        self.assertEquals(3, len(returned_events), msg="test_systems_case3 failed: returned "+str(len(returned_events))+" events instead of 1 for invited.")
+        c.logout()
+        c.login(username='visitor', password='VisitPassword')
+        self.assertEquals(self.user2, auth.get_user(c)) # to ensure that a new user is viewing the events
+        response = c.get('')
+        returned_events = list(response.context['object_list'])
+        self.assertEquals(2, len(returned_events), msg="test_systems_case3 failed: returned "+str(len(returned_events))+" events instead of 1 for uninvited.")
+
+
