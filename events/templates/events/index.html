@@ -4,9 +4,10 @@
 
 
 <link rel="stylesheet" href="/static/css/main.css">
+<div id="alert"></div>
     <script>
         if (!window.chrome) {
-            alert('Please update your browser to Chrome for the full site experience.');
+            document.getElementById("alert").innerHTML +=  "<div class=\"alert alert-secondary alert-dismissible fade show\" role=\"alert\"> Please consider switching your browser to Chrome for the full site experience! <button type=\"button\" class=\"close\" data-dismiss=\"alert\" aria-label=\"Close\"><span aria-hidden=\"true\">&times;</span></button></div>";
         }
     </script>
 {% if user.is_authenticated %}
@@ -37,20 +38,6 @@
 
     <div class="container" style="justify-content: center; display: flex">
         <h1 style="justify-content: center">Events Near You</h1>
-    </div>
-    <!-- Buttons for sattelite, street, etc. Messes with events on map... -->
-    <div class="container" style="display: flex; justify-content: center;">
-        <!-- <div id="menu" class="btn-group btn-group-toggle" >
-            <label class="btn btn-secondary active" for="streets-v11">
-                <input id="streets-v11" type="radio" name="name="rtoggle  autocomplete="off" checked> Streets
-              </label>
-              <label class="btn btn-secondary active" for="outdoors-v11">
-                  <input id="outdoors-v11" type="radio" name="name="rtoggle  autocomplete="off" checked> Outdoors
-              </label>
-              <label class="btn btn-secondary active" for="satellite-v9">
-                  <input id="satellite-v9" type="radio" name="name="rtoggle  autocomplete="off" checked> Satellite
-              </label>
-        </div> -->
     </div>
 
     <br>
@@ -83,18 +70,6 @@
             var marker = new mapboxgl.Marker()
                 .setLngLat([position.coords.longitude, position.coords.latitude])
                 .addTo(map);
-
-            // var layerList = document.getElementById('menu');
-            // var inputs = layerList.getElementsByTagName('input');
-
-            // function switchLayer(layer) {
-            //     var layerId = layer.target.id;
-            //     map.setStyle('mapbox://styles/mapbox/' + layerId);
-            // }
-
-            // for (var i = 0; i < inputs.length; i++) {
-            //     inputs[i].onclick = switchLayer;
-            // }
 
             var latitudes = [
                 {% for event in object_list %}
