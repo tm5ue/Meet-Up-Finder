@@ -11,10 +11,11 @@
     {% csrf_token %}
     {% crispy form %}
 
+    <div class="editable-alias" style="display:block; height: 60px; width: 100%;">&nbsp;</div>
+
 {% else %}
     <link href="https://fonts.googleapis.com/css2?family=Zilla+Slab:wght@300&display=swap" rel="stylesheet">
     <style>
-        /* This one does not have the cat image, something was causing issues... */
         h1{
             color:#D17B43;
             font-family: 'Zilla Slab',serif;

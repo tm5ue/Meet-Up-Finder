@@ -56,13 +56,83 @@ class EditEventForm(ModelForm):
         self.fields['tags'].required = False
         self.fields['photo'].required = False
         for field_name, field in self.fields.items():
-            if field_name == 'tags':
+            if (field_name == 'location'):
+                layout.append(Field(field_name, placeholder=field.label+(" (ex. 111 Apple Dr, Glensville, FL 12345)"), style="width: 100%;"))
+            elif (field_name == 'tags'):
                 layout.append(Field(field_name, placeholder=field.label+(" (Separated with Commas)"), style="width: 100%;"))
             else:
                 layout.append(Field(field_name, placeholder=field.label, style="width: 100%;"))
         self.helper.layout.append(ButtonHolder(
             Submit('submit', 'Save Edits', css_class='btn-primary btn-sm'),
-            HTML("""<a href="{% url 'events:delete_event' event.id %}" class="btn-danger btn-sm" >Delete Event</a>""")))
+            HTML("""
+                <style>
+                    .push {
+                        height: 50px;
+                    }
+                    .modal {
+                        padding-top: 100px;
+                        left: 0;
+                        top: 0;
+                        width: 100%;
+                        height: 100%;
+                        overflow: auto;
+                    }
+                    .modal-content {
+                        margin: auto;
+                        padding: 20px;
+                        border: 1px solid;
+                        width: 60%;
+                    }
+                    .close {
+                        color: #aaaaaa;
+                        float: right;
+                        font-size: 30px;
+                    }
+                    .close:hover,
+                    .close:focus {
+                        color: #000;
+                        cursor: pointer;
+                    }
+                    .deleteBtn{
+                        background-color: red;
+                        color:white;
+                        border-radius: 4px;
+                        border: 0px ;
+                        padding: 5px 5px;
+                        font-size:15px;
+                    }
+                </style>
+
+                <div style="float:right; width:90%;"> <button class="deleteBtn">Delete</button> </div>
+                <div id="Modal" class="modal">
+                    <div class="modal-content">
+                        <p class="close">&times;</p>
+                        <p> You are deleting this event! Click delete to confirm. </p>
+                        <a href="{% url 'events:delete_event' event.id %}" class="btn btn-danger btn-sm">Delete</a>
+                    </div>
+                </div>
+
+                <script>
+                    var modal = document.getElementById("Modal");
+                    var x = document.getElementsByClassName("close");
+                    var buttons = document.getElementsByClassName('deleteBtn');
+                    for(var i=0; i<buttons.length; i++){
+                        buttons[i].addEventListener("click", function() {
+                            modal.style.display = "block";
+                        })
+                    }
+                    for(var i=0; i<x.length; i++){
+                        x[i].addEventListener("click", function() {
+                            modal.style.display = "none";
+                        })
+                    }
+                    window.onclick = function(event) {
+                        if (event.target == modal) {
+                            modal.style.display = "none";
+                        }
+                    }
+                </script>
+            """)))
         self.helper.form_method = 'POST'
 
     class Meta:

@@ -46,9 +46,9 @@
                 </a>
               </p>
               <div class="collapse" id="collapse">
-                <div class="card card-body" style="background-color: #ECECEC;">
+                <div class="card card-body" style="background-color: #f4f2e3;">
                     <h5>Publish Date </h5>
-                    <p>{{ event.pub_date | title }}</p>
+                    <p>{{ event.pub_date }}</p>
                     <h5>Author </h5>
                     {% with name=event.author %}
                         <p><a href="{% url 'events:authorDetail' name %}">{{ event.author | title }}</a></p>

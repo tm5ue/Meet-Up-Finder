@@ -36,7 +36,7 @@
     </div>
     <!-- Buttons for sattelite, street, etc. Messes with events on map... -->
     <div class="container" style="display: flex; justify-content: center;">
-        <div id="menu" class="btn-group btn-group-toggle" >
+        <!-- <div id="menu" class="btn-group btn-group-toggle" >
             <label class="btn btn-secondary active" for="streets-v11">
                 <input id="streets-v11" type="radio" name="name="rtoggle  autocomplete="off" checked> Streets
               </label>
@@ -46,7 +46,7 @@
               <label class="btn btn-secondary active" for="satellite-v9">
                   <input id="satellite-v9" type="radio" name="name="rtoggle  autocomplete="off" checked> Satellite
               </label>
-        </div>
+        </div> -->
     </div>
 
     <br>
@@ -80,17 +80,17 @@
                 .setLngLat([position.coords.longitude, position.coords.latitude])
                 .addTo(map);
 
-            var layerList = document.getElementById('menu');
-            var inputs = layerList.getElementsByTagName('input');
+            // var layerList = document.getElementById('menu');
+            // var inputs = layerList.getElementsByTagName('input');
 
-            function switchLayer(layer) {
-                var layerId = layer.target.id;
-                map.setStyle('mapbox://styles/mapbox/' + layerId);
-            }
+            // function switchLayer(layer) {
+            //     var layerId = layer.target.id;
+            //     map.setStyle('mapbox://styles/mapbox/' + layerId);
+            // }
 
-            for (var i = 0; i < inputs.length; i++) {
-                inputs[i].onclick = switchLayer;
-            }
+            // for (var i = 0; i < inputs.length; i++) {
+            //     inputs[i].onclick = switchLayer;
+            // }
 
             var latitudes = [
                 {% for event in object_list %}
@@ -132,6 +132,15 @@
             map.addControl(new mapboxgl.NavigationControl());
 
             map.on('load', function () {
+                
+                map.loadImage(
+                    'https://upload.wikimedia.org/wikipedia/commons/7/7a/Map_symbol_attraction_02.png',
+                    function (error, image) {
+                        if (error) throw error;
+                        map.addImage('cat', image);
+                    }
+                );
+
                 for (let i = 0; i < names.length; i++) {
                     map.addSource(identifiers[i], {
                         'type': 'geojson',
@@ -163,8 +172,9 @@
                         'type': 'symbol',
                         'source': identifiers[i],
                         'layout': {
-                            'icon-image': '{icon}-15',
-                            'icon-allow-overlap': true
+                            'icon-image': 'cat',
+                            'icon-allow-overlap': true,
+                            'icon-size': 0.07,
                         }
                     });
 
